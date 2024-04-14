@@ -1,0 +1,21 @@
+version: '3'
+services:
+  frontend:
+    build:
+      context: .
+      # args:
+        # USER_NAME: yubuu
+        # USER_ID: 1000
+        # GROUP_ID: 1000
+      dockerfile: Dockerfile
+    container_name: 'ocr-frontend'
+    working_dir: '/frontend'
+    network_mode: host
+    environment:
+      - DISPLAY=$DISPLAY
+    tty: true
+    volumes:
+      - ./:/frontend
+      - /frontend/node_modules
+      - /tmp/.X11-unix/:/tmp/.X11-unix
+      - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro

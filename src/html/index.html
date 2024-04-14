@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="../css/index.css">
+<title>ドローイングアプリ</title>
+</head>
+<body>
+    <!-- メニューバー -->
+    <div id="menu-bar">
+        <div class="dropdown">
+            <button class="dropbtn">ファイル</button>
+            <div class="dropdown-content">
+                <a href="#">新規</a>
+                <a href="#">開く</a>
+                <a href="#">保存</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ツールバー -->
+    <div id="toolbar">
+        <button class="tool-btn">ブラシ</button>
+        <button class="tool-btn">消しゴム</button>
+    </div>
+    
+    <!-- ドローイングキャンバス -->
+    <canvas id="drawing-canvas" width="800" height="600"></canvas>
+    
+    <!-- プロパティパネル -->
+    <div id="property-panel">
+        <label for="color-picker">色:</label>
+        <input type="color" id="color-picker">
+        <label for="brush-size">ブラシサイズ:</label>
+        <input type="number" id="brush-size" min="1" max="100" value="10">
+    </div>
+    
+    <!-- ステータスバー -->
+    <div id="status-bar">
+        <span>ステータス: 準備完了</span>
+    </div>
+
+    <script src="../js/index.js"></script>
+</body>
+</html>
