@@ -16,7 +16,7 @@ const ChangeCanvasSizeForm = (): JSX.Element => {
     setIsTrimCanvas, setTrimRegionChanged,
     currentCanvasWidth, currentCanvasHeight, isAspectRatioChecked, setIsAspectRatioChecked,
     trimRegionWidth, setTrimRegionWidth, trimRegionHeight, setTrimRegionHeight,
-    setRotate90
+    setRotate90, setFlipState
   } = useGuideBarToolsContext();
   const { trimDetailsVisible, setTrimDetailsVisible } = useSidebarStateContext();
   const [inputs, setInputs] = useState<Inputs>({ width: currentCanvasWidth.toString(), height: currentCanvasHeight.toString() });
@@ -81,16 +81,12 @@ const ChangeCanvasSizeForm = (): JSX.Element => {
     setInputs({ ...inputs, [name]: value });
   };
 
-  const handleCloseClick = () => {
-    setTrimDetailsVisible(false);
-  }
-
   const handleModalOpen = () => {
     setScaleModalMode('image-scaling');
   }
 
-  const handleRotate90Click = (direction: number) => {
-    setRotate90(prev => prev + direction);
+  const handleRotateAndFlip = (setAction: React.Dispatch<React.SetStateAction<number>>, direction: number) => {
+    setAction(prev => prev + direction);
     setIsSaveState(flag => !flag);
   }
 
@@ -150,16 +146,16 @@ const ChangeCanvasSizeForm = (): JSX.Element => {
       </div>
       <div className="text">回転と反転</div>
       <div className="horizontal-group horizontal-four-buttons">
-        <button onClick={() => handleRotate90Click(-1)}>
+        <button onClick={() => handleRotateAndFlip(setRotate90, -1)}>
           <RotateObjectIcon className='button-icon' />
         </button>
-        <button onClick={() => handleRotate90Click(+1)}>
+        <button onClick={() => handleRotateAndFlip(setRotate90, +1)}>
           <RotateObjectIcon className='button-icon' style={{ transform: "scaleX(-1)" }} />
         </button>
-        <button onClick={handleChangeClick}>
+        <button onClick={() => handleRotateAndFlip(setFlipState, -1)}>
           <FlipObjectIcon className='button-icon'/>
         </button>
-        <button onClick={handleChangeClick}>
+        <button onClick={() => handleRotateAndFlip(setFlipState, +1)}>
           <FlipObjectIcon className='button-icon' style={{ transform: "rotate(270deg)" }} />
         </button>
       </div>

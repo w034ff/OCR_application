@@ -4,7 +4,8 @@ import { useCanvasTrimPreviewSetup } from './CanvasTrimPreviewSetup';
 import { useRectTrimPreview } from './RectTrimPreview';
 import { useRectTrimPreviewFromSidebar } from './RectTrimPreviewFromSidebar';
 import { useExecuteTrimming } from './ExecuteTrimming';
-import { useGuideBarToolsContext } from '../sidebar/GuideBarToolsContext';
+import { useRotate90Canvas } from './useRotate90Canvas';
+import { useFlipCanvas } from './useFlipCanvas';
 
 
 const MIN_LEFT_TOP = 498;
@@ -19,7 +20,6 @@ export const useTrimFabricCanvas = (
   canvasRef: React.RefObject<HTMLCanvasElement>,
   editCanvasRef:React.RefObject<HTMLCanvasElement>,
 ) => {
-  const { rotate90 } = useGuideBarToolsContext(); 
   const [fabricEditCanvas, setFabricEditCanvas] = useState<fabric.Canvas | null>(null)
 
   // trimDetailsVisibleが変更された際、fabricCanvasのオブジェクトをデアクティブ化し、背景と切り取り領域を追加・削除するカスタムフック
@@ -30,6 +30,11 @@ export const useTrimFabricCanvas = (
   useRectTrimPreviewFromSidebar(fabricEditCanvas, MIN_LEFT_TOP, EDGE_OFFSET, STROKE_WIDTH);
   // drawing-canvasの切り取りを実行するカスタムフック
   useExecuteTrimming(fabricCanvas, fabricEditCanvas, MIN_LEFT_TOP, EDGE_OFFSET);
+
+  // fabricCanvasを90度回転させるカスタムフック
+  useRotate90Canvas(fabricCanvas);
+  // fabricCanvasを水平・垂直方向に反転させるカスタムフック
+  useFlipCanvas(fabricCanvas);
 
   // 切り取り領域用のfabricキャンバスの初期化
   useEffect(() => {
@@ -51,32 +56,5 @@ export const useTrimFabricCanvas = (
       fabricEditCanvas.setHeight(canvasRef.current.height + 1000);
     }
   }, [canvasRef.current?.width, canvasRef.current?.height]);
-
-
-  useEffect(() => {
-    if(fabricCanvas) {
-      const width = fabricCanvas.getWidth();
-      const height = fabricCanvas.getHeight();
-
-      // キャンバスのサイズを回転後の状態に合わせて更新
-      fabricCanvas.setWidth(height);
-      fabricCanvas.setHeight(width);
-
-      // キャンバス上の全オブジェクトに対して操作を実行
-      fabricCanvas.forEachObject((obj) => {
-        // オブジェクトの中心点を基に90度回転
-        obj.set({
-          left: obj.top,
-          top: width - obj.left - obj.width * obj.scaleX,
-          angle: obj.angle - 90,
-        }).setCoords(); // 座標の更新を確実に適用
-      });
-
-      
-
-      // キャンバスの再描画
-      fabricCanvas.renderAll();
-    }
-  }, [rotate90]);
 
 }

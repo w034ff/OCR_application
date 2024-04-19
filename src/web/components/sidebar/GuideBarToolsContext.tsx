@@ -18,6 +18,8 @@ interface GuideBarToolsContextProps {
   setTrimRegionHeight: React.Dispatch<React.SetStateAction<number>>;
   rotate90: number;
   setRotate90: React.Dispatch<React.SetStateAction<number>>;
+  flipState: number;
+  setFlipState: React.Dispatch<React.SetStateAction<number>>;
 }
 
 
@@ -36,7 +38,8 @@ export const GuideBarToolsProvider = ({ children }: GuideBarToolsProviderProps):
   const [trimRegionWidth, setTrimRegionWidth] = useState<number>(800);
   const [trimRegionHeight, setTrimRegionHeight] = useState<number>(600);
 
-  const [ rotate90, setRotate90 ] = useState<number>(0);
+  const [ rotate90, setRotate90 ] = useState<number>(0); // +1: 右へ90度回転, -1: 左へ90度回転
+  const [ flipState, setFlipState ] = useState<number>(0); // +1: 垂直反転, -1: 水平反転
 
   return (
     <GuideBarToolsContext.Provider value = {{
@@ -44,7 +47,7 @@ export const GuideBarToolsProvider = ({ children }: GuideBarToolsProviderProps):
       trimRegionChanged, setTrimRegionChanged, isAspectRatioChecked, setIsAspectRatioChecked,
       currentCanvasWidth, setCurrentCanvasWidth, currentCanvasHeight, setCurrentCanvasHeight,
       trimRegionWidth, setTrimRegionWidth, trimRegionHeight, setTrimRegionHeight,
-      rotate90, setRotate90
+      rotate90, setRotate90, flipState, setFlipState
     }}>
       {children}
     </GuideBarToolsContext.Provider>
