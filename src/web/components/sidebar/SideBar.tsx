@@ -2,20 +2,20 @@ import React, { JSX, useEffect, useState } from 'react';
 import './Sidebar.css';
 import { useSidebarStateContext } from './SidebarStateContext';
 import TrimSettingsForm from './TrimSettingsForm';
-import ChangeCanvasSizeForm from './ChangeCanvasSize';
+import ResizeCanvasForm from './ChangeCanvasSize';
 
 
 const SideBar = (): JSX.Element | undefined => {
-  const { trimDetailsVisible } = useSidebarStateContext();
+  const { trimModeActive } = useSidebarStateContext();
 
-  if (trimDetailsVisible) {
+  if (trimModeActive) {
     return (
       <TrimSettingsForm />
     );
   } 
   else {
     return (
-      <ChangeCanvasSizeForm />
+      <ResizeCanvasForm />
     );
   }
 }

@@ -3,30 +3,35 @@ import { fabric } from 'fabric';
 import { useSidebarStateContext } from '../sidebar/SidebarStateContext';
 
 
-export const useCanvasTrimPreviewSetup = (
+export const useEditCanvasSetup = (
   fabricCanvas: fabric.Canvas | null,
   canvasRef: React.RefObject<HTMLCanvasElement>,
   fabricEditCanvas: fabric.Canvas | null,
   MIN_LEFT_TOP: number,
   STROKE_WIDTH: number,
 ) => {
-  const { trimDetailsVisible } = useSidebarStateContext();
+  const { trimModeActive, resizeModeActive } = useSidebarStateContext();
 
   // fabricCanvasのオブジェクトをデアクティブ化
   useEffect(() => {
     if (!fabricCanvas) return;
-      if (trimDetailsVisible) {
+      if (trimModeActive || resizeModeActive) {
         fabricCanvas.discardActiveObject(); // アクティブなオブジェクトをデアクティブ化
       } 
       fabricCanvas.renderAll();
-  }, [trimDetailsVisible]);
+  }, [trimModeActive, resizeModeActive]);
 
   // 背景と切り取り領域を追加・削除するfabricEditCanvasの初期化
   useEffect(() => {
     if (canvasRef.current && fabricEditCanvas) {
-
       const canvas = canvasRef.current;
-      if (trimDetailsVisible) {
+
+      // すべてのオブジェクトを削除
+      fabricEditCanvas.forEachObject((obj: fabric.Object) => {
+        fabricEditCanvas.remove(obj);
+      });
+
+      if (trimModeActive) {
         // 背景色用の四角形を作成
         const backgroundRect = new fabric.Rect({
           left: 0,
@@ -39,6 +44,9 @@ export const useCanvasTrimPreviewSetup = (
           hasControls: false,
           hasBorders: false,
         });
+
+        fabricEditCanvas.add(backgroundRect);
+
         // 切り取り領域を表す四角形の作成
         const rect = new fabric.Rect({
           left: MIN_LEFT_TOP,
@@ -48,7 +56,7 @@ export const useCanvasTrimPreviewSetup = (
           strokeUniform: true,
           fill: 'rgba(255, 255, 255, 0.4)',
           width: canvas.width + STROKE_WIDTH,
-          height: canvas.height + STROKE_WIDTH, 
+          height: canvas.height + STROKE_WIDTH,
           lockUniScaling: true,
           hasControls: true,
           hasBorders: true,
@@ -61,29 +69,60 @@ export const useCanvasTrimPreviewSetup = (
           cornerStyle: 'circle',
           cornerStrokeColor: '#3c3f46',
         });
-        // 回転用コントロールを非表示
         rect.setControlsVisibility({ mtr: false });
 
-        fabricEditCanvas.add(backgroundRect);
         fabricEditCanvas.add(rect);
         fabricEditCanvas.setActiveObject(rect);
 
-        const handleSelectionCleared = (e: fabric.IEvent) => {
+        const handleSelectionCleared = () => {
           fabricEditCanvas.setActiveObject(rect);
         };
-  
         fabricEditCanvas.on('selection:cleared', handleSelectionCleared);
-  
+
         return () => {
           fabricEditCanvas.off('selection:cleared', handleSelectionCleared);
         };
-      } else {
-        fabricEditCanvas.forEachObject((obj: fabric.Object) => {
-          fabricEditCanvas.remove(obj); // 条件に合致するオブジェクトを削除
-        });
       }
-      
-      fabricEditCanvas.renderAll();
+
+      if (resizeModeActive) {
+        // 切り取り領域を表す四角形の作成
+        const rect = new fabric.Rect({
+          left: MIN_LEFT_TOP,
+          top: MIN_LEFT_TOP,
+          stroke: 'black',
+          strokeWidth: STROKE_WIDTH,
+          strokeUniform: true,
+          fill: 'transparent',
+          width: canvas.width + STROKE_WIDTH,
+          height: canvas.height + STROKE_WIDTH,
+          lockUniScaling: true,
+          hasControls: true,
+          lockRotation: true,
+          cornerColor: '#f0f2f3',
+          cornerSize: 20,
+          transparentCorners: false,
+          cornerStrokeColor: '#3c3f46',
+          lockScalingX: false,
+          lockScalingY: false,
+          lockMovementX: true,
+          lockMovementY: true,
+          hoverCursor: 'default',
+        });
+        rect.setControlsVisibility({ mtr: false });
+
+        fabricEditCanvas.add(rect);
+        fabricEditCanvas.setActiveObject(rect);
+
+        const handleSelectionCleared = () => {
+          fabricEditCanvas.setActiveObject(rect);
+        };
+        fabricEditCanvas.on('selection:cleared', handleSelectionCleared);
+
+        return () => {
+          fabricEditCanvas.off('selection:cleared', handleSelectionCleared);
+        };
+      }
     }
-  }, [trimDetailsVisible]);
+  }, [trimModeActive, resizeModeActive]);
+
 }

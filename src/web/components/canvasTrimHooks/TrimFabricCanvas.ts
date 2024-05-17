@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { fabric } from 'fabric';
-import { useCanvasTrimPreviewSetup } from './CanvasTrimPreviewSetup';
+import { useEditCanvasSetup } from './useEditCanvasSetup';
 import { useRectTrimPreview } from './RectTrimPreview';
 import { useRectTrimPreviewFromSidebar } from './RectTrimPreviewFromSidebar';
 import { useExecuteTrimming } from './ExecuteTrimming';
+import { useExecuteResize } from './useExecuteResize';
 import { useRotate90Canvas } from './useRotate90Canvas';
 import { useFlipCanvas } from './useFlipCanvas';
 
@@ -22,8 +23,8 @@ export const useTrimFabricCanvas = (
 ) => {
   const [fabricEditCanvas, setFabricEditCanvas] = useState<fabric.Canvas | null>(null)
 
-  // trimDetailsVisibleが変更された際、fabricCanvasのオブジェクトをデアクティブ化し、背景と切り取り領域を追加・削除するカスタムフック
-  useCanvasTrimPreviewSetup(fabricCanvas, canvasRef, fabricEditCanvas, MIN_LEFT_TOP, STROKE_WIDTH);
+  // trimModeActive, resizeModeActiveが変更された際、編集用オブジェクトを追加・削除するカスタムフック
+  useEditCanvasSetup(fabricCanvas, canvasRef, fabricEditCanvas, MIN_LEFT_TOP, STROKE_WIDTH);
   // fabricEditCanvas上で切り取り領域を変更した際の処理（drawing-canvas外を切り取らないようにする処理）
   useRectTrimPreview(fabricEditCanvas, MIN_LEFT_TOP, EDGE_OFFSET, STROKE_WIDTH);
   // サイドバーから切り取り領域を変更した際の処理（drawing-canvas外を切り取らないようにする処理）
@@ -31,6 +32,7 @@ export const useTrimFabricCanvas = (
   // drawing-canvasの切り取りを実行するカスタムフック
   useExecuteTrimming(fabricCanvas, fabricEditCanvas, MIN_LEFT_TOP, EDGE_OFFSET);
 
+  useExecuteResize(fabricCanvas, fabricEditCanvas, MIN_LEFT_TOP, STROKE_WIDTH)
   // fabricCanvasを90度回転させるカスタムフック
   useRotate90Canvas(fabricCanvas);
   // fabricCanvasを水平・垂直方向に反転させるカスタムフック

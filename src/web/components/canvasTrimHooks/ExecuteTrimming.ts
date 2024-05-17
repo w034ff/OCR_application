@@ -12,7 +12,7 @@ export const useExecuteTrimming = (
   EDGE_OFFSET: number,
 ) => {
   const { isTrimCanvas, trimRegionWidth, trimRegionHeight } = useGuideBarToolsContext();
-  const { setTrimDetailsVisible } = useSidebarStateContext();
+  const { setTrimModeActive } = useSidebarStateContext();
   // drawing-canvasの切り取りを実行する処理
   useEffect(() => {
     if (fabricCanvas && fabricEditCanvas) {
@@ -49,7 +49,7 @@ export const useExecuteTrimming = (
       });
 
       fabricCanvas.renderAll();
-      setTrimDetailsVisible(false);
+      setTrimModeActive(false);
     }
   }, [isTrimCanvas]);
 }

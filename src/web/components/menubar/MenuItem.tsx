@@ -15,7 +15,7 @@ interface MenuItemProps {
 
 const MenuItem: (props: MenuItemProps) => JSX.Element = ({ icon, text, onClick }) => {
   const { isFlipped, setIsFlipped } = useCanvasFlipContext();
-  const { setTrimDetailsVisible } = useSidebarStateContext();
+  const { setTrimModeActive, setResizeModeActive } = useSidebarStateContext();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isAccordionOpen, setAccordionOpen] = useState(false);
   const { historyValue, maxHistory } = useHistoryContext();
@@ -29,11 +29,14 @@ const MenuItem: (props: MenuItemProps) => JSX.Element = ({ icon, text, onClick }
   const menuItemClasses = menuItemClassNames.join(' ');
 
   const handleItemClick = (e: React.MouseEvent) => {
-    setTrimDetailsVisible(false);
-    if (text === '履歴') {
-      setAccordionOpen(!isAccordionOpen);
+    setTrimModeActive(false);
+    setResizeModeActive(false);
+    if (text === 'キャンバス') {
+      setResizeModeActive(true)
     } else if (text === '挿入') {
       fileInputRef.current?.click();
+    } else if (text === '履歴') {
+      setAccordionOpen(!isAccordionOpen);
     } else if (text === '閉じる') {
       setIsFlipped(!isFlipped);
     } else {

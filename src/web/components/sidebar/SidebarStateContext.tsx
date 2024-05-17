@@ -2,8 +2,14 @@ import React, { createContext, useContext, ReactNode, useState, JSX } from 'reac
 
 
 interface SidebarStateContextProps {
-  trimDetailsVisible: boolean;
-  setTrimDetailsVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  trimModeActive: boolean;
+  setTrimModeActive: React.Dispatch<React.SetStateAction<boolean>>;
+  resizeModeActive: boolean;
+  setResizeModeActive: React.Dispatch<React.SetStateAction<boolean>>;
+  isResizeAspectRatioLocked: boolean;
+  setIsResizeAspectRatioLocked: React.Dispatch<React.SetStateAction<boolean>>;
+  isResizeCanvas: boolean;
+  setIsResizeCanvas: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const SidebarStateContext = createContext<SidebarStateContextProps | undefined>(undefined);
@@ -13,10 +19,16 @@ interface SidebarStateProviderProps {
 }
 
 export const SidebarStateProvider = ({ children }: SidebarStateProviderProps): JSX.Element => {
-  const [trimDetailsVisible, setTrimDetailsVisible] = useState<boolean>(false);
+  const [trimModeActive, setTrimModeActive] = useState<boolean>(false);
+  const [resizeModeActive, setResizeModeActive] = useState<boolean>(false);
+  const [isResizeAspectRatioLocked, setIsResizeAspectRatioLocked] = useState<boolean>(false);
+  const [isResizeCanvas, setIsResizeCanvas] = useState<boolean>(false);
 
   return (
-    <SidebarStateContext.Provider value = {{ trimDetailsVisible, setTrimDetailsVisible }}>
+    <SidebarStateContext.Provider value = {{ 
+      trimModeActive, setTrimModeActive, resizeModeActive, setResizeModeActive,
+      isResizeAspectRatioLocked, setIsResizeAspectRatioLocked, isResizeCanvas, setIsResizeCanvas
+    }}>
       {children}
     </SidebarStateContext.Provider>
   );

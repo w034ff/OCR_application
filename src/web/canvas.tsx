@@ -20,7 +20,7 @@ const CanvasComponent = (): JSX.Element  => {
 	} = useCanvasToolsContext();
 	const { isFlipped } = useCanvasFlipContext();
 	const { setCurrentCanvasWidth, setCurrentCanvasHeight } = useGuideBarToolsContext();
-	const { trimDetailsVisible, setTrimDetailsVisible } = useSidebarStateContext();
+	const { trimModeActive, resizeModeActive } = useSidebarStateContext();
 	const [lastDragX, setLastDragX] = useState<number>(0);
 	const [lastDragY, setLastDragY] = useState<number>(0);
 
@@ -41,7 +41,7 @@ const CanvasComponent = (): JSX.Element  => {
 	
 	// カスタムフックを使用
 	useChangeScaleUpperCanvases(scale);
-	useAdjustEditCanvasZIndex(trimDetailsVisible);
+	useAdjustEditCanvasZIndex();
 	useSimpleBarHoverCleanup('.simplebar-scrollable-x, .simplebar-scrollable-y');
 	// キャンバスのズーム及び、ズーム後のスクロール(simplebar)の位置を調整するカスタムフック
 	useAdjustScrollForCanvasZoom(canvasRef, editCanvasRef, InnercontainerRef);
@@ -143,7 +143,6 @@ const CanvasComponent = (): JSX.Element  => {
 		} else {
 			handleScrollbarToCenter();
 		}
-		// setTrimDetailsVisible(false);
 	}, [isFlipped]);
 
 	
@@ -203,11 +202,11 @@ const CanvasComponent = (): JSX.Element  => {
 	return (
 		<>
 		<div ref={containerRef} id="outer-canvas-container">
-			<div className="trim-overlay" style={{ backgroundColor: trimDetailsVisible ? '#373737' : 'transparent' }}>
+			<div className="trim-overlay" style={{ backgroundColor: trimModeActive ? '#373737' : 'transparent' }}>
 				<SimpleBar ref={simpleBarRef} style={{ width: '100%', height: '100%' }}>
 					<div id="inner-canvas-container" ref={InnercontainerRef}>
 						<canvas id="drawing-canvas" ref={canvasRef} width="800" height="600" style={{ zIndex: 1, opacity: listenerRegistered ? '1' : '0'} } />
-						<canvas id="edit-canvas" ref={editCanvasRef} style={{ zIndex: trimDetailsVisible ? 10 : -1 }} />
+						<canvas id="edit-canvas" ref={editCanvasRef} style={{ zIndex: trimModeActive || resizeModeActive ? 10 : -1 }} />
 						<CanvasDrawComponent
 							drawing={drawing}  canvasRef={canvasRef}
 							editCanvasRef={editCanvasRef}

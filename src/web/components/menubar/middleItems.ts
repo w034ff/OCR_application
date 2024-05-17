@@ -12,8 +12,7 @@ export const middleItems = [
     onClick: () => console.log('貼り付け clicked'),
   },
   {
-    icon: menuIcon,
-    text: '貼り付け',
-    onClick: () => console.log('履歴 clicked'),
+    // icon: menuIcon,
+    text: 'キャンバス',
   },
 ];

@@ -17,7 +17,7 @@ interface GuideItemProps {
 
 const GuideItem: (props: GuideItemProps) => JSX.Element = ({ icon, svg, text, onClick }) => {
   const { scale } = useCanvasToolsContext();
-  const { setTrimDetailsVisible } = useSidebarStateContext();
+  const { setTrimModeActive, setResizeModeActive } = useSidebarStateContext();
   const { setScaleModalMode } = useScaleModalWindowContext();
   const [isHovered, setIsHovered] = useState(false);
   const [isGrabbed, setIsGrabbed] = useState(false);
@@ -40,9 +40,11 @@ const GuideItem: (props: GuideItemProps) => JSX.Element = ({ icon, svg, text, on
 
   const handleItemClick = (e: React.MouseEvent) => {
     if (text === 'start-選択') {
-      setTrimDetailsVisible(false);
+      setTrimModeActive(false);
+      setResizeModeActive(false);
     } else if (text === 'start-トリミング') {
-      setTrimDetailsVisible(true);
+      setResizeModeActive(false);
+      setTrimModeActive(true);
     } else if (text === 'handle-scale-minus' && scale > 0.1) {
       updateScale(getNextScale(scale, -1));
     } else if (text === 'handle-scale-plus' && scale < 64.0) {

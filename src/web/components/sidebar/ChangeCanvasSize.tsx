@@ -9,16 +9,19 @@ import { useScaleModalWindowContext } from '../guidebar/ScaleModalWindowContext'
 import { useValidateAndAdjustSize } from './ValidateAndAdjustSize';
 
 
-const ChangeCanvasSizeForm = (): JSX.Element => {
+const ResizeCanvasForm = (): JSX.Element => {
   const { setIsSaveState } = useHistoryContext();
   const { setScaleModalMode } = useScaleModalWindowContext();
   const {
     setIsTrimCanvas, setTrimRegionChanged,
-    currentCanvasWidth, currentCanvasHeight, isAspectRatioChecked, setIsAspectRatioChecked,
+    currentCanvasWidth, currentCanvasHeight,
     trimRegionWidth, setTrimRegionWidth, trimRegionHeight, setTrimRegionHeight,
     setRotate90, setFlipState
   } = useGuideBarToolsContext();
-  const { trimDetailsVisible, setTrimDetailsVisible } = useSidebarStateContext();
+  const { 
+    trimModeActive, isResizeAspectRatioLocked, setIsResizeAspectRatioLocked,
+    isResizeCanvas, setIsResizeCanvas
+  } = useSidebarStateContext();
   const [inputs, setInputs] = useState<Inputs>({ width: currentCanvasWidth.toString(), height: currentCanvasHeight.toString() });
   const [aspectRatio, setAspectRatio] = useState<number>(1);
   const [inputChanged, setInputChanged] = useState<boolean>(false);
@@ -32,7 +35,7 @@ const ChangeCanvasSizeForm = (): JSX.Element => {
   useEffect(() => {
     setTrimRegionWidth(currentCanvasWidth);
     setTrimRegionHeight(currentCanvasHeight);
-  }, [trimDetailsVisible]);
+  }, [trimModeActive]);
 
   // RectTrimPreviewで更新されたトリミング領域をinputsに適用する
   useEffect(() => {
@@ -48,15 +51,20 @@ const ChangeCanvasSizeForm = (): JSX.Element => {
   
   // チェックボックスをクリックするとアスペクト比を更新する
   useEffect(() => {
-    if (isAspectRatioChecked) {
-      setAspectRatio(trimRegionWidth / trimRegionHeight);
+    if (isResizeAspectRatioLocked) {
+      setAspectRatio(currentCanvasWidth / currentCanvasHeight);
     }
-  }, [isAspectRatioChecked]);
+  }, [isResizeAspectRatioLocked]);
 
 
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsAspectRatioChecked(e.target.checked);
+  const handleCheckboxAspect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsResizeAspectRatioLocked(e.target.checked);
   };
+
+  const handleCheckboxResize = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsResizeCanvas(e.target.checked);
+  };
+
 
   const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     if (isEnterPressed) {
@@ -134,12 +142,12 @@ const ChangeCanvasSizeForm = (): JSX.Element => {
         </div>
       </div>
       <div className="checkbox">
-        <input type="checkbox" id="AspectRatio" className="custom-checkbox" checked={isAspectRatioChecked} onChange={handleCheckboxChange} />
+        <input type="checkbox" id="AspectRatio" className="custom-checkbox" checked={isResizeAspectRatioLocked} onChange={handleCheckboxAspect} />
         <label htmlFor="AspectRatio" className="custom-label">縦横比を固定する</label>
       </div>
       <div className="checkbox">
-        <input type="checkbox" id="AspectRatio" className="custom-checkbox" checked={isAspectRatioChecked} onChange={handleCheckboxChange} />
-        <label htmlFor="AspectRatio" className="custom-label">画像サイズを変更する</label>
+        <input type="checkbox" id="ResizeCanvas" className="custom-checkbox" checked={isResizeCanvas} onChange={handleCheckboxResize} />
+        <label htmlFor="ResizeCanvas" className="custom-label">画像サイズを変更する</label>
       </div>
       <div className="horizontal-group modal-open">
         <button onClick={handleModalOpen}>画像をリサイズする</button>
@@ -163,4 +171,4 @@ const ChangeCanvasSizeForm = (): JSX.Element => {
   );
 }
 
-export default ChangeCanvasSizeForm
+export default ResizeCanvasForm

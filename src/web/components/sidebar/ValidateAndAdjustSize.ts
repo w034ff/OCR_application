@@ -8,7 +8,7 @@ export const useValidateAndAdjustSize = (
   setInputChanged: React.Dispatch<React.SetStateAction<boolean>>,
   aspectRatio: number
   ) => {
-  const { currentCanvasWidth, currentCanvasHeight, isAspectRatioChecked, setIsAspectRatioChecked } = useGuideBarToolsContext();
+  const { currentCanvasWidth, currentCanvasHeight, isTrimAspectRatioLocked, setIsTrimAspectRatioLocked } = useGuideBarToolsContext();
 
 
   const validateAndAdjustSize = (name: string, value: string) => {
@@ -18,8 +18,8 @@ export const useValidateAndAdjustSize = (
       window.ShowError.sendMain('Invalid value Error', errorMessage);
       const currentValue = name === 'width' ? currentCanvasWidth.toString() : currentCanvasHeight.toString();
       setInputs({ ...inputs, [name]: currentValue });
-      setIsAspectRatioChecked(false);
-    } else if (isAspectRatioChecked) {
+      setIsTrimAspectRatioLocked(false);
+    } else if (isTrimAspectRatioLocked) {
       adjustDimensionsKeepingAspectRatio(name, value);
     }
     setInputChanged(flag => !flag);

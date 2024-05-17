@@ -10,10 +10,10 @@ const TrimSettingsForm = (): JSX.Element => {
   const { setIsSaveState } = useHistoryContext();
   const {
     setIsTrimCanvas, setTrimRegionChanged,
-    currentCanvasWidth, currentCanvasHeight, isAspectRatioChecked, setIsAspectRatioChecked,
+    currentCanvasWidth, currentCanvasHeight, isTrimAspectRatioLocked, setIsTrimAspectRatioLocked,
     trimRegionWidth, setTrimRegionWidth, trimRegionHeight, setTrimRegionHeight
   } = useGuideBarToolsContext();
-  const { trimDetailsVisible, setTrimDetailsVisible } = useSidebarStateContext();
+  const { trimModeActive, setTrimModeActive } = useSidebarStateContext();
   const [inputs, setInputs] = useState<Inputs>({ width: currentCanvasWidth.toString(), height: currentCanvasHeight.toString() });
   const [aspectRatio, setAspectRatio] = useState<number>(1);
   const [inputChanged, setInputChanged] = useState<boolean>(false);
@@ -27,7 +27,7 @@ const TrimSettingsForm = (): JSX.Element => {
   useEffect(() => {
     setTrimRegionWidth(currentCanvasWidth);
     setTrimRegionHeight(currentCanvasHeight);
-  }, [trimDetailsVisible]);
+  }, [trimModeActive]);
 
   // RectTrimPreviewで更新されたトリミング領域をinputsに適用する
   useEffect(() => {
@@ -43,14 +43,14 @@ const TrimSettingsForm = (): JSX.Element => {
   
   // チェックボックスをクリックするとアスペクト比を更新する
   useEffect(() => {
-    if (isAspectRatioChecked) {
+    if (isTrimAspectRatioLocked) {
       setAspectRatio(trimRegionWidth / trimRegionHeight);
     }
-  }, [isAspectRatioChecked]);
+  }, [isTrimAspectRatioLocked]);
 
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsAspectRatioChecked(e.target.checked);
+    setIsTrimAspectRatioLocked(e.target.checked);
   };
 
   const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -77,7 +77,7 @@ const TrimSettingsForm = (): JSX.Element => {
   };
 
   const handleCloseClick = (e: React.MouseEvent) => {
-    setTrimDetailsVisible(false);
+    setTrimModeActive(false);
   }
 
   const handleChangeClick = (e: React.MouseEvent) => {
@@ -123,7 +123,7 @@ const TrimSettingsForm = (): JSX.Element => {
         </div>
       </div>
       <div className="checkbox">
-        <input type="checkbox" id="AspectRatio" className="custom-checkbox" checked={isAspectRatioChecked} onChange={handleCheckboxChange} />
+        <input type="checkbox" id="AspectRatio" className="custom-checkbox" checked={isTrimAspectRatioLocked} onChange={handleCheckboxChange} />
         <label htmlFor="AspectRatio" className="custom-label">縦横比を固定する</label>
       </div>
       <div className="horizontal-group horizontal-group-two-buttons">

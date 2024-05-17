@@ -6,8 +6,8 @@ interface GuideBarToolsContextProps {
   setIsTrimCanvas: React.Dispatch<React.SetStateAction<boolean>>;
   trimRegionChanged: boolean;
   setTrimRegionChanged: React.Dispatch<React.SetStateAction<boolean>>;
-  isAspectRatioChecked: boolean;
-  setIsAspectRatioChecked: React.Dispatch<React.SetStateAction<boolean>>;
+  isTrimAspectRatioLocked: boolean;
+  setIsTrimAspectRatioLocked: React.Dispatch<React.SetStateAction<boolean>>;
   currentCanvasWidth: number;
   setCurrentCanvasWidth: React.Dispatch<React.SetStateAction<number>>;
   currentCanvasHeight: number;
@@ -32,7 +32,7 @@ interface GuideBarToolsProviderProps {
 export const GuideBarToolsProvider = ({ children }: GuideBarToolsProviderProps): JSX.Element => {
   const [isTrimCanvas, setIsTrimCanvas] = useState<boolean>(false);
   const [trimRegionChanged, setTrimRegionChanged] = useState<boolean>(false);
-  const [isAspectRatioChecked, setIsAspectRatioChecked] = useState<boolean>(false);
+  const [isTrimAspectRatioLocked, setIsTrimAspectRatioLocked] = useState<boolean>(false);
   const [currentCanvasWidth, setCurrentCanvasWidth] = useState<number>(800);
   const [currentCanvasHeight, setCurrentCanvasHeight] = useState<number>(600);
   const [trimRegionWidth, setTrimRegionWidth] = useState<number>(800);
@@ -44,7 +44,7 @@ export const GuideBarToolsProvider = ({ children }: GuideBarToolsProviderProps):
   return (
     <GuideBarToolsContext.Provider value = {{
       isTrimCanvas, setIsTrimCanvas,
-      trimRegionChanged, setTrimRegionChanged, isAspectRatioChecked, setIsAspectRatioChecked,
+      trimRegionChanged, setTrimRegionChanged, isTrimAspectRatioLocked, setIsTrimAspectRatioLocked,
       currentCanvasWidth, setCurrentCanvasWidth, currentCanvasHeight, setCurrentCanvasHeight,
       trimRegionWidth, setTrimRegionWidth, trimRegionHeight, setTrimRegionHeight,
       rotate90, setRotate90, flipState, setFlipState
