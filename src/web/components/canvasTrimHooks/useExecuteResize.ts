@@ -1,32 +1,22 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { fabric } from 'fabric';
-import { isNumber } from '../../utils/IsNumber';
+import { useHistoryContext } from '../../CanvasHistoryContext';
 import { useGuideBarToolsContext } from '../sidebar/GuideBarToolsContext';
 import { useSidebarStateContext } from '../sidebar/SidebarStateContext';
+import { isNumber, isRectValid } from '../../utils/validators';
+import { shiftObjects, resizeAndMoveObjects } from '../../utils/fabricEditCanvasUtils';
+import { MIN_LEFT_TOP, STROKE_WIDTH } from './editCanvasConstants';
 
-
-// Rectオブジェクトのスケールが1を超えないよう調整
-const adjustScale = (newScale: number) => Math.min(newScale, 1);
 
 export const useExecuteResize = (
 	fabricCanvas: fabric.Canvas | null,
-  fabricEditCanvas: fabric.Canvas | null,
-	MIN_LEFT_TOP: number,
-  STROKE_WIDTH: number,
+  fabricEditCanvas: fabric.Canvas | null
 ) => {
-  const { trimRegionWidth, trimRegionHeight, setTrimRegionWidth, setTrimRegionHeight } = useGuideBarToolsContext();
-  const { resizeModeActive, isResizeAspectRatioLocked } = useSidebarStateContext();
+	const { setIsSaveState } = useHistoryContext();
+  const { setTrimRegionWidth, setTrimRegionHeight } = useGuideBarToolsContext();
+  const { resizeModeActive } = useSidebarStateContext();
 
-  // isAspectRatioCheckedがtrueのとき、アスペクト比を維持しながら切り取り領域を操作する
-  useEffect(() => {
-    if (fabricEditCanvas) {
-      if (isResizeAspectRatioLocked) {
-        fabricEditCanvas.uniformScaling = true; // uniformScalingは角のコントロールにのみアスペクト比の維持を適応する
-      } else {
-        fabricEditCanvas.uniformScaling = false;
-      }
-    }
-  }, [isResizeAspectRatioLocked]);
+	const initialScalingFlag = useRef<boolean>(false);
 
   
   useEffect(() => {
@@ -34,14 +24,16 @@ export const useExecuteResize = (
 
     const handleFabricRectScaling = (e: fabric.IEvent) => {
       const rect = e.target;
-      if (!(rect instanceof fabric.Rect)) return;
+			if (!(rect instanceof fabric.Rect)) return;
 
-      if (isNumber(rect.top) && isNumber(rect.width) && isNumber(rect.left) && isNumber(rect.height)) {
-        let newScaleX = rect.scaleX || 1;
-        let newScaleY = rect.scaleY || 1;
+			if (!initialScalingFlag.current) {
+				setIsSaveState((flag: boolean) => !flag);
+				initialScalingFlag.current = true;
+			}
 
-        setTrimRegionWidth(Math.round((rect.width - STROKE_WIDTH) * newScaleX));
-        setTrimRegionHeight(Math.round((rect.height - STROKE_WIDTH) * newScaleY));
+      if (isNumber(rect.width) && isNumber(rect.scaleX) && isNumber(rect.height) && isNumber(rect.scaleY)) {
+        setTrimRegionWidth(Math.round((rect.width - STROKE_WIDTH) * rect.scaleX));
+        setTrimRegionHeight(Math.round((rect.height - STROKE_WIDTH) * rect.scaleY));
         rect.setCoords(); // オブジェクトの座標情報を更新
         fabricEditCanvas.renderAll(); // キャンバスの再描画
       }
@@ -52,39 +44,31 @@ export const useExecuteResize = (
 				const rect = fabricEditCanvas.getObjects()[0];
       	if (!(rect instanceof fabric.Rect)) return;
 
-				if (rect.left !== MIN_LEFT_TOP) {
-					const shiftAmountX = MIN_LEFT_TOP - rect.left;
-		
-					// rect.leftをMIN_LEFT_TOPに設定
-					rect.left = MIN_LEFT_TOP;
-		
-					// すべてのオブジェクトを右方向に移動
-					fabricCanvas.getObjects().forEach((obj:fabric.Object) => {
-						obj.set('left', obj.left + shiftAmountX);
-						obj.setCoords(); // オブジェクトの座標情報を更新
-					});
-		
-					rect.setCoords(); // rectの座標情報を更新
-				}
+				if (isRectValid(rect)) {
+					if (rect.left !== MIN_LEFT_TOP) {
+						const shiftAmountX = MIN_LEFT_TOP - rect.left;
+						rect.left = MIN_LEFT_TOP;
+						shiftObjects(fabricCanvas, shiftAmountX, 0);
+						rect.setCoords(); // rectの座標情報を更新
+					}
 
-				if (rect.top !== MIN_LEFT_TOP) {
-					const shiftAmountY = MIN_LEFT_TOP - rect.top;
-		
-					// rect.leftをMIN_LEFT_TOPに設定
-					rect.top = MIN_LEFT_TOP;
-		
-					// すべてのオブジェクトを右方向に移動
-					fabricCanvas.getObjects().forEach((obj:fabric.Object) => {
-						obj.set('left', obj.top + shiftAmountY);
-						obj.setCoords(); // オブジェクトの座標情報を更新
-					});
-		
-					rect.setCoords(); // rectの座標情報を更新
-				}
+					if (rect.top !== MIN_LEFT_TOP) {
+						const shiftAmountY = MIN_LEFT_TOP - rect.top;
+						rect.top = MIN_LEFT_TOP;
+						shiftObjects(fabricCanvas, 0, shiftAmountY);
+						rect.setCoords(); // rectの座標情報を更新
+					}
 
-				fabricCanvas.setWidth(Math.round(rect.width * (rect.scaleX || 1) - STROKE_WIDTH));
-				fabricCanvas.setHeight(Math.round(rect.height * (rect.scaleY || 1) - STROKE_WIDTH));
+					// 切り取りの実行及び切り取り領域内のオブジェクトを切り取り後のキャンバスに複製する
+					resizeAndMoveObjects(
+						fabricCanvas, rect,
+						Math.round((rect.width - STROKE_WIDTH) * rect.scaleX),
+						Math.round((rect.height - STROKE_WIDTH) * rect.scaleY)
+					)
+				}
+				
 				fabricCanvas.renderAll();
+				initialScalingFlag.current = false;
 			}
     };
     

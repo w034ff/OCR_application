@@ -5,15 +5,9 @@ import { useRectTrimPreview } from './RectTrimPreview';
 import { useRectTrimPreviewFromSidebar } from './RectTrimPreviewFromSidebar';
 import { useExecuteTrimming } from './ExecuteTrimming';
 import { useExecuteResize } from './useExecuteResize';
-import { useRotate90Canvas } from './useRotate90Canvas';
+import { useResizeFromSidebar } from './useResizeFromSidebar';
+import { useResizeFromModal } from './useResizeFromModal';
 import { useFlipCanvas } from './useFlipCanvas';
-
-
-const MIN_LEFT_TOP = 498;
-// キャンバスの左端からRectオブジェクトの内側のエッジまでの最小距離を示すオフセット
-const EDGE_OFFSET = 500;
-// Rectオブジェクトのストロークの太さ。Rectオブジェクトのサイズ計算において、枠線の太さも含まれるため注意が必要
-const STROKE_WIDTH = 2;
 
 
 export const useTrimFabricCanvas = (
@@ -23,18 +17,22 @@ export const useTrimFabricCanvas = (
 ) => {
   const [fabricEditCanvas, setFabricEditCanvas] = useState<fabric.Canvas | null>(null)
 
-  // trimModeActive, resizeModeActiveが変更された際、編集用オブジェクトを追加・削除するカスタムフック
-  useEditCanvasSetup(fabricCanvas, canvasRef, fabricEditCanvas, MIN_LEFT_TOP, STROKE_WIDTH);
-  // fabricEditCanvas上で切り取り領域を変更した際の処理（drawing-canvas外を切り取らないようにする処理）
-  useRectTrimPreview(fabricEditCanvas, MIN_LEFT_TOP, EDGE_OFFSET, STROKE_WIDTH);
-  // サイドバーから切り取り領域を変更した際の処理（drawing-canvas外を切り取らないようにする処理）
-  useRectTrimPreviewFromSidebar(fabricEditCanvas, MIN_LEFT_TOP, EDGE_OFFSET, STROKE_WIDTH);
-  // drawing-canvasの切り取りを実行するカスタムフック
-  useExecuteTrimming(fabricCanvas, fabricEditCanvas, MIN_LEFT_TOP, EDGE_OFFSET);
 
-  useExecuteResize(fabricCanvas, fabricEditCanvas, MIN_LEFT_TOP, STROKE_WIDTH)
-  // fabricCanvasを90度回転させるカスタムフック
-  useRotate90Canvas(fabricCanvas);
+  // trimModeActive, resizeModeActiveが変更された際、編集用オブジェクトを追加・削除するカスタムフック
+  useEditCanvasSetup(fabricCanvas, canvasRef, fabricEditCanvas);
+  // fabricEditCanvas上で切り取り領域を変更した際の処理（drawing-canvas外を切り取らないようにする処理）
+  useRectTrimPreview(fabricEditCanvas);
+  // サイドバーから切り取り領域を変更した際の処理（drawing-canvas外を切り取らないようにする処理）
+  useRectTrimPreviewFromSidebar(fabricEditCanvas);
+  // drawing-canvasの切り取りを実行するカスタムフック
+  useExecuteTrimming(fabricCanvas, fabricEditCanvas);
+
+  // リサイズ用オブジェクトを操作してリサイズを行うカスタムフックs
+  useExecuteResize(fabricCanvas, fabricEditCanvas);
+  // サイドバーからリサイズするカスタムフック（テキストエリアがBlurした時にリサイズを行う）
+  useResizeFromSidebar(fabricCanvas, fabricEditCanvas);
+  // モーダルからリサイズするカスタムフック（アスペクト比を維持しつつリサイズを行う）
+  useResizeFromModal(fabricCanvas);
   // fabricCanvasを水平・垂直方向に反転させるカスタムフック
   useFlipCanvas(fabricCanvas);
 

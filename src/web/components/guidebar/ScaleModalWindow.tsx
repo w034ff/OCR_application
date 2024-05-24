@@ -1,4 +1,5 @@
-import React, { JSX, useState, useEffect } from 'react';
+import React, { JSX, useState } from 'react';
+import { useHistoryContext } from '../../CanvasHistoryContext';
 import { useScaleModalWindowContext } from './ScaleModalWindowContext';
 import { useAlertSound } from '../../hooks/AlertSound';
 import { useScaleChangeModal } from './ScaleChangeModal';
@@ -9,18 +10,19 @@ const scaleChangeValues: number[] = [
 ];
 
 const imageScaleValues: number[] = [
-  0.25, 0.5, 0.75, 1.0, 1.5, 2.0
+  0.25, 0.5, 0.75, 1.5, 2.0, 4.0
 ]
 
 const CanvasModalWindow = (): JSX.Element | null  => {
+  const { setIsSaveState } = useHistoryContext();
   const { scaleModalMode, setScaleModalMode } = useScaleModalWindowContext();
   const [selectedScale, setSelectedScale] = useState<number>(1);
   const [animationKey, setAnimationKey] = useState(0); 
   const playAlertSound = useAlertSound();
-  const applyScaleChange = useScaleChangeModal(setSelectedScale);
+  const { applyScaleChange, applyResizeCanvas } = useScaleChangeModal(setSelectedScale);
   let inputRadioArray: number[] = scaleChangeValues;
   let modalTitle: string = 'キャンバスの倍率を調整します';
-
+  
 
   if (scaleModalMode !== 'canvas-scaling' && scaleModalMode !== 'image-scaling') {
     return null;
@@ -52,6 +54,9 @@ const CanvasModalWindow = (): JSX.Element | null  => {
     closeModal();
     if (scaleModalMode === 'canvas-scaling') {
       applyScaleChange(selectedScale);
+    } else if (scaleModalMode === 'image-scaling') {
+      setIsSaveState((flag: boolean) => !flag); 
+      applyResizeCanvas(selectedScale);
     }
   }
 
