@@ -1,10 +1,19 @@
 import { fabric } from 'fabric';
-import { isNumber, isRectValid } from './validators'
+import { isNumber, isRectPropsNumber } from './validators'
 import { MIN_LEFT_TOP, EDGE_OFFSET } from '../components/canvasTrimHooks/editCanvasConstants';
 
 
 // fabricEditCanvasに関して、追加したRectオブジェクトのスケールが1を超えないよう調整
 export const adjustScale = (newScale: number) => Math.min(newScale, 1);
+
+// 切り取り用オブジェクトがRect型であることを確認する関数
+export const isFabricRect = (obj: fabric.Rect): obj is fabric.Rect => {
+  if (!(obj instanceof fabric.Rect)) {
+    console.error('Proper rectangle object not found for trimming.');
+    return false;
+  }
+  return true;
+}
 
 
 // fabricEditCanvasに切り取り（リサイズ）領域を追加する共通関数
@@ -73,7 +82,7 @@ const findObjectsToCopy = (
   const objectsToCopy: fabric.Object[] = [];
   canvas.forEachObject((obj: fabric.Object) => {
     const objCenter = obj.getCenterPoint();
-		if (isRectValid(rect)) {
+		if (isRectPropsNumber(rect)) {
 			if (
 				objCenter.x + edgeOffset >= rect.left &&
 				objCenter.x + edgeOffset <= rect.left + rect.width * rect.scaleX &&

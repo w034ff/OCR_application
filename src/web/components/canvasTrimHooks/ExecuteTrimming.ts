@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { fabric } from 'fabric';
 import { useGuideBarToolsContext } from '../sidebar/GuideBarToolsContext';
 import { useSidebarStateContext } from '../sidebar/SidebarStateContext';
-import { resizeAndMoveObjects } from '../../utils/fabricEditCanvasUtils';
+import { isFabricRect, resizeAndMoveObjects } from '../../utils/fabricEditCanvasUtils';
 
 
 export const useExecuteTrimming = (
@@ -11,17 +11,21 @@ export const useExecuteTrimming = (
 ) => {
   const { isTrimCanvas, trimRegionWidth, trimRegionHeight } = useGuideBarToolsContext();
   const { setTrimModeActive } = useSidebarStateContext();
+
   // drawing-canvasの切り取りを実行する処理
   useEffect(() => {
     if (fabricCanvas && fabricEditCanvas) {
       const rect = fabricEditCanvas.getObjects()[1];
-      if (!(rect instanceof fabric.Rect)) return;
+      if (!isFabricRect(rect)) return;
+
+      fabricCanvas.renderOnAddRemove = false;
 
       // 切り取りの実行及び切り取り領域内のオブジェクトを切り取り後のキャンバスに複製する
       resizeAndMoveObjects(fabricCanvas, rect, trimRegionWidth, trimRegionHeight);
 
       fabricCanvas.renderAll();
-      setTrimModeActive(false);
+      fabricCanvas.renderOnAddRemove = true;
+      setTrimModeActive(false); //トリミングモードを解除する
     }
   }, [isTrimCanvas]);
 

@@ -27,11 +27,11 @@ export const useTrimFabricCanvas = (
   // drawing-canvasの切り取りを実行するカスタムフック
   useExecuteTrimming(fabricCanvas, fabricEditCanvas);
 
-  // リサイズ用オブジェクトを操作してリサイズを行うカスタムフックs
+  // リサイズ用オブジェクトを操作してリサイズを行うカスタムフック
   useExecuteResize(fabricCanvas, fabricEditCanvas);
   // サイドバーからリサイズするカスタムフック（テキストエリアがBlurした時にリサイズを行う）
   useResizeFromSidebar(fabricCanvas, fabricEditCanvas);
-  // モーダルからリサイズするカスタムフック（アスペクト比を維持しつつリサイズを行う）
+  // モーダルウィンドウからリサイズするカスタムフック（アスペクト比を維持しつつリサイズを行う）
   useResizeFromModal(fabricCanvas);
   // fabricCanvasを水平・垂直方向に反転させるカスタムフック
   useFlipCanvas(fabricCanvas);

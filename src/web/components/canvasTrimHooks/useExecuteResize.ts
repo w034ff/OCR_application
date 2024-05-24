@@ -3,7 +3,7 @@ import { fabric } from 'fabric';
 import { useHistoryContext } from '../../CanvasHistoryContext';
 import { useGuideBarToolsContext } from '../sidebar/GuideBarToolsContext';
 import { useSidebarStateContext } from '../sidebar/SidebarStateContext';
-import { isNumber, isRectValid } from '../../utils/validators';
+import { isNumber, isRectPropsNumber } from '../../utils/validators';
 import { shiftObjects, resizeAndMoveObjects } from '../../utils/fabricEditCanvasUtils';
 import { MIN_LEFT_TOP, STROKE_WIDTH } from './editCanvasConstants';
 
@@ -44,7 +44,7 @@ export const useExecuteResize = (
 				const rect = fabricEditCanvas.getObjects()[0];
       	if (!(rect instanceof fabric.Rect)) return;
 
-				if (isRectValid(rect)) {
+				if (isRectPropsNumber(rect)) {
 					if (rect.left !== MIN_LEFT_TOP) {
 						const shiftAmountX = MIN_LEFT_TOP - rect.left;
 						rect.left = MIN_LEFT_TOP;

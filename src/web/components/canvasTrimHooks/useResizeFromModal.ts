@@ -27,7 +27,6 @@ export const useResizeFromModal = (
 			fabricCanvas.setWidth(width * resizeRatio);
   		fabricCanvas.setHeight(height * resizeRatio);
 
-      fabricCanvas.renderAll();
       setResizeRatio(1);
     }
   }, [resizeRatio]);

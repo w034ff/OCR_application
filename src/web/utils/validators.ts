@@ -3,7 +3,7 @@ export const isNumber = (value: any): value is number => {
 };
 
 
-export const isRectValid = (
+export const isRectPropsNumber = (
   rect: fabric.Rect
 ): rect is fabric.Rect & { left: number, top: number, width: number, height: number, scaleX: number, scaleY: number } => {
   return (
