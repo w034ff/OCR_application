@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { fabric } from 'fabric';
-import { isNumber } from '../../utils/IsNumber';
+import { isNumber } from '../../utils/validators';
 import { useGuideBarToolsContext } from '../sidebar/GuideBarToolsContext';
 
 

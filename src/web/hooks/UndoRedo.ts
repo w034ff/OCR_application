@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { fabric } from 'fabric';
 import { useHistoryContext } from '../CanvasHistoryContext';
 import { useCanvasToolsContext } from '../CanvasToolsContext';
-import { isNumber } from '../utils/IsNumber';
+import { isNumber } from '../utils/validators';
 
 
 const getCurrentFabricCanvasState = (fabricCanvas: fabric.Canvas): FabricCanvasState => {

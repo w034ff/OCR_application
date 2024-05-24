@@ -156,9 +156,11 @@ const CanvasDrawComponent: (props: Props) => JSX.Element | null = ({
 
     const handleKeydown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+        e.preventDefault();
         performCanvasAction(ActionType.Undo);
       }
       if (e.ctrlKey && e.key === 'y') {
+        e.preventDefault();
         performCanvasAction(ActionType.Redo);
       }
     };

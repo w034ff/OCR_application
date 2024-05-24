@@ -3,7 +3,7 @@ import { fabric } from 'fabric';
 import { Image as FabricImage } from 'fabric/fabric-impl';
 import { useHistoryContext } from '../CanvasHistoryContext';
 import { useCanvasToolsContext } from '../CanvasToolsContext';
-import { isNumber } from '../utils/IsNumber';
+import { isNumber } from '../utils/validators';
 
 
 export const useLoadImageURL = (
