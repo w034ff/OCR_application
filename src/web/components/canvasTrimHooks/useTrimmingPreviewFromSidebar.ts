@@ -7,7 +7,7 @@ import { useGuideBarToolsContext } from '../sidebar/GuideBarToolsContext';
 import { useSidebarStateContext } from '../sidebar/SidebarStateContext';
 
 
-export const useRectTrimPreviewFromSidebar = (fabricEditCanvas: fabric.Canvas | null) => {
+export const useTrimmingPreviewFromSidebar = (fabricEditCanvas: fabric.Canvas | null) => {
   const { trimRegionChanged, trimRegionWidth, trimRegionHeight } = useGuideBarToolsContext();
   const { trimModeActive} = useSidebarStateContext();
 
@@ -38,7 +38,6 @@ export const useRectTrimPreviewFromSidebar = (fabricEditCanvas: fabric.Canvas | 
       left: Math.max(MIN_LEFT_TOP, newLeft),
       top: Math.max(MIN_LEFT_TOP, newTop)
     });
-    
     rect.setCoords(); // オブジェクトの座標情報を更新
     fabricEditCanvas.renderAll(); // キャンバスの再描画
   }, [fabricEditCanvas, trimRegionChanged]);

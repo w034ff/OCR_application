@@ -5,7 +5,7 @@ import { useSidebarStateContext } from '../sidebar/SidebarStateContext';
 import { isFabricRect, resizeAndMoveObjects } from '../../utils/fabricEditCanvasUtils';
 
 
-export const useExecuteTrimming = (
+export const useTrimCanvas = (
   fabricCanvas: fabric.Canvas | null,
   fabricEditCanvas: fabric.Canvas | null,
 ) => {

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { fabric } from 'fabric';
 import { useEditCanvasSetup } from './useEditCanvasSetup';
-import { useRectTrimPreview } from './RectTrimPreview';
-import { useRectTrimPreviewFromSidebar } from './RectTrimPreviewFromSidebar';
-import { useExecuteTrimming } from './ExecuteTrimming';
-import { useExecuteResize } from './useExecuteResize';
-import { useResizeFromSidebar } from './useResizeFromSidebar';
+import { useTrimmingPreview } from './useTrimmingPreview';
+import { useTrimmingPreviewFromSidebar } from './useTrimmingPreviewFromSidebar';
+import { useTrimCanvas } from './useTrimCanvas';
+import { useTransformCanvas } from './useTransformCanvas';
+import { useTransformFromSidebar } from './useTransformFromSidebar';
 import { useResizeFromModal } from './useResizeFromModal';
 import { useFlipCanvas } from './useFlipCanvas';
 
@@ -21,17 +21,17 @@ export const useTrimFabricCanvas = (
   // trimModeActive, resizeModeActiveが変更された際、編集用オブジェクトを追加・削除するカスタムフック
   useEditCanvasSetup(fabricCanvas, canvasRef, fabricEditCanvas);
   // fabricEditCanvas上で切り取り領域を変更した際の処理（drawing-canvas外を切り取らないようにする処理）
-  useRectTrimPreview(fabricEditCanvas);
+  useTrimmingPreview(fabricEditCanvas);
   // サイドバーから切り取り領域を変更した際の処理（drawing-canvas外を切り取らないようにする処理）
-  useRectTrimPreviewFromSidebar(fabricEditCanvas);
+  useTrimmingPreviewFromSidebar(fabricEditCanvas);
   // drawing-canvasの切り取りを実行するカスタムフック
-  useExecuteTrimming(fabricCanvas, fabricEditCanvas);
+  useTrimCanvas(fabricCanvas, fabricEditCanvas);
 
   // リサイズ用オブジェクトを操作してリサイズを行うカスタムフック
-  useExecuteResize(fabricCanvas, fabricEditCanvas);
-  // サイドバーからリサイズするカスタムフック（テキストエリアがBlurした時にリサイズを行う）
-  useResizeFromSidebar(fabricCanvas, fabricEditCanvas);
-  // モーダルウィンドウからリサイズするカスタムフック（アスペクト比を維持しつつリサイズを行う）
+  useTransformCanvas(fabricCanvas, fabricEditCanvas);
+  // サイドバーから拡張・切り取りするカスタムフック（テキストエリアをBlurした時、キャンパスを変形する）
+  useTransformFromSidebar(fabricCanvas, fabricEditCanvas);
+  // モーダルウィンドウからリサイズするカスタムフック（アスペクト比を維持しつつリサイズする）
   useResizeFromModal(fabricCanvas);
   // fabricCanvasを水平・垂直方向に反転させるカスタムフック
   useFlipCanvas(fabricCanvas);

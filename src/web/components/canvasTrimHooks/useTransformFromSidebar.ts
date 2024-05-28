@@ -8,7 +8,7 @@ import { useSidebarStateContext } from '../sidebar/SidebarStateContext';
 import { useHistoryContext } from '../../CanvasHistoryContext';
 
 
-export const useResizeFromSidebar = (
+export const useTransformFromSidebar = (
   fabricCanvas: fabric.Canvas | null,
   fabricEditCanvas: fabric.Canvas | null,
 ) => {
