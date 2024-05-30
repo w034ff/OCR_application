@@ -1,25 +1,23 @@
-import React, { JSX, useEffect, useState } from 'react';
-import './Sidebar.css';
-import RotateObjectIcon from '../assets/svgs/RotateObjectIcon';
-import FlipObjectIcon from '../assets/svgs/FlipObjectIcon';
+import { useEffect, useState } from 'react';
 import { useHistoryContext } from '../../CanvasHistoryContext';
-import { useGuideBarToolsContext } from './GuideBarToolsContext';
+import RotateFlipButtons from './RotateFlipButtons';
+import { useEditCanvasToolsContext } from '../canvasTrimHooks/EditCanvasToolsContext';
 import { useSidebarStateContext } from './SidebarStateContext';
 import { useScaleModalWindowContext } from '../guidebar/ScaleModalWindowContext';
-import { useValidateAndAdjustSize } from './ValidateAndAdjustSize';
+import { useValidateAndAdjustSize } from './useValidateAndAdjustSize';
 
 
 const ResizeCanvasForm = (): JSX.Element => {
   const { setIsSaveState } = useHistoryContext();
   const { setScaleModalMode } = useScaleModalWindowContext();
   const {
-    setTrimRegionChanged,
-    currentCanvasWidth, currentCanvasHeight,
+    setIsTrimCanvas, setTrimRegionChanged,
+    currentCanvasWidth, currentCanvasHeight, isTrimAspectRatioLocked, setIsTrimAspectRatioLocked,
     trimRegionWidth, setTrimRegionWidth, trimRegionHeight, setTrimRegionHeight,
-    setRotate90, setFlipState
-  } = useGuideBarToolsContext();
+  } = useEditCanvasToolsContext();
   const { 
-    resizeModeActive, isResizeAspectRatioLocked, setIsResizeAspectRatioLocked,
+    trimModeActive, setTrimModeActive, resizeModeActive, isResizeAspectRatioLocked,
+    setIsResizeAspectRatioLocked,
   } = useSidebarStateContext();
   const [inputs, setInputs] = useState<Inputs>({ width: currentCanvasWidth.toString(), height: currentCanvasHeight.toString() });
   const [aspectRatio, setAspectRatio] = useState<number>(1);
@@ -34,7 +32,7 @@ const ResizeCanvasForm = (): JSX.Element => {
   useEffect(() => {
     setTrimRegionWidth(currentCanvasWidth);
     setTrimRegionHeight(currentCanvasHeight);
-  }, [resizeModeActive, currentCanvasWidth, currentCanvasHeight]);
+  }, [trimModeActive, resizeModeActive, currentCanvasWidth, currentCanvasHeight]);
 
   // RectTrimPreviewで更新されたトリミング領域をinputsに適用する
   useEffect(() => {
@@ -52,13 +50,10 @@ const ResizeCanvasForm = (): JSX.Element => {
   useEffect(() => {
     if (isResizeAspectRatioLocked) {
       setAspectRatio(currentCanvasWidth / currentCanvasHeight);
+    } else if (isTrimAspectRatioLocked) {
+      setAspectRatio(trimRegionWidth / trimRegionHeight);
     }
-  }, [isResizeAspectRatioLocked]);
-
-
-  const handleCheckboxAspect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsResizeAspectRatioLocked(e.target.checked);
-  };
+  }, [isTrimAspectRatioLocked, isResizeAspectRatioLocked]);
 
 
   const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -70,7 +65,7 @@ const ResizeCanvasForm = (): JSX.Element => {
     validateAndAdjustSize(name, value);
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       setIsEnterPressed(true);
       const { name, value } = e.currentTarget;
@@ -84,13 +79,9 @@ const ResizeCanvasForm = (): JSX.Element => {
     setInputs({ ...inputs, [name]: value });
   };
 
-  const handleModalOpen = () => {
-    setScaleModalMode('image-scaling');
-  }
-
-  const handleRotateAndFlip = (setAction: React.Dispatch<React.SetStateAction<number>>, direction: number) => {
-    setAction(prev => prev + direction);
-    setIsSaveState(flag => !flag);
+  const handleChangeClick = () => {
+    setIsTrimCanvas(flag => !flag);
+    setIsSaveState(flag => !flag);  // SaveStateを更新(ここで呼び出さないと正しくキャンバスの状態を保存できない)
   }
 
   return (
@@ -109,7 +100,7 @@ const ResizeCanvasForm = (): JSX.Element => {
             value={inputs.width} 
             onChange={handleInputChange}
             onBlur={handleInputBlur}
-            onKeyPress={handleKeyPress}
+            onKeyUp={handleKeyUp}
             maxLength={5}
             onFocus={(e) => e.target.select()}
             onDragStart={(e) => e.preventDefault()}
@@ -123,7 +114,7 @@ const ResizeCanvasForm = (): JSX.Element => {
             value={inputs.height} 
             onChange={handleInputChange}
             onBlur={handleInputBlur}
-            onKeyPress={handleKeyPress}
+            onKeyUp={handleKeyUp}
             maxLength={5}
             onFocus={(e) => e.target.select()}
             onDragStart={(e) => e.preventDefault()}
@@ -131,28 +122,43 @@ const ResizeCanvasForm = (): JSX.Element => {
           <span className="unit-text">ピクセル</span>
         </div>
       </div>
-      <div className="checkbox">
-        <input type="checkbox" id="AspectRatio" className="custom-checkbox" checked={isResizeAspectRatioLocked} onChange={handleCheckboxAspect} />
-        <label htmlFor="AspectRatio" className="custom-label">縦横比を固定する</label>
-      </div>
-      <div className="horizontal-group modal-open">
-        <button onClick={handleModalOpen}>画像をリサイズする</button>
-      </div>
-      <div className="text">回転と反転</div>
-      <div className="horizontal-group horizontal-four-buttons">
-        <button onClick={() => handleRotateAndFlip(setRotate90, -1)}>
-          <RotateObjectIcon className='button-icon' />
-        </button>
-        <button onClick={() => handleRotateAndFlip(setRotate90, +1)}>
-          <RotateObjectIcon className='button-icon' style={{ transform: "scaleX(-1)" }} />
-        </button>
-        <button onClick={() => handleRotateAndFlip(setFlipState, -1)}>
-          <FlipObjectIcon className='button-icon'/>
-        </button>
-        <button onClick={() => handleRotateAndFlip(setFlipState, +1)}>
-          <FlipObjectIcon className='button-icon' style={{ transform: "rotate(270deg)" }} />
-        </button>
-      </div>
+      {trimModeActive && (
+        <>
+          <div className="checkbox">
+            <input 
+              type="checkbox"
+              id="trimAspectRatio"
+              className="custom-checkbox"
+              checked={isTrimAspectRatioLocked}
+              onChange={(e) => setIsTrimAspectRatioLocked(e.target.checked)}
+            />
+            <label htmlFor="trimAspectRatio" className="custom-label">縦横比を固定する</label>
+          </div>
+          <div className="horizontal-group horizontal-group-two-buttons">
+            <button onClick={() => setTrimModeActive(false)}>キャンセル</button>
+            <button onClick={handleChangeClick}>完了</button>
+          </div>
+        </>
+      )}
+      {resizeModeActive && (
+        <>
+          <div className="checkbox">
+            <input 
+              type="checkbox"
+              id="resizeAspectRatio"
+              className="custom-checkbox"
+              checked={isResizeAspectRatioLocked}
+              onChange={(e) => setIsResizeAspectRatioLocked(e.target.checked)}
+            />
+            <label htmlFor="resizeAspectRatio" className="custom-label">縦横比を固定する</label>
+          </div>
+          <div className="horizontal-group modal-open">
+            <button onClick={() => setScaleModalMode('image-scaling')}>画像をリサイズする</button>
+          </div>
+          <div className="text">回転と反転</div>
+          <RotateFlipButtons />
+        </>
+      )}  
     </div>
   );
 }

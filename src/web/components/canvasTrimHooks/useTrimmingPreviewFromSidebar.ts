@@ -3,12 +3,12 @@ import { fabric } from 'fabric';
 import { MIN_LEFT_TOP, EDGE_OFFSET, STROKE_WIDTH, TOTAL_STROKE_WIDTH } from './editCanvasConstants';
 import { isRectPropsNumber } from '../../utils/validators';
 import { adjustScale, isFabricRect } from '../../utils/fabricEditCanvasUtils';
-import { useGuideBarToolsContext } from '../sidebar/GuideBarToolsContext';
+import { useEditCanvasToolsContext } from './EditCanvasToolsContext';
 import { useSidebarStateContext } from '../sidebar/SidebarStateContext';
 
 
 export const useTrimmingPreviewFromSidebar = (fabricEditCanvas: fabric.Canvas | null) => {
-  const { trimRegionChanged, trimRegionWidth, trimRegionHeight } = useGuideBarToolsContext();
+  const { trimRegionChanged, trimRegionWidth, trimRegionHeight } = useEditCanvasToolsContext();
   const { trimModeActive} = useSidebarStateContext();
 
   useEffect(() => {

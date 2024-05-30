@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { fabric } from 'fabric';
 import { isNumber } from '../../utils/validators';
-import { useGuideBarToolsContext } from '../sidebar/GuideBarToolsContext';
+import { useEditCanvasToolsContext } from './EditCanvasToolsContext';
 
 
 export const useRotate90Canvas = (
@@ -10,7 +10,7 @@ export const useRotate90Canvas = (
   setResizeCompleted: React.Dispatch<React.SetStateAction<boolean>>,
   cleanupRef: React.RefObject<(() => void) | undefined>
 ) => {
-  const { rotate90 } = useGuideBarToolsContext();
+  const { rotate90 } = useEditCanvasToolsContext();
   const previousRotateState = useRef<number>(rotate90);
 
   useEffect(() => {

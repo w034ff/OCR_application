@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { fabric } from 'fabric';
 import { isNumber } from '../../utils/validators';
-import { useGuideBarToolsContext } from '../sidebar/GuideBarToolsContext';
+import { useEditCanvasToolsContext } from './EditCanvasToolsContext';
 
 
 // 角度の正規化処理
@@ -41,7 +41,7 @@ const updateObjectForFlip = (obj: fabric.Object, isVerticalFlip: boolean, canvas
 export const useFlipCanvas = (
   fabricCanvas: fabric.Canvas | null,
 ) => {
-  const { flipState } = useGuideBarToolsContext();
+  const { flipState } = useEditCanvasToolsContext();
   const previousFlipState = useRef<number>(flipState);
 
   useEffect(() => {

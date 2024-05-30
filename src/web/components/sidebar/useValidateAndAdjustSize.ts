@@ -1,5 +1,4 @@
-import React from 'react';
-import { useGuideBarToolsContext } from './GuideBarToolsContext';
+import { useEditCanvasToolsContext } from '../canvasTrimHooks/EditCanvasToolsContext';
 import { useSidebarStateContext } from './SidebarStateContext';
 
 
@@ -9,7 +8,7 @@ export const useValidateAndAdjustSize = (
   setInputChanged: React.Dispatch<React.SetStateAction<boolean>>,
   aspectRatio: number
   ) => {
-  const { currentCanvasWidth, currentCanvasHeight, isTrimAspectRatioLocked, setIsTrimAspectRatioLocked } = useGuideBarToolsContext();
+  const { currentCanvasWidth, currentCanvasHeight, isTrimAspectRatioLocked, setIsTrimAspectRatioLocked } = useEditCanvasToolsContext();
   const { trimModeActive, resizeModeActive, isResizeAspectRatioLocked } = useSidebarStateContext();
 
   const validateAndAdjustSize = (name: string, value: string) => {
@@ -20,7 +19,7 @@ export const useValidateAndAdjustSize = (
       const currentValue = name === 'width' ? currentCanvasWidth.toString() : currentCanvasHeight.toString();
       setInputs({ ...inputs, [name]: currentValue });
       setIsTrimAspectRatioLocked(false);
-    } else if (isTrimAspectRatioLocked || isResizeAspectRatioLocked) {
+    } else if (isTrimAspectRatioLocked || (resizeModeActive && isResizeAspectRatioLocked)) {
       adjustDimensionsKeepingAspectRatio(name, value);
     }
     setInputChanged((flag: boolean) => !flag);

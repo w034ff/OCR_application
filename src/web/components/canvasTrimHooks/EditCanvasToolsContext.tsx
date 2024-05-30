@@ -1,7 +1,7 @@
-import React, { createContext, useContext, ReactNode, useState, JSX } from 'react';
+import { createContext, useContext, ReactNode, useState } from 'react';
 
 
-interface GuideBarToolsContextProps {
+interface EditCanvasToolsContextProps {
   isTrimCanvas: boolean;
   setIsTrimCanvas: React.Dispatch<React.SetStateAction<boolean>>;
   trimRegionChanged: boolean;
@@ -23,13 +23,13 @@ interface GuideBarToolsContextProps {
 }
 
 
-const GuideBarToolsContext = createContext<GuideBarToolsContextProps | undefined>(undefined);
+const EditCanvasToolsContext = createContext<EditCanvasToolsContextProps | undefined>(undefined);
 
-interface GuideBarToolsProviderProps {
+interface EditCanvasToolsProviderProps {
   children: ReactNode;
 }
 
-export const GuideBarToolsProvider = ({ children }: GuideBarToolsProviderProps): JSX.Element => {
+export const EditCanvasToolsProvider = ({ children }: EditCanvasToolsProviderProps): JSX.Element => {
   const [isTrimCanvas, setIsTrimCanvas] = useState<boolean>(false);
   const [trimRegionChanged, setTrimRegionChanged] = useState<boolean>(false);
   const [isTrimAspectRatioLocked, setIsTrimAspectRatioLocked] = useState<boolean>(false);
@@ -42,7 +42,7 @@ export const GuideBarToolsProvider = ({ children }: GuideBarToolsProviderProps):
   const [ flipState, setFlipState ] = useState<number>(0); // +1: 垂直反転, -1: 水平反転
 
   return (
-    <GuideBarToolsContext.Provider value = {{
+    <EditCanvasToolsContext.Provider value = {{
       isTrimCanvas, setIsTrimCanvas,
       trimRegionChanged, setTrimRegionChanged, isTrimAspectRatioLocked, setIsTrimAspectRatioLocked,
       currentCanvasWidth, setCurrentCanvasWidth, currentCanvasHeight, setCurrentCanvasHeight,
@@ -50,14 +50,14 @@ export const GuideBarToolsProvider = ({ children }: GuideBarToolsProviderProps):
       rotate90, setRotate90, flipState, setFlipState
     }}>
       {children}
-    </GuideBarToolsContext.Provider>
+    </EditCanvasToolsContext.Provider>
   );
 }
 
-export const useGuideBarToolsContext = (): GuideBarToolsContextProps => {
-  const ToolsContext = useContext(GuideBarToolsContext);
+export const useEditCanvasToolsContext = (): EditCanvasToolsContextProps => {
+  const ToolsContext = useContext(EditCanvasToolsContext);
   if (!ToolsContext) {
-    throw new Error('GuideBarToolsContext must be used within a GuideBarToolsProvider');
+    throw new Error('EditCanvasToolsContext must be used within a EditCanvasToolsProvider');
   }
   return ToolsContext;
 }

@@ -2,7 +2,7 @@ import React, { JSX } from 'react';
 import { CanvasHistoryProvider } from './CanvasHistoryContext';
 import { CanvasToolsProvider } from './CanvasToolsContext';
 import { CanvasFlipProvider } from './CanvasToolsContext';
-import { GuideBarToolsProvider } from './components/sidebar/GuideBarToolsContext';
+import { EditCanvasToolsProvider } from './components/canvasTrimHooks/EditCanvasToolsContext';
 import { SidebarStateProvider } from './components/sidebar/SidebarStateContext';
 import {
     MenuBar,
@@ -15,7 +15,7 @@ const App = (): JSX.Element => {
 			<CanvasHistoryProvider>
 				<CanvasToolsProvider>
 					<CanvasFlipProvider>
-						<GuideBarToolsProvider>
+						<EditCanvasToolsProvider>
 							<SidebarStateProvider>
 								<div className="app-container">
 									<MenuBar />
@@ -24,7 +24,7 @@ const App = (): JSX.Element => {
 									</div>
 								</div>
 							</SidebarStateProvider>
-						</GuideBarToolsProvider>
+						</EditCanvasToolsProvider>
 					</CanvasFlipProvider>
 				</CanvasToolsProvider>
 			</CanvasHistoryProvider>

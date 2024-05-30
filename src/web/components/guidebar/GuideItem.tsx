@@ -1,11 +1,10 @@
-import React, { JSX, useState } from 'react';
+import { useState } from 'react';
 import { useCanvasToolsContext } from '../../CanvasToolsContext';
 import { useScaleModalWindowContext } from './ScaleModalWindowContext';
 import { useSidebarStateContext } from '../sidebar/SidebarStateContext';
 import { getNextScale } from '../../utils/scaleUtils';
 import { useAlertSound } from '../../hooks/AlertSound';
 import { useScaleUpdate } from '../../hooks/ScaleUpdate';
-
 
 
 interface GuideItemProps {

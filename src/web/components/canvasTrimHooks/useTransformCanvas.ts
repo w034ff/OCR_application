@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { fabric } from 'fabric';
 import { useHistoryContext } from '../../CanvasHistoryContext';
-import { useGuideBarToolsContext } from '../sidebar/GuideBarToolsContext';
+import { useEditCanvasToolsContext } from './EditCanvasToolsContext';
 import { useSidebarStateContext } from '../sidebar/SidebarStateContext';
 import { isNumber, isRectPropsNumber } from '../../utils/validators';
 import { isFabricRect, shiftObjects, resizeAndMoveObjects } from '../../utils/fabricEditCanvasUtils';
@@ -13,12 +13,12 @@ export const useTransformCanvas = (
   fabricEditCanvas: fabric.Canvas | null
 ) => {
 	const { setIsSaveState } = useHistoryContext();
-  const { setTrimRegionWidth, setTrimRegionHeight } = useGuideBarToolsContext();
+  const { setTrimRegionWidth, setTrimRegionHeight } = useEditCanvasToolsContext();
   const { resizeModeActive } = useSidebarStateContext();
 
 	const initialScalingFlag = useRef<boolean>(false);
-
 	
+
 	const handleFabricRectScaling = (e: fabric.IEvent) => {
 		const rect = e.target;
 		if (!(rect instanceof fabric.Rect)) return;

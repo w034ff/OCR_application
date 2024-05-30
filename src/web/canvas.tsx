@@ -8,7 +8,7 @@ import { useSimpleBarHoverCleanup } from './hooks/SimpleBarHoverCleanup';
 import { useAdjustScrollForCanvasZoom } from './hooks/AdjustScrollForCanvasZoom';
 import { useCanvasToolsContext } from './CanvasToolsContext';
 import { useCanvasFlipContext } from './CanvasToolsContext';
-import { useGuideBarToolsContext } from './components/sidebar/GuideBarToolsContext';
+import { useEditCanvasToolsContext } from './components/canvasTrimHooks/EditCanvasToolsContext';
 import { useSidebarStateContext } from './components/sidebar/SidebarStateContext';
 import ContextMenuFrameComponent from './components/canvasContextMenu/ContextMenuFrame';
 import CanvasDrawComponent from './CanvasDraw';
@@ -19,7 +19,7 @@ const CanvasComponent = (): JSX.Element  => {
 		scale, setScale, scrollElement, setScrollElement, handleScrollbarToCenter, setScaleUpdateFlag
 	} = useCanvasToolsContext();
 	const { isFlipped } = useCanvasFlipContext();
-	const { setCurrentCanvasWidth, setCurrentCanvasHeight } = useGuideBarToolsContext();
+	const { setCurrentCanvasWidth, setCurrentCanvasHeight } = useEditCanvasToolsContext();
 	const { trimModeActive, resizeModeActive } = useSidebarStateContext();
 	const [lastDragX, setLastDragX] = useState<number>(0);
 	const [lastDragY, setLastDragY] = useState<number>(0);

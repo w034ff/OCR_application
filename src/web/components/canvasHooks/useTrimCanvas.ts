@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { fabric } from 'fabric';
-import { useEditCanvasToolsContext } from './EditCanvasToolsContext';
+import { useEditCanvasToolsContext } from '../canvasTrimHooks/EditCanvasToolsContext';
 import { useSidebarStateContext } from '../sidebar/SidebarStateContext';
 import { isFabricRect, resizeAndMoveObjects } from '../../utils/fabricEditCanvasUtils';
 

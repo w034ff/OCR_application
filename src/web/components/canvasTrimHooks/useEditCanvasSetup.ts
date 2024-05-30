@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { fabric } from 'fabric';
 import { useSidebarStateContext } from '../sidebar/SidebarStateContext';
-import { useGuideBarToolsContext } from '../sidebar/GuideBarToolsContext';
+import { useEditCanvasToolsContext } from './EditCanvasToolsContext';
 import { useRotate90Canvas } from './useRotate90Canvas';
 import { createRectProps } from './createRectProps';
 import { addRectToCanvas } from '../../utils/fabricEditCanvasUtils';
@@ -14,7 +14,7 @@ export const useEditCanvasSetup = (
   fabricEditCanvas: fabric.Canvas | null,
 ) => {
   const { trimModeActive, resizeModeActive, isResizeAspectRatioLocked } = useSidebarStateContext();
-  const { isTrimAspectRatioLocked } = useGuideBarToolsContext();
+  const { isTrimAspectRatioLocked } = useEditCanvasToolsContext();
 
   const [rotationCompleted, setRotationCompleted] = useState(false);
   const cleanupRef = useRef<() => void>(() => {});

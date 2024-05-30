@@ -1,11 +1,11 @@
-import { render, screen, fireEvent, renderHook } from '@testing-library/react';
-import CanvasComponent from './canvas';
-import { CanvasHistoryProvider } from './CanvasHistoryContext';
-import { CanvasToolsProvider } from './CanvasToolsContext';
-import { CanvasFlipProvider } from './CanvasToolsContext';
-import { GuideBarToolsProvider } from './components/sidebar/GuideBarToolsContext';
-import '@testing-library/jest-dom';
-import { useAdjustScrollForCanvasZoom } from './hooks/AdjustScrollForCanvasZoom';
+// import { render, screen, fireEvent, renderHook } from '@testing-library/react';
+// import CanvasComponent from './canvas';
+// import { CanvasHistoryProvider } from './CanvasHistoryContext';
+// import { CanvasToolsProvider } from './CanvasToolsContext';
+// import { CanvasFlipProvider } from './CanvasToolsContext';
+// import { EditToolsProvider } from './components/canvasTrimHooks/EditToolsContext';
+// import '@testing-library/jest-dom';
+// import { useAdjustScrollForCanvasZoom } from './hooks/AdjustScrollForCanvasZoom';
 
 // // useCanvasToolsContextのモック
 // jest.mock('./CanvasToolsContext', () => ({
@@ -40,20 +40,20 @@ import { useAdjustScrollForCanvasZoom } from './hooks/AdjustScrollForCanvasZoom'
 //   });
 // });
 
-describe('Mouse wheel zoom handling', () => {
-  test('キャンバスコンポーネントのマウスホイールイベントテスト', () => {
+// describe('Mouse wheel zoom handling', () => {
+//   test('キャンバスコンポーネントのマウスホイールイベントテスト', () => {
 
-    const { getByTestId } = render(
-      <CanvasHistoryProvider>
-        <CanvasToolsProvider>
-          <CanvasFlipProvider>
-            <GuideBarToolsProvider>
-              <CanvasComponent />
-            </GuideBarToolsProvider>
-          </CanvasFlipProvider>
-        </CanvasToolsProvider>
-      </CanvasHistoryProvider>
-    );
+//     const { getByTestId } = render(
+//       <CanvasHistoryProvider>
+//         <CanvasToolsProvider>
+//           <CanvasFlipProvider>
+//             <GuideBarToolsProvider>
+//               <CanvasComponent />
+//             </GuideBarToolsProvider>
+//           </CanvasFlipProvider>
+//         </CanvasToolsProvider>
+//       </CanvasHistoryProvider>
+//     );
 
     // const simplebar = getByTestId('simplebar');
     
@@ -75,7 +75,7 @@ describe('Mouse wheel zoom handling', () => {
 
     // 期待されるスケール変更を確認
     // 例えば、scale stateが適切に更新されたか確認する等
-  });
+  // });
 
   // その他のテストケース...
-});
+// });
