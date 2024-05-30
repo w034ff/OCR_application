@@ -1,5 +1,4 @@
-import React, { JSX } from 'react';
-import './Guidebar.css';
+import '../../styles/Guidebar.css';
 import { startGuideItems } from './startGuideItems';
 import { endGuideItems } from './endGuideItems';
 import GuideGroup from './GuideGroup';

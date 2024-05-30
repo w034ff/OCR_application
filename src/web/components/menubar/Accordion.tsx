@@ -1,5 +1,4 @@
-import React, { JSX, useEffect, useState } from 'react';
-import './Menubar.css';
+import { useEffect, useState } from 'react';
 import { handleUndoRedoAction } from './handlers'
 import { useHistoryContext } from '../../CanvasHistoryContext'
 

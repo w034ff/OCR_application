@@ -1,5 +1,4 @@
-import React, { JSX } from 'react';
-import './ContextMenu.css'; 
+import '../../styles/ContextMenu.css'; 
 import { useCanvasToolsContext } from '../../CanvasToolsContext';
 import { ContextMenuItems } from './ContextMenuItems';
 import ContextMenuItem from './ContextMenuItem';
