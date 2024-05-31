@@ -13,8 +13,8 @@ export const useEditCanvasSetup = (
   canvasRef: React.RefObject<HTMLCanvasElement>,
   fabricEditCanvas: fabric.Canvas | null,
 ) => {
-  const { trimModeActive, resizeModeActive, isResizeAspectRatioLocked } = useSidebarStateContext();
-  const { isTrimAspectRatioLocked } = useEditCanvasToolsContext();
+  const { trimModeActive, resizeModeActive } = useSidebarStateContext();
+  const { isTrimAspectRatioLocked, isResizeAspectRatioLocked } = useEditCanvasToolsContext();
 
   const [rotationCompleted, setRotationCompleted] = useState(false);
   const cleanupRef = useRef<() => void>(() => {});

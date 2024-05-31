@@ -8,8 +8,11 @@ export const useValidateAndAdjustSize = (
   setInputChanged: React.Dispatch<React.SetStateAction<boolean>>,
   aspectRatio: number
   ) => {
-  const { currentCanvasWidth, currentCanvasHeight, isTrimAspectRatioLocked, setIsTrimAspectRatioLocked } = useEditCanvasToolsContext();
-  const { trimModeActive, resizeModeActive, isResizeAspectRatioLocked } = useSidebarStateContext();
+  const {
+    currentCanvasWidth, currentCanvasHeight, isTrimAspectRatioLocked,
+    setIsTrimAspectRatioLocked, isResizeAspectRatioLocked
+  } = useEditCanvasToolsContext();
+  const { trimModeActive, resizeModeActive } = useSidebarStateContext();
 
   const validateAndAdjustSize = (name: string, value: string) => {
     const errorMessage = validateInputNumber(name, value);

@@ -6,10 +6,6 @@ interface SidebarStateContextProps {
   setTrimModeActive: React.Dispatch<React.SetStateAction<boolean>>;
   resizeModeActive: boolean;
   setResizeModeActive: React.Dispatch<React.SetStateAction<boolean>>;
-  isResizeAspectRatioLocked: boolean;
-  setIsResizeAspectRatioLocked: React.Dispatch<React.SetStateAction<boolean>>;
-  resizeRatio: number;
-  setResizeRatio: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const SidebarStateContext = createContext<SidebarStateContextProps | undefined>(undefined);
@@ -21,13 +17,10 @@ interface SidebarStateProviderProps {
 export const SidebarStateProvider = ({ children }: SidebarStateProviderProps): JSX.Element => {
   const [trimModeActive, setTrimModeActive] = useState<boolean>(false);
   const [resizeModeActive, setResizeModeActive] = useState<boolean>(false);
-  const [isResizeAspectRatioLocked, setIsResizeAspectRatioLocked] = useState<boolean>(false);
-  const [resizeRatio, setResizeRatio] = useState<number>(1);
 
   return (
     <SidebarStateContext.Provider value = {{ 
-      trimModeActive, setTrimModeActive, resizeModeActive, setResizeModeActive,
-      isResizeAspectRatioLocked, setIsResizeAspectRatioLocked, resizeRatio, setResizeRatio
+      trimModeActive, setTrimModeActive, resizeModeActive, setResizeModeActive
     }}>
       {children}
     </SidebarStateContext.Provider>

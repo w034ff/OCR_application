@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import { fabric } from 'fabric';
 import { isNumber } from '../../utils/validators';
-import { useSidebarStateContext } from '../sidebar/SidebarStateContext';
+import { useCanvasModalWindowContext } from '../modalWindow/CanvasModalWindowContext';
 
 
 export const useResizeFromModal = (
   fabricCanvas: fabric.Canvas | null,
 ) => {
-  const { resizeRatio, setResizeRatio } = useSidebarStateContext();
+  const { resizeRatio, setResizeRatio } = useCanvasModalWindowContext();
   // drawing-canvasの切り取りを実行する処理
   useEffect(() => {
     if (fabricCanvas && resizeRatio !== 1) {

@@ -1,35 +1,35 @@
-import React, { JSX, useState } from 'react';
+import { useState } from 'react';
 import { useHistoryContext } from '../../CanvasHistoryContext';
-import { useScaleModalWindowContext } from './ScaleModalWindowContext';
+import { useCanvasModalWindowContext } from './CanvasModalWindowContext';
 import { useAlertSound } from '../../hooks/AlertSound';
-import { useScaleChangeModal } from './ScaleChangeModal';
+import { useChangeScaleModal } from './useChangeScaleModal';
 
 
-const scaleChangeValues: number[] = [
+const zoomRatioValues: number[] = [
   0.33, 0.5, 0.66, 1.0, 2.0, 4.0
 ];
 
-const imageScaleValues: number[] = [
+const resizeRatioValues: number[] = [
   0.25, 0.5, 0.75, 1.5, 2.0, 4.0
 ]
 
 const CanvasModalWindow = (): JSX.Element | null  => {
   const { setIsSaveState } = useHistoryContext();
-  const { scaleModalMode, setScaleModalMode } = useScaleModalWindowContext();
+  const { canvasModalMode, setCanvasModalMode } = useCanvasModalWindowContext();
   const [selectedScale, setSelectedScale] = useState<number>(1);
   const [animationKey, setAnimationKey] = useState(0); 
   const playAlertSound = useAlertSound();
-  const { applyScaleChange, applyResizeCanvas } = useScaleChangeModal(setSelectedScale);
-  let inputRadioArray: number[] = scaleChangeValues;
+  const { applyZoomCanvas, applyResizeCanvas } = useChangeScaleModal(setSelectedScale);
+  let inputRadioArray: number[] = zoomRatioValues;
   let modalTitle: string = 'キャンバスの倍率を調整します';
   
 
-  if (scaleModalMode !== 'canvas-scaling' && scaleModalMode !== 'image-scaling') {
+  if (canvasModalMode !== 'zoom-canvas' && canvasModalMode !== 'resize-canvas') {
     return null;
   }
 
-  if (scaleModalMode === 'image-scaling') {
-    inputRadioArray = imageScaleValues;
+  if (canvasModalMode === 'resize-canvas') {
+    inputRadioArray = resizeRatioValues;
     modalTitle = '画像をリサイズします';
   }
 
@@ -46,16 +46,16 @@ const CanvasModalWindow = (): JSX.Element | null  => {
   };
   
   const closeModal = () => {
-    setScaleModalMode("");
+    setCanvasModalMode("");
     setAnimationKey(0);
   };
   
   const handleChangeClick = () => {
     closeModal();
-    if (scaleModalMode === 'canvas-scaling') {
-      applyScaleChange(selectedScale);
-    } else if (scaleModalMode === 'image-scaling') {
-      setIsSaveState((flag: boolean) => !flag); 
+    if (canvasModalMode === 'zoom-canvas') {
+      applyZoomCanvas(selectedScale);
+    } else if (canvasModalMode === 'resize-canvas') {
+      setIsSaveState(flag => !flag); 
       applyResizeCanvas(selectedScale);
     }
   }

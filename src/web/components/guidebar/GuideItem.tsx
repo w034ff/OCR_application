@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useCanvasToolsContext } from '../../CanvasToolsContext';
-import { useScaleModalWindowContext } from './ScaleModalWindowContext';
+import { useCanvasModalWindowContext } from '../modalWindow/CanvasModalWindowContext';
 import { useSidebarStateContext } from '../sidebar/SidebarStateContext';
 import { getNextScale } from '../../utils/scaleUtils';
 import { useAlertSound } from '../../hooks/AlertSound';
@@ -17,7 +17,7 @@ interface GuideItemProps {
 const GuideItem: (props: GuideItemProps) => JSX.Element = ({ icon, svg, text, onClick }) => {
   const { scale } = useCanvasToolsContext();
   const { setTrimModeActive, setResizeModeActive } = useSidebarStateContext();
-  const { setScaleModalMode } = useScaleModalWindowContext();
+  const { setCanvasModalMode } = useCanvasModalWindowContext();
   const [isHovered, setIsHovered] = useState(false);
   const [isGrabbed, setIsGrabbed] = useState(false);
   const [isThumbHovered, setIsThumbHovered] = useState(false);
@@ -49,7 +49,7 @@ const GuideItem: (props: GuideItemProps) => JSX.Element = ({ icon, svg, text, on
     } else if (text === 'handle-scale-plus' && scale < 64.0) {
       updateScale(getNextScale(scale, 1));
     } else if (text === 'scale'){
-      setScaleModalMode('canvas-scaling');
+      setCanvasModalMode('zoom-canvas');
     // } else {
     //   if (onClick && !(isRedoDisabled && text === 'やり直し') && !(isUndoDisabled && text === '元に戻す')) {
     //     onClick(e);

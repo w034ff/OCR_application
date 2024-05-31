@@ -8,6 +8,8 @@ interface EditCanvasToolsContextProps {
   setTrimRegionChanged: React.Dispatch<React.SetStateAction<boolean>>;
   isTrimAspectRatioLocked: boolean;
   setIsTrimAspectRatioLocked: React.Dispatch<React.SetStateAction<boolean>>;
+  isResizeAspectRatioLocked: boolean;
+  setIsResizeAspectRatioLocked: React.Dispatch<React.SetStateAction<boolean>>;
   currentCanvasWidth: number;
   setCurrentCanvasWidth: React.Dispatch<React.SetStateAction<number>>;
   currentCanvasHeight: number;
@@ -33,6 +35,7 @@ export const EditCanvasToolsProvider = ({ children }: EditCanvasToolsProviderPro
   const [isTrimCanvas, setIsTrimCanvas] = useState<boolean>(false);
   const [trimRegionChanged, setTrimRegionChanged] = useState<boolean>(false);
   const [isTrimAspectRatioLocked, setIsTrimAspectRatioLocked] = useState<boolean>(false);
+  const [isResizeAspectRatioLocked, setIsResizeAspectRatioLocked] = useState<boolean>(false);
   const [currentCanvasWidth, setCurrentCanvasWidth] = useState<number>(800);
   const [currentCanvasHeight, setCurrentCanvasHeight] = useState<number>(600);
   const [trimRegionWidth, setTrimRegionWidth] = useState<number>(800);
@@ -43,8 +46,8 @@ export const EditCanvasToolsProvider = ({ children }: EditCanvasToolsProviderPro
 
   return (
     <EditCanvasToolsContext.Provider value = {{
-      isTrimCanvas, setIsTrimCanvas,
-      trimRegionChanged, setTrimRegionChanged, isTrimAspectRatioLocked, setIsTrimAspectRatioLocked,
+      isTrimCanvas, setIsTrimCanvas, trimRegionChanged, setTrimRegionChanged,
+      isTrimAspectRatioLocked, setIsTrimAspectRatioLocked, isResizeAspectRatioLocked, setIsResizeAspectRatioLocked,
       currentCanvasWidth, setCurrentCanvasWidth, currentCanvasHeight, setCurrentCanvasHeight,
       trimRegionWidth, setTrimRegionWidth, trimRegionHeight, setTrimRegionHeight,
       rotate90, setRotate90, flipState, setFlipState

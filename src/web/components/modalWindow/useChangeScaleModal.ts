@@ -1,13 +1,11 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useCanvasToolsContext } from "../../CanvasToolsContext";
-import { useScaleModalWindowContext } from './ScaleModalWindowContext';
-import { useSidebarStateContext } from '../sidebar/SidebarStateContext';
+import { useCanvasModalWindowContext } from './CanvasModalWindowContext';
 
 
-export const useScaleChangeModal = (setSelectedScale: React.Dispatch<React.SetStateAction<number>>) => {
+export const useChangeScaleModal = (setSelectedScale: React.Dispatch<React.SetStateAction<number>>) => {
   const { scale, setScale, setZoomScaleValue, setScaleUpdateFlag  } = useCanvasToolsContext();
-  const { scaleModalMode } = useScaleModalWindowContext();
-  const { setResizeRatio } = useSidebarStateContext();
+  const { canvasModalMode, setResizeRatio } = useCanvasModalWindowContext();
 
   // scaleの大きさが更新されるとradioの入力値を更新する
   useEffect(() => {
@@ -16,12 +14,12 @@ export const useScaleChangeModal = (setSelectedScale: React.Dispatch<React.SetSt
 
   // モーダルを開いて画像をリサイズするときは、ラジオボタンの初期値を1にする（選択されていない状態にする）
   useEffect(() => {
-    if (scaleModalMode === 'image-scaling') {
+    if (canvasModalMode === 'resize-canvas') {
       setSelectedScale(1);
     }
-  }, [scaleModalMode]); 
+  }, [canvasModalMode]); 
 
-  const applyScaleChange = (selectedScale: number) => {
+  const applyZoomCanvas = (selectedScale: number) => {
     if (selectedScale === scale) return;
 
     setZoomScaleValue(selectedScale / Math.max(1, scale));
@@ -33,5 +31,5 @@ export const useScaleChangeModal = (setSelectedScale: React.Dispatch<React.SetSt
     setResizeRatio(selectedScale);
   };
 
-  return { applyScaleChange, applyResizeCanvas };
+  return { applyZoomCanvas, applyResizeCanvas };
 }

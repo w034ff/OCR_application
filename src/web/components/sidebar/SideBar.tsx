@@ -1,6 +1,6 @@
 import '../../styles/Sidebar.css';
 import { useSidebarStateContext } from './SidebarStateContext';
-import ResizeCanvasForm from './ChangeCanvasSize';
+import TransformCanvasForm from './TransformCanvasForm';
 
 
 const SideBar = (): JSX.Element | undefined => {
@@ -8,7 +8,7 @@ const SideBar = (): JSX.Element | undefined => {
 
   // if (trimModeActive) {
     return (
-      <ResizeCanvasForm />
+      <TransformCanvasForm />
     );
   // } 
   // else {

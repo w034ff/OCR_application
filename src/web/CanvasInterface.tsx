@@ -1,12 +1,11 @@
-import React, { JSX } from 'react';
 import {
   SideBar,
   GuideBar,
 } from './components';
 import CanvasComponent from './canvas'
 import { useCanvasFlipContext } from './CanvasToolsContext';
-import ScaleModalWindow from './components/guidebar/ScaleModalWindow';
-import { ScaleModalWindowProvider } from './components/guidebar/ScaleModalWindowContext';
+import CanvasModalWindow from './components/modalWindow/ScaleModalWindow';
+import { CanvasModalWindowProvider } from './components/modalWindow/CanvasModalWindowContext';
 
 const CanvasInterface = (): JSX.Element => {  
   const { isFlipped } = useCanvasFlipContext();
@@ -21,7 +20,7 @@ const CanvasInterface = (): JSX.Element => {
 
   return (
     <>
-      <ScaleModalWindowProvider>
+      <CanvasModalWindowProvider>
         <GuideBar />
         <div className="top-section" style={topSectionStyle}>
             <CanvasComponent />
@@ -29,8 +28,8 @@ const CanvasInterface = (): JSX.Element => {
               <SideBar />
             </div>
         </div>
-        <ScaleModalWindow />
-      </ScaleModalWindowProvider>
+        <CanvasModalWindow />
+      </CanvasModalWindowProvider>
     </>
   );
 };
