@@ -1,7 +1,6 @@
-import React, { JSX, useRef } from 'react';
-import FileInput from '../menubar/FileInput';
+import { useRef } from 'react';
+import FileInput from '../FileInput/FileInput';
 import { useHistoryContext } from '../../CanvasHistoryContext';
-
 
 interface ContextMenuItemProps {
   icon?: JSX.Element;

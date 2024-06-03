@@ -1,4 +1,3 @@
-import React, { JSX } from 'react';
 import GuideItem from './GuideItem';
 
 interface GuideGroupProps {
@@ -24,4 +23,4 @@ const GuideGroup: (props: GuideGroupProps) => JSX.Element = ({ justifyContent, c
   );
 }
 
-export default GuideGroup
+export default GuideGroup;

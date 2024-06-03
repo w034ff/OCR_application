@@ -1,12 +1,11 @@
-import React, { JSX } from 'react';
-// import { handleFileInsert } from './handlers'
-
+import { useHistoryContext } from "../../CanvasHistoryContext";
 
 interface FileInputProps {
   fileInputRef: React.RefObject<HTMLInputElement>;
 }
 
-const FileInput: (props : FileInputProps) => JSX.Element = (props) => {
+const FileInput = ({ fileInputRef } : FileInputProps): JSX.Element => {
+  const { setIsSaveState } = useHistoryContext();
 
   const handleFileInsert = (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileInput = e.target;
@@ -17,6 +16,7 @@ const FileInput: (props : FileInputProps) => JSX.Element = (props) => {
         const fileContent = e.target?.result;
         if (typeof fileContent === 'string' && fileContent.startsWith('data:image/')) {
           try {
+            setIsSaveState(flag => !flag);
             window.InsertURL.sendURL(fileContent);
           } catch (error) {
             console.error('Failed to send the file URL:', error);
@@ -41,9 +41,9 @@ const FileInput: (props : FileInputProps) => JSX.Element = (props) => {
       <input 
         type="file" 
         accept="image/*"
-        ref={props.fileInputRef} 
-        style={{ display: 'none' }}
+        ref={fileInputRef} 
         onChange={handleFileInsert}
+        className="hidden-input"
       />
     </div>
   );

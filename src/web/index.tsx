@@ -1,6 +1,4 @@
-import React from 'react';
 import { createRoot } from 'react-dom/client'
-import CanvasComponent from './canvas'
 import App from './App';
 
 

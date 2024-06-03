@@ -1,6 +1,5 @@
 import '../../styles/Guidebar.css';
-import { startGuideItems } from './startGuideItems';
-import { endGuideItems } from './endGuideItems';
+import { startGuideItems, endGuideItems } from './guideItems';
 import GuideGroup from './GuideGroup';
 import { useCanvasFlipContext } from '../../CanvasToolsContext';
 
@@ -22,4 +21,4 @@ const GuideBar = (): JSX.Element | null => {
   );
 };
 
-export default GuideBar
+export default GuideBar;

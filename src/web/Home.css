@@ -143,3 +143,7 @@ html, body {
   background-color: transparent;
   transform-origin: center center;
 }
+
+.hidden-input {
+  display: none;
+}

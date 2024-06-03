@@ -19,8 +19,6 @@ export const useLoadImageURL = (
     const container = containerRef.current;
     if (!fabricCanvas || !canvas || !container) return;
 
-    setIsSaveState(flag => !flag);
-
     fabric.Image.fromURL(ImageURL, (img: FabricImage) => {
       if (isNumber(img.width) && isNumber(img.height)) {
         if (img.width > canvas.width && img.height > canvas.height) {

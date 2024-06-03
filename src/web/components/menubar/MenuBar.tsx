@@ -1,7 +1,5 @@
 import '../../styles/Menubar.css';
-import { startItems } from './startItems';
-import { middleItems } from './middleItems';
-import { endItems } from './endItems';
+import { startItems, middleItems, endItems } from './menuItems';
 import MenuGroup from './MenuGroup';
 
 
@@ -18,4 +16,4 @@ const MenuBar = (): JSX.Element => {
   );
 };
 
-export default MenuBar
+export default MenuBar;

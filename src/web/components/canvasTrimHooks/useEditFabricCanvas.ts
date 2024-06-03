@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { fabric } from 'fabric';
+import { useInitializeEditCanvas } from './useInitializeEditCanvas';
+import { useUpdateEditCanvasSize } from './useUpdateEditCanvas';
 import { useEditCanvasSetup } from './useEditCanvasSetup';
 import { useTrimmingPreview } from './useTrimmingPreview';
 import { useTrimmingPreviewFromSidebar } from './useTrimmingPreviewFromSidebar';
@@ -10,13 +10,16 @@ import { useResizeFromModal } from './useResizeFromModal';
 import { useFlipCanvas } from './useFlipCanvas';
 
 
-export const useTrimFabricCanvas = (
+export const useEditFabricCanvas = (
   fabricCanvas: fabric.Canvas | null,
   canvasRef: React.RefObject<HTMLCanvasElement>,
   editCanvasRef:React.RefObject<HTMLCanvasElement>,
 ) => {
-  const [fabricEditCanvas, setFabricEditCanvas] = useState<fabric.Canvas | null>(null)
-
+  // 切り取り領域用のfabricキャンバスの初期化するカスタムフック
+  const fabricEditCanvas = useInitializeEditCanvas(editCanvasRef);
+  
+  // drawing-canvasの大きさが変更された際、fabricEditCanvasの大きさを更新するカスタムフック
+  useUpdateEditCanvasSize(fabricEditCanvas, canvasRef);
 
   // trimModeActive, resizeModeActiveが変更された際、編集用オブジェクトを追加・削除するカスタムフック
   useEditCanvasSetup(fabricCanvas, canvasRef, fabricEditCanvas);
@@ -35,26 +38,4 @@ export const useTrimFabricCanvas = (
   useResizeFromModal(fabricCanvas);
   // fabricCanvasを水平・垂直方向に反転させるカスタムフック
   useFlipCanvas(fabricCanvas);
-
-  // 切り取り領域用のfabricキャンバスの初期化
-  useEffect(() => {
-    if (editCanvasRef.current && !fabricEditCanvas) {
-      const newFabricCanvas = new fabric.Canvas(editCanvasRef.current);
-      newFabricCanvas.upperCanvasEl.style.top = '-500px';
-      newFabricCanvas.upperCanvasEl.style.left = '-500px';
-      newFabricCanvas.setDimensions({width: 1800, height: 1600});
-      newFabricCanvas.uniformScaling = false;
-      newFabricCanvas.selection = false;
-      setFabricEditCanvas(newFabricCanvas);
-    }
-  }, []);
-
-  // drawing-canvasの大きさが変更された際、fabricEditCanvasの大きさを更新する
-  useEffect(() => {
-    if (canvasRef.current && fabricEditCanvas) {
-      fabricEditCanvas.setWidth(canvasRef.current.width + 1000);
-      fabricEditCanvas.setHeight(canvasRef.current.height + 1000);
-    }
-  }, [canvasRef.current?.width, canvasRef.current?.height]);
-
-}
+};

@@ -1,17 +1,17 @@
-import React, { useEffect, useRef, useState, JSX } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 import SimpleBarCore from 'simplebar-core';
 import { useChangeScaleUpperCanvases } from './hooks/ChangeScaleUpperCanvases';
-import { useAdjustEditCanvasZIndex } from './hooks/AdjustEditCanvasZIndex';
 import { useSimpleBarHoverCleanup } from './hooks/SimpleBarHoverCleanup';
 import { useAdjustScrollForCanvasZoom } from './hooks/AdjustScrollForCanvasZoom';
 import { useCanvasToolsContext } from './CanvasToolsContext';
 import { useCanvasFlipContext } from './CanvasToolsContext';
 import { useEditCanvasToolsContext } from './components/canvasTrimHooks/EditCanvasToolsContext';
 import { useSidebarStateContext } from './components/sidebar/SidebarStateContext';
+import { useControlContextMenu } from './useControlContextMenu';
 import ContextMenuFrameComponent from './components/canvasContextMenu/ContextMenuFrame';
-import CanvasDrawComponent from './CanvasDraw';
+import { useDrawFabricCanvas } from './CanvasDraw';
 
 
 const CanvasComponent = (): JSX.Element  => {
@@ -26,6 +26,9 @@ const CanvasComponent = (): JSX.Element  => {
 
 	const [drawing, setDrawing] = useState(false);
 	const [dragging, setDragging] = useState(false);
+	// コンテキストメニューの開閉や表示位置を制御するカスタムフック
+	const { contextMenu, openContextMenu, closeContextMenu } = useControlContextMenu(dragging, drawing);
+	
 	const [listenerRegistered, setListenerRegistered] = useState(false);
 	
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -40,53 +43,15 @@ const CanvasComponent = (): JSX.Element  => {
 	const scrollables = document.querySelectorAll('.simplebar-scrollable-x, .simplebar-scrollable-y');
 	
 	// カスタムフックを使用
+	// Rectオブジェクト等をFabricキャンバスに描画するためのカスタムフック
+	useDrawFabricCanvas(drawing, canvasRef, editCanvasRef, containerRef, PerformCanvasActionRef, handleImageUrlReceiveRef);
 	useChangeScaleUpperCanvases(scale);
-	useAdjustEditCanvasZIndex();
 	useSimpleBarHoverCleanup('.simplebar-scrollable-x, .simplebar-scrollable-y');
 	// キャンバスのズーム及び、ズーム後のスクロール(simplebar)の位置を調整するカスタムフック
 	useAdjustScrollForCanvasZoom(canvasRef, editCanvasRef, InnercontainerRef);
-
-
+	
+	
 	// console.log("render canvas")
-
-	const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0 });
-	const openContextMenu = (e: MouseEvent) => {
-		if (e.button === 2 && !dragging && !drawing) {
-			e.preventDefault();
-			e.stopPropagation();
-			setContextMenu({ visible: true, x: e.clientX, y: e.clientY});
-		}
-	}
-	const closeContextMenu = () => {
-		setContextMenu({ visible: false, x: 0, y: 0 });
-	}
-	const closeOnOutsideClick = (e: MouseEvent) => {
-		if ((e.target as HTMLElement).classList.contains('modal-background')) {
-			closeContextMenu();
-		}
-	};
-	// ブラウザウィンドウのサイズを取得
-	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-	const [windowHeight, setWindowHeight] = useState(window.innerHeight);
-
-	useEffect(() => {
-		const handleResize = () => {
-			setWindowWidth(window.innerWidth);
-			setWindowHeight(window.innerHeight);
-		};
-		const handleCloseContextMenu = () => {
-			closeContextMenu();
-		};
-		window.addEventListener('blur', handleCloseContextMenu); 
-		window.addEventListener('mousedown', closeOnOutsideClick);
-		window.addEventListener('resize', handleResize);
-		return () => {
-			window.removeEventListener('blur', handleCloseContextMenu);
-			window.removeEventListener('mousedown', closeOnOutsideClick);
-			window.removeEventListener('resize', handleResize);
-		};
-	}, []);
-
 
 	useEffect(() => {
 		if (simpleBarRef.current) {
@@ -207,20 +172,12 @@ const CanvasComponent = (): JSX.Element  => {
 					<div id="inner-canvas-container" ref={InnercontainerRef}>
 						<canvas id="drawing-canvas" ref={canvasRef} width="800" height="600" style={{ zIndex: 1, opacity: listenerRegistered ? '1' : '0'} } />
 						<canvas id="edit-canvas" ref={editCanvasRef} style={{ zIndex: trimModeActive || resizeModeActive ? 10 : -1 }} />
-						<CanvasDrawComponent
-							drawing={drawing}  canvasRef={canvasRef}
-							editCanvasRef={editCanvasRef}
-							containerRef={containerRef}
-							PerformCanvasActionRef={PerformCanvasActionRef}
-							handleImageUrlReceiveRef={handleImageUrlReceiveRef}
-						/>
 					</div>
 				</SimpleBar>
 			</div>
 		</div>
 		<ContextMenuFrameComponent
-			visible={contextMenu.visible} x={contextMenu.x} y={contextMenu.y}
-			windowWidth={windowWidth} windowHeight={windowHeight}
+			visible={contextMenu.visible} adjustedX={contextMenu.x} adjustedY={contextMenu.y}
 			closeEvent={closeContextMenu}
 		/>
 		</>

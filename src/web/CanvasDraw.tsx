@@ -1,21 +1,11 @@
-import React, { JSX, useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { fabric } from 'fabric';
 import { useSaveState } from './hooks/SaveState';
 import { useLoadImageURL } from './hooks/LoadImageURL';
-import { useTrimFabricCanvas } from './components/canvasTrimHooks/TrimFabricCanvas';
+import { useEditFabricCanvas } from './components/canvasTrimHooks/useEditFabricCanvas';
 import { useHistoryContext } from './CanvasHistoryContext';
 import { useCanvasToolsContext} from './CanvasToolsContext'
 import { useUndo, useRedo } from './hooks/UndoRedo';
-
-
-interface Props {
-  drawing: boolean;
-  canvasRef: React.RefObject<HTMLCanvasElement>;
-  containerRef: React.RefObject<HTMLDivElement>;
-  PerformCanvasActionRef: React.MutableRefObject<((action: string, count: number) => void) | undefined>;
-  handleImageUrlReceiveRef: React.MutableRefObject<((ImageURL: string) => void) | undefined>;
-  editCanvasRef:React.RefObject<HTMLCanvasElement>;
-}
 
 enum ActionType {
 	Undo = "Undo",
@@ -23,10 +13,14 @@ enum ActionType {
 }
 
 
-const CanvasDrawComponent: (props: Props) => JSX.Element | null = ({
-  drawing, canvasRef, containerRef, PerformCanvasActionRef, handleImageUrlReceiveRef, editCanvasRef
-  }) => {
-
+export const useDrawFabricCanvas = (
+  drawing: boolean,
+  canvasRef: React.RefObject<HTMLCanvasElement>,
+  editCanvasRef:React.RefObject<HTMLCanvasElement>,
+  containerRef: React.RefObject<HTMLDivElement>,
+  PerformCanvasActionRef: React.MutableRefObject<((action: string, count: number) => void) | undefined>,
+  handleImageUrlReceiveRef: React.MutableRefObject<((ImageURL: string) => void) | undefined>,
+) => {
 	const { setIsSaveState } = useHistoryContext();
   const { scale } = useCanvasToolsContext();
   const [drawingMode, setDrawingMode] = useState('lin'); // 'line' または 'rect'
@@ -49,7 +43,7 @@ const CanvasDrawComponent: (props: Props) => JSX.Element | null = ({
   useUndo(isUndo, fabricCanvas, undoStack, setUndoStack, setRedoStack, countUndoRedo);
   useRedo(isRedo, fabricCanvas, undoStack, redoStack, setUndoStack, setRedoStack, countUndoRedo);
   //  キャンバスのトリミング領域を設定および管理するためのカスタムフック
-  useTrimFabricCanvas(fabricCanvas, canvasRef, editCanvasRef);
+  useEditFabricCanvas(fabricCanvas, canvasRef, editCanvasRef);
 
   // console.log("render canvasDraw")
 
@@ -83,7 +77,7 @@ const CanvasDrawComponent: (props: Props) => JSX.Element | null = ({
       newFabricCanvas.uniformScaling = false;
       setFabricCanvas(newFabricCanvas);
     }
-  }, []);
+  }, [canvasRef]);
 
   
   useEffect(() => {
@@ -178,7 +172,4 @@ const CanvasDrawComponent: (props: Props) => JSX.Element | null = ({
     };
   }, [fabricCanvas, drawing, startPoint, scale]);
 
-  return <></>;
 };
-
-export default CanvasDrawComponent

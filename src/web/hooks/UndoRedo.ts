@@ -1,8 +1,13 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { fabric } from 'fabric';
 import { useHistoryContext } from '../CanvasHistoryContext';
 import { useCanvasToolsContext } from '../CanvasToolsContext';
 import { isNumber } from '../utils/validators';
+
+
+export const handleUndoRedoAction = (action: string, count: number = 1) => {
+  window.UnRedo.sendUndoRedoAction({ action, count });
+};
 
 
 const getCurrentFabricCanvasState = (fabricCanvas: fabric.Canvas): FabricCanvasState => {
@@ -35,7 +40,6 @@ const applyCanvasState = (
     fabricCanvas.renderAll(); // 変更を適用してキャンバスを再描画
   });
 };
-
 
 export const useUndo = (
   isUndo: boolean,
@@ -77,7 +81,6 @@ export const useUndo = (
     setLastHistoryValue(newUndoStack.length);
   }, [isUndo]);
 };
-
 
 export const useRedo = (
   isRedo: boolean,

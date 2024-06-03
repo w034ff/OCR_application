@@ -1,7 +1,7 @@
 import UnRedoIcon from '../assets/svgs/UnRedoIcon';
 import InsertIcon from '../assets/svgs/InsertIcon';
 import ViewResetIcon from '../assets/svgs/ViewResetIcon';
-import { handleUndoRedoAction } from '../menubar/handlers';
+import { handleUndoRedoAction } from '../../hooks/UndoRedo';
 
 export const ContextMenuItems = [
   {

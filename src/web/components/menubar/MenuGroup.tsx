@@ -1,4 +1,3 @@
-import React, { JSX } from 'react';
 import MenuItem from './MenuItem';
 
 interface MenuGroupProps {

@@ -1,6 +1,6 @@
-import React, { JSX, useState, useRef } from 'react';
-import  Accordion  from './Accordion'
-import FileInput from './FileInput';
+import { useState, useRef } from 'react';
+import Accordion  from './Accordion'
+import FileInput from '../FileInput/FileInput';
 import SortIcon from '../assets/svgs/SortIcon';
 import { useHistoryContext } from '../../CanvasHistoryContext'
 import { useCanvasFlipContext } from '../../CanvasToolsContext';

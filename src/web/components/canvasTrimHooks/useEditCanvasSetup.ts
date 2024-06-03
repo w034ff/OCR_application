@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { fabric } from 'fabric';
 import { useSidebarStateContext } from '../sidebar/SidebarStateContext';
 import { useEditCanvasToolsContext } from './EditCanvasToolsContext';
@@ -35,13 +35,22 @@ export const useEditCanvasSetup = (
   }, [trimModeActive, resizeModeActive, isTrimAspectRatioLocked, isResizeAspectRatioLocked]);
 
 
-  // fabricCanvasのオブジェクトをデアクティブ化
+  // fabricCanvasのオブジェクトをデアクティブ化し、edit-canvasにおけるupper-canvasのZ-Indexの値を調整
   useEffect(() => {
     if (!fabricCanvas) return;
+
+    const editLowerCanvas = document.getElementById('edit-canvas');
+    const editCanvasContainer = editLowerCanvas?.parentElement;
+    const editUpperCanvas = editCanvasContainer?.querySelector('.upper-canvas');
+    if (editUpperCanvas instanceof HTMLElement) {
       if (trimModeActive || resizeModeActive) {
+        editUpperCanvas.style.zIndex = "10";
         fabricCanvas.discardActiveObject(); // アクティブなオブジェクトをデアクティブ化
-      } 
-      fabricCanvas.renderAll();
+        fabricCanvas.renderAll();
+      } else {
+        editUpperCanvas.style.zIndex = "-1";
+      }
+    }
   }, [trimModeActive, resizeModeActive]);
   
 

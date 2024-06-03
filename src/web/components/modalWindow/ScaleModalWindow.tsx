@@ -1,3 +1,4 @@
+import '../../styles/modal-window.css';
 import { useState } from 'react';
 import { useHistoryContext } from '../../CanvasHistoryContext';
 import { useCanvasModalWindowContext } from './CanvasModalWindowContext';
