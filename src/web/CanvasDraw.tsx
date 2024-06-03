@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { fabric } from 'fabric';
 import { useSaveState } from './hooks/SaveState';
-import { useLoadImageURL } from './hooks/LoadImageURL';
+import { useLoadImageURL } from './hooks/useLoadImageURL';
 import { useEditFabricCanvas } from './components/canvasTrimHooks/useEditFabricCanvas';
 import { useHistoryContext } from './CanvasHistoryContext';
 import { useCanvasToolsContext} from './CanvasToolsContext'
@@ -19,7 +19,6 @@ export const useDrawFabricCanvas = (
   editCanvasRef:React.RefObject<HTMLCanvasElement>,
   containerRef: React.RefObject<HTMLDivElement>,
   PerformCanvasActionRef: React.MutableRefObject<((action: string, count: number) => void) | undefined>,
-  handleImageUrlReceiveRef: React.MutableRefObject<((ImageURL: string) => void) | undefined>,
 ) => {
 	const { setIsSaveState } = useHistoryContext();
   const { scale } = useCanvasToolsContext();
@@ -32,13 +31,11 @@ export const useDrawFabricCanvas = (
   const [isUndo, setIsUndo] = useState<boolean>(false);
   const [isRedo, setIsRedo] = useState<boolean>(false);
   const [countUndoRedo, setCountUndoRedo] = useState<number>(1);
-  
-  const [imageURL, setImageURL] = useState<string>('');
 
   // カスタムフックを使用
   useSaveState(fabricCanvas, undoStack, setUndoStack, setRedoStack);
-  //  同じ画像を連続して挿入できないようにしたカスタムフック(改良すれば連続して画像を挿入可)
-  useLoadImageURL(fabricCanvas, canvasRef, containerRef)(imageURL);
+  // Fabricキャンバスに画像を挿入するカスタムフック
+  useLoadImageURL(fabricCanvas, canvasRef, containerRef);
 
   useUndo(isUndo, fabricCanvas, undoStack, setUndoStack, setRedoStack, countUndoRedo);
   useRedo(isRedo, fabricCanvas, undoStack, redoStack, setUndoStack, setRedoStack, countUndoRedo);
@@ -65,10 +62,6 @@ export const useDrawFabricCanvas = (
     performCanvasAction(action, count);
   };
 
-
-  handleImageUrlReceiveRef.current = (ImageURL: string) => {
-    setImageURL(ImageURL);
-  }
 
 
   useEffect(() => {

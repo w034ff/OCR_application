@@ -38,13 +38,12 @@ const CanvasComponent = (): JSX.Element  => {
 	const editCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
 	const PerformCanvasActionRef = useRef<(action: string, count: number) => void>(() => {});
-	const handleImageUrlReceiveRef = useRef<(ImageURL: string) => void>(() => {});
 
 	const scrollables = document.querySelectorAll('.simplebar-scrollable-x, .simplebar-scrollable-y');
 	
 	// カスタムフックを使用
 	// Rectオブジェクト等をFabricキャンバスに描画するためのカスタムフック
-	useDrawFabricCanvas(drawing, canvasRef, editCanvasRef, containerRef, PerformCanvasActionRef, handleImageUrlReceiveRef);
+	useDrawFabricCanvas(drawing, canvasRef, editCanvasRef, containerRef, PerformCanvasActionRef);
 	useChangeScaleUpperCanvases(scale);
 	useSimpleBarHoverCleanup('.simplebar-scrollable-x, .simplebar-scrollable-y');
 	// キャンバスのズーム及び、ズーム後のスクロール(simplebar)の位置を調整するカスタムフック
@@ -84,18 +83,14 @@ const CanvasComponent = (): JSX.Element  => {
 
 	useEffect(() => {
 		// 依存配列にscrollElementを含めることで、scrollElementが設定された後にこのEffectが実行される
-		if (scrollElement && !listenerRegistered && window.UnRedo && typeof window.UnRedo.on === 'function' &&
-			window.InsertURL && typeof window.InsertURL.on === 'function') {
+		if (scrollElement && !listenerRegistered && window.UnRedo && typeof window.UnRedo.on === 'function') {
 			window.UnRedo.on('UnRedo-action', PerformCanvasActionRef.current);
-			window.InsertURL.on('load-url', handleImageUrlReceiveRef.current);
 			handleScrollbarToCenter();
 			setListenerRegistered(true); // 登録状態を更新
 		}
 		return () => {
-			if (window.UnRedo && typeof window.UnRedo.off === 'function' &&
-				window.InsertURL && typeof window.InsertURL.off === 'function') {
+			if (window.UnRedo && typeof window.UnRedo.off === 'function') {
 				window.UnRedo.off('UnRedo-action', PerformCanvasActionRef.current);
-				window.InsertURL.off('load-url', handleImageUrlReceiveRef.current);
 			}
 		};
 	}, [scrollElement]);

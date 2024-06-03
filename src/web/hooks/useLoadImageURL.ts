@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { fabric } from 'fabric';
 import { Image as FabricImage } from 'fabric/fabric-impl';
-import { useHistoryContext } from '../CanvasHistoryContext';
 import { useCanvasToolsContext } from '../CanvasToolsContext';
+import { useFileInputContext } from '../components/FileInput/FileInputContext';
 import { isNumber } from '../utils/validators';
 
 
@@ -10,8 +10,8 @@ export const useLoadImageURL = (
   fabricCanvas: fabric.Canvas | null,
   canvasRef: React.RefObject<HTMLCanvasElement>,
   containerRef: React.RefObject<HTMLDivElement>,
-) => (ImageURL: string) => {
-  const { setIsSaveState } = useHistoryContext();
+) => {
+  const { imageURLs, loadImageFlag } = useFileInputContext();
   const { setScale, setScaleUpdateFlag } = useCanvasToolsContext();
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export const useLoadImageURL = (
     const container = containerRef.current;
     if (!fabricCanvas || !canvas || !container) return;
 
-    fabric.Image.fromURL(ImageURL, (img: FabricImage) => {
+    fabric.Image.fromURL(imageURLs, (img: FabricImage) => {
       if (isNumber(img.width) && isNumber(img.height)) {
         if (img.width > canvas.width && img.height > canvas.height) {
           fabricCanvas.clear();
@@ -43,5 +43,5 @@ export const useLoadImageURL = (
       fabricCanvas.add(img);
       fabricCanvas.renderAll();
     });
-  }, [ImageURL]);
+  }, [loadImageFlag]);
 };

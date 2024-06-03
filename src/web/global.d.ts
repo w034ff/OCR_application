@@ -10,11 +10,6 @@ declare global {
       Fullscreen: {
         toggleFullscreen: ()  => void;
       };
-      InsertURL: {
-        sendURL: (ImageURL: string) => void;
-        on: (eventName: string, callback: (ImageURL: string )=> void) => void;
-        off?: (eventName: string, callback: (ImageURL: string) => void) => void;
-      };
       ShowError: {
         sendMain : (title: string, message: string) => void;
       }

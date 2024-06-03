@@ -18,15 +18,3 @@ contextBridge.exposeInMainWorld('UnRedo', {
         ipcRenderer.removeListener(channel, func);
     }
 });
-
-contextBridge.exposeInMainWorld('InsertURL', {
-    sendURL: (ImageURL: string) => {
-        ipcRenderer.invoke('load-URL', ImageURL);
-    },
-    on: (channel: string, func: (ImageURL: string) => void) => {
-        ipcRenderer.on(channel, (_, ImageURL: string) => func(ImageURL));
-    },
-    off: (channel: string, func: (ImageURL: string) => void) => {
-        ipcRenderer.removeListener(channel, func);
-    }
-});

@@ -1,9 +1,9 @@
-import React, { JSX } from 'react';
 import { CanvasHistoryProvider } from './CanvasHistoryContext';
 import { CanvasToolsProvider } from './CanvasToolsContext';
 import { CanvasFlipProvider } from './CanvasToolsContext';
 import { EditCanvasToolsProvider } from './components/canvasTrimHooks/EditCanvasToolsContext';
 import { SidebarStateProvider } from './components/sidebar/SidebarStateContext';
+import { FileInputProvider } from './components/FileInput/FileInputContext';
 import {
     MenuBar,
 } from './components';
@@ -17,12 +17,14 @@ const App = (): JSX.Element => {
 					<CanvasFlipProvider>
 						<EditCanvasToolsProvider>
 							<SidebarStateProvider>
-								<div className="app-container">
-									<MenuBar />
-									<div id="react-canvas">
-											<CanvasInterface /> 
+								<FileInputProvider>
+									<div className="app-container">
+										<MenuBar />
+										<div id="react-canvas">
+												<CanvasInterface /> 
+										</div>
 									</div>
-								</div>
+								</FileInputProvider>
 							</SidebarStateProvider>
 						</EditCanvasToolsProvider>
 					</CanvasFlipProvider>

@@ -62,14 +62,6 @@ ipcMain.handle('UnRedo-action', (event, payload) => {
   }
 });
 
-ipcMain.handle('load-URL', (event, ImageURL) => {
-  try {
-    event.sender.send('load-url', ImageURL);
-  } catch (error) {
-      console.error('Failed to handle the URL:', error);
-  }
-});
-
 ipcMain.on('show-error', (event, title, message) => {
   const focusedWindow = BrowserWindow.getFocusedWindow();
   if (!focusedWindow) return;

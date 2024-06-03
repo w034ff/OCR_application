@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactNode, useState, JSX } from 'react';
+import { createContext, useContext, ReactNode, useState } from 'react';
 
 interface HistoryContextProps {
   isSaveState: boolean;
