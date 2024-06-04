@@ -7,7 +7,7 @@ interface FileInputProps {
 
 const FileInput = ({ fileInputRef } : FileInputProps): JSX.Element => {
   const { setIsSaveState } = useHistoryContext();
-  const { setImageURLs, setLoadImageFlag } = useFileInputContext();
+  const { setImageURL, setLoadImageFlag } = useFileInputContext();
 
   const handleFileInsert = (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileInput = e.target;
@@ -20,7 +20,7 @@ const FileInput = ({ fileInputRef } : FileInputProps): JSX.Element => {
           try {
             setIsSaveState(flag => !flag);
             setLoadImageFlag(flag => !flag);
-            setImageURLs(fileContent)
+            setImageURL(fileContent)
           } catch (error) {
             console.error('Failed to send the file URL:', error);
           }

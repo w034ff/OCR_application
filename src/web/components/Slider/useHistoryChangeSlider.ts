@@ -3,21 +3,20 @@ import { useHistoryContext } from '../../CanvasHistoryContext'
 
 
 export const useHistoryChangeSlider = () => {
-	const { historyValue, setHistoryValue, lastHistoryValue, setLastHistoryValue, maxHistory } = useHistoryContext();
+	const { historyValue, setHistoryValue, maxHistory } = useHistoryContext();
+
 
 	const handleHistoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const newHistoryValue = parseInt(e.target.value, 10);
 		setHistoryValue(newHistoryValue);
 
-		if (newHistoryValue > lastHistoryValue) {
-			const redoCount = newHistoryValue - lastHistoryValue;
+		if (newHistoryValue > historyValue) {
+			const redoCount = newHistoryValue - historyValue;
 			handleUndoRedoAction('Redo', redoCount);
 		} else {
-			const undoCount = lastHistoryValue - newHistoryValue;
+			const undoCount = historyValue - newHistoryValue;
 			handleUndoRedoAction('Undo', undoCount);
 		}
-
-		setLastHistoryValue(newHistoryValue);
 	};
 	
 	return { maxHistory, historyValue, handleHistoryChange };

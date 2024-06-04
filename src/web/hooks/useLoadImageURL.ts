@@ -11,7 +11,7 @@ export const useLoadImageURL = (
   canvasRef: React.RefObject<HTMLCanvasElement>,
   containerRef: React.RefObject<HTMLDivElement>,
 ) => {
-  const { imageURLs, loadImageFlag } = useFileInputContext();
+  const { imageURL, loadImageFlag } = useFileInputContext();
   const { setScale, setScaleUpdateFlag } = useCanvasToolsContext();
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export const useLoadImageURL = (
     const container = containerRef.current;
     if (!fabricCanvas || !canvas || !container) return;
 
-    fabric.Image.fromURL(imageURLs, (img: FabricImage) => {
+    fabric.Image.fromURL(imageURL, (img: FabricImage) => {
       if (isNumber(img.width) && isNumber(img.height)) {
         if (img.width > canvas.width && img.height > canvas.height) {
           fabricCanvas.clear();

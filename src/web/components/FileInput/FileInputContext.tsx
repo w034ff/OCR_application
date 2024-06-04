@@ -1,8 +1,8 @@
-import React, { createContext, useContext, ReactNode, useState } from 'react';
+import { createContext, useContext, ReactNode, useState } from 'react';
 
 interface FileInputContextProps {
-	imageURLs: string;
-	setImageURLs: React.Dispatch<React.SetStateAction<string>>;
+	imageURL: string;
+	setImageURL: React.Dispatch<React.SetStateAction<string>>;
 	loadImageFlag: boolean;
 	setLoadImageFlag: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -14,12 +14,12 @@ interface FileInputProviderProps {
 }
 
 export const FileInputProvider = ({ children }: FileInputProviderProps): JSX.Element => {
-	const [ imageURLs, setImageURLs ] = useState<string>('');
+	const [ imageURL, setImageURL ] = useState<string>('');
 	const [ loadImageFlag, setLoadImageFlag ] = useState<boolean>(false);
 
   return (
     <FileInputContext.Provider value={{
-			imageURLs, setImageURLs, loadImageFlag, setLoadImageFlag
+			imageURL, setImageURL, loadImageFlag, setLoadImageFlag
     }}>
       {children}
     </FileInputContext.Provider>

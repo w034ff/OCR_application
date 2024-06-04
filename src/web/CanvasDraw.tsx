@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { fabric } from 'fabric';
 import { useSaveState } from './hooks/SaveState';
 import { useLoadImageURL } from './hooks/useLoadImageURL';
@@ -7,60 +7,33 @@ import { useHistoryContext } from './CanvasHistoryContext';
 import { useCanvasToolsContext} from './CanvasToolsContext'
 import { useUndo, useRedo } from './hooks/UndoRedo';
 
-enum ActionType {
-	Undo = "Undo",
-	Redo = "Redo"
-}
-
 
 export const useDrawFabricCanvas = (
   drawing: boolean,
   canvasRef: React.RefObject<HTMLCanvasElement>,
   editCanvasRef:React.RefObject<HTMLCanvasElement>,
   containerRef: React.RefObject<HTMLDivElement>,
-  PerformCanvasActionRef: React.MutableRefObject<((action: string, count: number) => void) | undefined>,
 ) => {
-	const { setIsSaveState } = useHistoryContext();
+	const { setIsSaveState, setUndoRedoState } = useHistoryContext();
   const { scale } = useCanvasToolsContext();
   const [drawingMode, setDrawingMode] = useState('lin'); // 'line' または 'rect'
   const [fabricCanvas, setFabricCanvas] = useState<fabric.Canvas | null>(null);
   const [startPoint, setStartPoint] = useState<fabric.Rect | null>(null);
-  
-  const [undoStack, setUndoStack] = useState<FabricCanvasState[]>([]);
-  const [redoStack, setRedoStack] = useState<FabricCanvasState[]>([]);
-  const [isUndo, setIsUndo] = useState<boolean>(false);
-  const [isRedo, setIsRedo] = useState<boolean>(false);
-  const [countUndoRedo, setCountUndoRedo] = useState<number>(1);
+
 
   // カスタムフックを使用
-  useSaveState(fabricCanvas, undoStack, setUndoStack, setRedoStack);
+  useSaveState(fabricCanvas);
+
+  useUndo(fabricCanvas);
+  useRedo(fabricCanvas);
   // Fabricキャンバスに画像を挿入するカスタムフック
   useLoadImageURL(fabricCanvas, canvasRef, containerRef);
-
-  useUndo(isUndo, fabricCanvas, undoStack, setUndoStack, setRedoStack, countUndoRedo);
-  useRedo(isRedo, fabricCanvas, undoStack, redoStack, setUndoStack, setRedoStack, countUndoRedo);
   //  キャンバスのトリミング領域を設定および管理するためのカスタムフック
   useEditFabricCanvas(fabricCanvas, canvasRef, editCanvasRef);
 
   // console.log("render canvasDraw")
 
-  const performCanvasAction = (action: string, count: number = 1) => {
-    switch (action) {
-      case ActionType.Undo:
-        setIsUndo(flag => !flag);
-        break;
-      case ActionType.Redo:
-        setIsRedo(flag => !flag);
-        break;
-      default:
-        throw new Error("No active window found");
-    }
-    setCountUndoRedo(count);
-  };
   
-  PerformCanvasActionRef.current = (action: string, count: number) => {
-    performCanvasAction(action, count);
-  };
 
 
 
@@ -144,11 +117,11 @@ export const useDrawFabricCanvas = (
     const handleKeydown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
         e.preventDefault();
-        performCanvasAction(ActionType.Undo);
+        setUndoRedoState(prevState => ({...prevState, isUndo: !prevState.isUndo, count: 1}));
       }
       if (e.ctrlKey && e.key === 'y') {
         e.preventDefault();
-        performCanvasAction(ActionType.Redo);
+        setUndoRedoState(prevState => ({...prevState, isRedo: !prevState.isRedo, count: 1}));
       }
     };
 

@@ -34,7 +34,7 @@ const ContextMenuFrameComponent: (props: ContextMenuFrameProps) => JSX.Element |
       {visible && <div className="modal-background" />}
       <div className="contextMenu" style={contextMenuStyle}>
         {ContextMenuItems.map((item, index) => (
-          <ContextMenuItem key={index} icon={item.icon} text={item.text} onClick={item.onClick}
+          <ContextMenuItem key={index} icon={item.icon} text={item.text}
             divider={item.divider} ViewReset={triggerViewReset} closeEvent={closeEvent}
           />
           ))}

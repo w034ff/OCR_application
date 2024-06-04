@@ -1,15 +1,11 @@
-import React, { useEffect } from 'react';
-import { fabric } from 'fabric';
+import { useEffect } from 'react';
 import { useHistoryContext } from '../CanvasHistoryContext';
 
 
 export const useSaveState = (
   fabricCanvas: fabric.Canvas | null,
-	undoStack: FabricCanvasState[],
-  setUndoStack: React.Dispatch<React.SetStateAction<FabricCanvasState[]>>,
-  setRedoStack: React.Dispatch<React.SetStateAction<FabricCanvasState[]>>,
 ) => {
-	const { isSaveState, setHistoryValue, setLastHistoryValue, setMaxHistory } = useHistoryContext();
+	const { isSaveState, setHistoryValue, setMaxHistory, undoStack, setUndoStack, setRedoStack } = useHistoryContext();
   
   useEffect(() => {
     if (!fabricCanvas) return;
@@ -24,7 +20,6 @@ export const useSaveState = (
     setUndoStack(newUndoStack);
     setRedoStack([]);
     setHistoryValue(newUndoStack.length); 
-    setLastHistoryValue(newUndoStack.length);
     setMaxHistory(newUndoStack.length);
   }, [isSaveState]);
 }

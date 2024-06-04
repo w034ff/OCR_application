@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { fabric } from 'fabric';
 import { useHistoryContext } from '../CanvasHistoryContext';
 import { useCanvasToolsContext } from '../CanvasToolsContext';
 import { isNumber } from '../utils/validators';
@@ -42,28 +41,27 @@ const applyCanvasState = (
 };
 
 export const useUndo = (
-  isUndo: boolean,
 	fabricCanvas: fabric.Canvas | null,
-	undoStack: FabricCanvasState[],
-	setUndoStack: React.Dispatch<React.SetStateAction<FabricCanvasState[]>>,
-	setRedoStack: React.Dispatch<React.SetStateAction<FabricCanvasState[]>>,
-	count: number = 1
 ) => {
-  const { setHistoryValue, setLastHistoryValue } = useHistoryContext();
+  const { 
+    setHistoryValue, undoStack, setUndoStack,setRedoStack,
+    undoRedoState
+  } = useHistoryContext();
   const { handleScrollbarToCenter } = useCanvasToolsContext();
 
   useEffect(() => {
-    if (undoStack.length < count || !fabricCanvas) return;
+    if (undoStack.length < undoRedoState.count || !fabricCanvas) return;
+    // console.log('undo', undoRedoState.count, undoStack.length, redoStack.length)
 
     const newUndoStack = [...undoStack];
     const Fabric_state = getCurrentFabricCanvasState(fabricCanvas);
 
     let stateToLoad: FabricCanvasState | undefined;
     const statesToRedo: FabricCanvasState[] = [];
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < undoRedoState.count; i++) {
       const state = newUndoStack.pop();
       if (state) {
-        if (i === count - 1) {
+        if (i === undoRedoState.count - 1) {
           stateToLoad = state;
           break;
         }
@@ -78,34 +76,31 @@ export const useUndo = (
 
     setUndoStack(newUndoStack);
     setHistoryValue(newUndoStack.length);
-    setLastHistoryValue(newUndoStack.length);
-  }, [isUndo]);
+  }, [undoRedoState.isUndo]);
 };
 
 export const useRedo = (
-  isRedo: boolean,
 	fabricCanvas: fabric.Canvas | null,
-	undoStack: FabricCanvasState[],
-	redoStack: FabricCanvasState[],
-	setUndoStack: React.Dispatch<React.SetStateAction<FabricCanvasState[]>>,
-	setRedoStack: React.Dispatch<React.SetStateAction<FabricCanvasState[]>>,
-	count: number = 1
 ) => {
-  const { setHistoryValue, setLastHistoryValue } = useHistoryContext();
+  const { 
+    setHistoryValue, undoStack, setUndoStack,
+    redoStack, setRedoStack, undoRedoState
+  } = useHistoryContext();
   const { handleScrollbarToCenter } = useCanvasToolsContext();
 
   useEffect(() => {
     if (redoStack.length === 0 || !fabricCanvas) return;
+    // console.log('redo', undoRedoState.count, redoStack.length)
 
     const newRedoStack = [...redoStack];
     const Fabric_state = getCurrentFabricCanvasState(fabricCanvas);
 
     let stateToLoad: FabricCanvasState | undefined;
     const statesToUndo: FabricCanvasState[] = [];
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < undoRedoState.count; i++) {
       const state = newRedoStack.pop();
       if (state) {
-        if (i === count - 1) {
+        if (i === undoRedoState.count - 1) {
           stateToLoad = state;
           break;
         }
@@ -119,8 +114,6 @@ export const useRedo = (
     }
         
     setRedoStack(newRedoStack);
-    setHistoryValue(undoStack.length + count);
-    setLastHistoryValue(undoStack.length + count);
-
-  }, [isRedo]);
+    setHistoryValue(undoStack.length + undoRedoState.count);
+  }, [undoRedoState.isRedo]);
 };

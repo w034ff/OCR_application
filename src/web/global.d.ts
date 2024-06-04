@@ -20,6 +20,11 @@ declare global {
       width: number;
       height: number;
     }
+    export interface UndoRedoState {
+      isUndo: boolean;
+      isRedo: boolean;
+      count: number;
+    }
     export interface Inputs {
       width: string;
       height: string;

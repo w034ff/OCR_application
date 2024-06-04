@@ -5,7 +5,6 @@ interface MenuGroupProps {
   items: Array<{
     icon?: string;
     text: string;
-    onClick?: (e: React.MouseEvent) => void;
   }>;
 }
 
@@ -13,7 +12,7 @@ const MenuGroup: (props: MenuGroupProps) => JSX.Element = ({ justifyContent, ite
   return (
     <div className="menu-group" style={{ justifyContent }}>
       {items.map((item, index) => (
-        <MenuItem key={index} icon={item.icon} text={item.text} onClick={item.onClick} />
+        <MenuItem key={index} icon={item.icon} text={item.text} />
       ))}
     </div>
   );

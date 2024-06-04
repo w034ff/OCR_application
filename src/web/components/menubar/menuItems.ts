@@ -3,7 +3,6 @@ import insert from '../assets/icons/insert.png'
 import undo from '../assets/icons/undo.png'
 import redo from '../assets/icons/redo.png'
 import history from '../assets/icons/history_icon.png'
-import { handleUndoRedoAction } from '../../hooks/UndoRedo';
 
 
 export const startItems = [
@@ -41,7 +40,6 @@ export const endItems = [
     {
       icon: undo,
       text: '元に戻す',
-      onClick: () => handleUndoRedoAction('Undo', 1),
     },
     {
       icon: history,
@@ -50,7 +48,6 @@ export const endItems = [
     {
       icon: redo,
       text: 'やり直し',
-      onClick: () => handleUndoRedoAction('Redo', 1),
     },
     {
       text: '閉じる',

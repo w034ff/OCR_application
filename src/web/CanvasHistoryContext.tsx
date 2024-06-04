@@ -1,4 +1,4 @@
-import { createContext, useContext, ReactNode, useState } from 'react';
+import React, { createContext, useContext, ReactNode, useState } from 'react';
 
 interface HistoryContextProps {
   isSaveState: boolean;
@@ -7,8 +7,12 @@ interface HistoryContextProps {
   setHistoryValue: React.Dispatch<React.SetStateAction<number>>;
   maxHistory: number;
   setMaxHistory: React.Dispatch<React.SetStateAction<number>>;
-  lastHistoryValue: number;
-  setLastHistoryValue: React.Dispatch<React.SetStateAction<number>>;
+  undoStack: FabricCanvasState[];
+  setUndoStack: React.Dispatch<React.SetStateAction<FabricCanvasState[]>>;
+  redoStack: FabricCanvasState[];
+  setRedoStack: React.Dispatch<React.SetStateAction<FabricCanvasState[]>>;
+  undoRedoState: UndoRedoState
+  setUndoRedoState: React.Dispatch<React.SetStateAction<UndoRedoState>>;
 }
 
 const HistoryContext = createContext<HistoryContextProps | undefined>(undefined);
@@ -21,12 +25,17 @@ export const CanvasHistoryProvider = ({ children }: CanvasHistoryProviderProps):
   const [isSaveState, setIsSaveState] = useState<boolean>(false);
   const [historyValue, setHistoryValue] = useState<number>(0);
   const [maxHistory, setMaxHistory] = useState<number>(0);
-  const [lastHistoryValue, setLastHistoryValue] = useState<number>(0);
+
+  const [undoStack, setUndoStack] = useState<FabricCanvasState[]>([]);
+  const [redoStack, setRedoStack] = useState<FabricCanvasState[]>([]);
+  const [undoRedoState, setUndoRedoState] = useState<UndoRedoState>({ isUndo: false, isRedo: false, count: 1});
+
 
   return (
     <HistoryContext.Provider value={{
       isSaveState, setIsSaveState, historyValue, setHistoryValue, 
-      maxHistory, setMaxHistory, lastHistoryValue, setLastHistoryValue
+      maxHistory, setMaxHistory,undoStack, setUndoStack,
+      redoStack, setRedoStack, undoRedoState, setUndoRedoState
     }}>
       {children}
     </HistoryContext.Provider>

@@ -5,29 +5,30 @@ import { useHistoryContext } from '../../CanvasHistoryContext';
 interface ContextMenuItemProps {
   icon?: JSX.Element;
   text?: string;
-  onClick?: (e: React.MouseEvent) => void;
   divider?: boolean;
   ViewReset: () => void;
   closeEvent: () => void;
 }
 
-const ContextMenuItem: (props: ContextMenuItemProps) => JSX.Element = ({ icon, text, onClick, divider, ViewReset, closeEvent}) => {
+const ContextMenuItem: (props: ContextMenuItemProps) => JSX.Element = ({ icon, text, divider, ViewReset, closeEvent}) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { historyValue, maxHistory } = useHistoryContext();
+  const { historyValue, maxHistory, setUndoRedoState } = useHistoryContext();
 
   const isActionDisabled = (action?: string) : boolean => {
     return (action === 'やり直し' && historyValue === maxHistory) ||
            (action === '元に戻す' && historyValue === 0);
   };
 
-  const handleItemClick = (e: React.MouseEvent) => {
+  const handleItemClick = () => {
     if (isActionDisabled(text)) return;
-    if (text === 'ビューをリセットします') {
-      ViewReset();
+    if (text === '元に戻す') {
+      setUndoRedoState(prevState => ({...prevState, isUndo: !prevState.isUndo, count: 1}));
+    } else if (text === 'やり直し') {
+      setUndoRedoState(prevState => ({...prevState, isRedo: !prevState.isRedo, count: 1}));
     } else if (text === '挿入') {
       fileInputRef.current?.click();
-    } else if (onClick) {
-      onClick(e);
+    } else if (text === 'ビューをリセットします') {
+      ViewReset();
     }
     closeEvent();
   };
@@ -45,8 +46,6 @@ const ContextMenuItem: (props: ContextMenuItemProps) => JSX.Element = ({ icon, t
       {text === '挿入' && <FileInput fileInputRef={fileInputRef} />}
     </div>
   );
-  
 };
-
 
 export default ContextMenuItem;

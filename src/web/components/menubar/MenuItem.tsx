@@ -10,15 +10,14 @@ import { useSidebarStateContext } from '../sidebar/SidebarStateContext';
 interface MenuItemProps {
   icon?: string;
   text: string;
-  onClick?: (e: React.MouseEvent) => void;
 }
 
-const MenuItem: (props: MenuItemProps) => JSX.Element = ({ icon, text, onClick }) => {
+const MenuItem: (props: MenuItemProps) => JSX.Element = ({ icon, text }) => {
   const { isFlipped, setIsFlipped } = useCanvasFlipContext();
   const { setTrimModeActive, setResizeModeActive } = useSidebarStateContext();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isAccordionOpen, setAccordionOpen] = useState(false);
-  const { historyValue, maxHistory } = useHistoryContext();
+  const { historyValue, maxHistory, setUndoRedoState } = useHistoryContext();
   const isRedoDisabled = historyValue === maxHistory;
   const isUndoDisabled = historyValue === 0;
 
@@ -28,21 +27,21 @@ const MenuItem: (props: MenuItemProps) => JSX.Element = ({ icon, text, onClick }
 
   const menuItemClasses = menuItemClassNames.join(' ');
 
-  const handleItemClick = (e: React.MouseEvent) => {
+  const handleItemClick = () => {
     setTrimModeActive(false);
     setResizeModeActive(false);
     if (text === 'キャンバス') {
       setResizeModeActive(true)
     } else if (text === '挿入') {
       fileInputRef.current?.click();
+    } else if (text === '元に戻す') {
+      setUndoRedoState(prevState => ({...prevState, isUndo: !prevState.isUndo, count: 1}));
     } else if (text === '履歴') {
       setAccordionOpen(!isAccordionOpen);
+    } else if (text === 'やり直し') {
+      setUndoRedoState(prevState => ({...prevState, isRedo: !prevState.isRedo, count: 1}));
     } else if (text === '閉じる') {
       setIsFlipped(!isFlipped);
-    } else {
-      if (onClick && !(isRedoDisabled && text === 'やり直し') && !(isUndoDisabled && text === '元に戻す')) {
-        onClick(e);
-      }
     }
   };
 

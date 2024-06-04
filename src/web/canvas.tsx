@@ -7,12 +7,18 @@ import { useSimpleBarHoverCleanup } from './hooks/SimpleBarHoverCleanup';
 import { useAdjustScrollForCanvasZoom } from './hooks/AdjustScrollForCanvasZoom';
 import { useCanvasToolsContext } from './CanvasToolsContext';
 import { useCanvasFlipContext } from './CanvasToolsContext';
+import { useHistoryContext } from './CanvasHistoryContext';
 import { useEditCanvasToolsContext } from './components/canvasTrimHooks/EditCanvasToolsContext';
 import { useSidebarStateContext } from './components/sidebar/SidebarStateContext';
 import { useControlContextMenu } from './useControlContextMenu';
 import ContextMenuFrameComponent from './components/canvasContextMenu/ContextMenuFrame';
 import { useDrawFabricCanvas } from './CanvasDraw';
 
+
+enum ActionType {
+	Undo = "Undo",
+	Redo = "Redo"
+}
 
 const CanvasComponent = (): JSX.Element  => {
 	const { 
@@ -21,6 +27,7 @@ const CanvasComponent = (): JSX.Element  => {
 	const { isFlipped } = useCanvasFlipContext();
 	const { setCurrentCanvasWidth, setCurrentCanvasHeight } = useEditCanvasToolsContext();
 	const { trimModeActive, resizeModeActive } = useSidebarStateContext();
+	const { setUndoRedoState } = useHistoryContext();
 	const [lastDragX, setLastDragX] = useState<number>(0);
 	const [lastDragY, setLastDragY] = useState<number>(0);
 
@@ -37,13 +44,25 @@ const CanvasComponent = (): JSX.Element  => {
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
 	const editCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
-	const PerformCanvasActionRef = useRef<(action: string, count: number) => void>(() => {});
+	const performCanvasAction = (action: string, count: number = 1) => {
+    switch (action) {
+      case ActionType.Undo:
+        setUndoRedoState(prevState => ({...prevState, isUndo: !prevState.isUndo, count: count}));
+        break;
+      case ActionType.Redo:
+        setUndoRedoState(prevState => ({...prevState, isRedo: !prevState.isRedo, count: count}));
+        break;
+      default:
+        throw new Error("No active window found");
+    }
+  };
+  
 
 	const scrollables = document.querySelectorAll('.simplebar-scrollable-x, .simplebar-scrollable-y');
 	
 	// カスタムフックを使用
 	// Rectオブジェクト等をFabricキャンバスに描画するためのカスタムフック
-	useDrawFabricCanvas(drawing, canvasRef, editCanvasRef, containerRef, PerformCanvasActionRef);
+	useDrawFabricCanvas(drawing, canvasRef, editCanvasRef, containerRef);
 	useChangeScaleUpperCanvases(scale);
 	useSimpleBarHoverCleanup('.simplebar-scrollable-x, .simplebar-scrollable-y');
 	// キャンバスのズーム及び、ズーム後のスクロール(simplebar)の位置を調整するカスタムフック
@@ -84,13 +103,13 @@ const CanvasComponent = (): JSX.Element  => {
 	useEffect(() => {
 		// 依存配列にscrollElementを含めることで、scrollElementが設定された後にこのEffectが実行される
 		if (scrollElement && !listenerRegistered && window.UnRedo && typeof window.UnRedo.on === 'function') {
-			window.UnRedo.on('UnRedo-action', PerformCanvasActionRef.current);
+			window.UnRedo.on('UnRedo-action', performCanvasAction);
 			handleScrollbarToCenter();
 			setListenerRegistered(true); // 登録状態を更新
 		}
 		return () => {
 			if (window.UnRedo && typeof window.UnRedo.off === 'function') {
-				window.UnRedo.off('UnRedo-action', PerformCanvasActionRef.current);
+				window.UnRedo.off('UnRedo-action', performCanvasAction);
 			}
 		};
 	}, [scrollElement]);
