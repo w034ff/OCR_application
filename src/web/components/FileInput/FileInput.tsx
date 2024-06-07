@@ -1,4 +1,4 @@
-import { useHistoryContext } from "../../CanvasHistoryContext";
+import { useSaveStateContext } from "../../CanvasSaveStateContext";
 import { useFileInputContext } from "./FileInputContext";
 
 interface FileInputProps {
@@ -6,7 +6,7 @@ interface FileInputProps {
 }
 
 const FileInput = ({ fileInputRef } : FileInputProps): JSX.Element => {
-  const { setIsSaveState } = useHistoryContext();
+  const { setIsSaveState } = useSaveStateContext();
   const { setImageURL, setLoadImageFlag } = useFileInputContext();
 
   const handleFileInsert = (e: React.ChangeEvent<HTMLInputElement>) => {

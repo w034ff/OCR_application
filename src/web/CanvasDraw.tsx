@@ -1,55 +1,49 @@
 import { useEffect, useState } from 'react';
 import { fabric } from 'fabric';
-import { useSaveState } from './hooks/SaveState';
+import { useInitializeFabricCanvas } from './hooks/fabricCanvasHooks/useInitializeFabricCanvas';
+import { useSaveState } from './hooks/fabricCanvasHooks/useSaveState';
 import { useLoadImageURL } from './hooks/useLoadImageURL';
-import { useEditFabricCanvas } from './components/canvasTrimHooks/useEditFabricCanvas';
+import { useEditFabricCanvas } from './hooks/editFabricCanvasHooks/useEditFabricCanvas';
 import { useHistoryContext } from './CanvasHistoryContext';
 import { useCanvasToolsContext} from './CanvasToolsContext'
-import { useUndo, useRedo } from './hooks/UndoRedo';
+import { useSaveStateContext } from './CanvasSaveStateContext';
+import { useUndo } from './hooks/fabricCanvasHooks/useUndo';
+import { useRedo } from './hooks/fabricCanvasHooks/useRedo';
+import { isNumber } from './utils/validators';
 
 
 export const useDrawFabricCanvas = (
-  drawing: boolean,
   canvasRef: React.RefObject<HTMLCanvasElement>,
   editCanvasRef:React.RefObject<HTMLCanvasElement>,
   containerRef: React.RefObject<HTMLDivElement>,
 ) => {
-	const { setIsSaveState, setUndoRedoState } = useHistoryContext();
+  const { setIsSaveState } = useSaveStateContext()
+	const { setUndoRedoState } = useHistoryContext();
   const { scale } = useCanvasToolsContext();
   const [drawingMode, setDrawingMode] = useState('lin'); // 'line' または 'rect'
-  const [fabricCanvas, setFabricCanvas] = useState<fabric.Canvas | null>(null);
   const [startPoint, setStartPoint] = useState<fabric.Rect | null>(null);
 
+  // 描画用fabricキャンバスと切り取り領域用fabricキャンバスを初期化するカスタムフック
+  const { fabricCanvas, fabricEditCanvas } = useInitializeFabricCanvas(canvasRef, editCanvasRef);
 
-  // カスタムフックを使用
+  // drawing-canvasの状態を保存するカスタムフック（Undo, Redoの実行に不可欠なカスタムフック）
   useSaveState(fabricCanvas);
-
+  // drawing-canvasをUndoするカスタムフック
   useUndo(fabricCanvas);
+  // drawing-canvasをRedoするカスタムフック
   useRedo(fabricCanvas);
   // Fabricキャンバスに画像を挿入するカスタムフック
   useLoadImageURL(fabricCanvas, canvasRef, containerRef);
   //  キャンバスのトリミング領域を設定および管理するためのカスタムフック
-  useEditFabricCanvas(fabricCanvas, canvasRef, editCanvasRef);
+  useEditFabricCanvas(fabricCanvas, fabricEditCanvas, canvasRef);
 
-  // console.log("render canvasDraw")
-
-  
-
-
-
-  useEffect(() => {
-    if (canvasRef.current && !fabricCanvas) {
-      const newFabricCanvas = new fabric.Canvas(canvasRef.current);
-      newFabricCanvas.uniformScaling = false;
-      setFabricCanvas(newFabricCanvas);
-    }
-  }, [canvasRef]);
-
+  console.log("render canvasDraw")
   
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!fabricCanvas || !canvas) return;
+    console.log('gggggggggggggggg')
+    if (!fabricCanvas) return;
     const startDrawing = (o: fabric.IEvent) => {
+      console.log('eeeeeeeeeeeeeeeeeeeeee')
       fabricCanvas.selection = false; 
       const pointer = fabricCanvas.getPointer(o.e);
       const rect = new fabric.Rect({
@@ -72,7 +66,7 @@ export const useDrawFabricCanvas = (
     };
 
     const keepDrawing = (o: fabric.IEvent) => {
-      if (!drawing || !startPoint || startPoint.left === undefined || startPoint.top === undefined) return;
+      if (!startPoint || !isNumber(startPoint.left) || !isNumber(startPoint.top)) return;
       const pointer = fabricCanvas.getPointer(o.e);
       // スケーリングされたキャンバスに対するポインタの相対座標を計算
       const xChange = (pointer.x - startPoint.left) * scale;
@@ -107,10 +101,10 @@ export const useDrawFabricCanvas = (
       if (fabricCanvas.getActiveObject()) {
         // 既にアクティブなオブジェクトがある場合の処理
         // ここで不適切な位置変更が行われていないか確認
-      } else if (drawingMode === 'lin' && !drawing) {
+      } else if (drawingMode === 'lin') {
         startDrawing(o);
       }
-      console.log(drawing)
+      console.log('ffffffffffffffffffff')
       setIsSaveState(flag => !flag);
     };
 
@@ -136,6 +130,6 @@ export const useDrawFabricCanvas = (
       fabricCanvas.off('mouse:up', finishDrawing);
       document.removeEventListener('keydown', handleKeydown);
     };
-  }, [fabricCanvas, drawing, startPoint, scale]);
+  }, [fabricCanvas, startPoint, scale]);
 
 };

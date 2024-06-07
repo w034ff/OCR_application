@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { fabric } from 'fabric';
-import { useSidebarStateContext } from '../sidebar/SidebarStateContext';
+import { useSidebarStateContext } from '../../components/Sidebar/SidebarStateContext';
 import { useEditCanvasToolsContext } from './EditCanvasToolsContext';
 import { useRotate90Canvas } from './useRotate90Canvas';
 import { createRectProps } from './createRectProps';

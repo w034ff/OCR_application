@@ -1,5 +1,5 @@
 import { useAlertSound } from '../../hooks/AlertSound';
-import { useScaleUpdate } from '../../hooks/ScaleUpdate';
+import { useCanvasScaleControls } from '../../hooks/ScaleUpdate';
 
 const MIN_SCALE = 0.1; // 最小ズーム倍率（スライダー操作時）
 const MAX_SCALE = 4; // 最大ズーム倍率（スライダー操作時）
@@ -8,7 +8,7 @@ const DEFAULT_SCALE = 1; // ズームの基準値
 
 export const useZoomScaleChangeSlider = () => {
 	const playAlertSound = useAlertSound(); // アラートを再生するカスタムフック
-  const updateScale = useScaleUpdate(); // scaleを変更する処理をまとめたカスタムフック
+  const { updateScale } = useCanvasScaleControls(); // scaleを変更する処理をまとめたカスタムフック
 	
 
 	// スライダーの値からスケール値への変換

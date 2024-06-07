@@ -1,11 +1,11 @@
 import RotateObjectIcon from '../assets/svgs/RotateObjectIcon';
 import FlipObjectIcon from '../assets/svgs/FlipObjectIcon';
-import { useHistoryContext } from '../../CanvasHistoryContext';
-import { useEditCanvasToolsContext } from '../canvasTrimHooks/EditCanvasToolsContext';
+import { useSaveStateContext } from '../../CanvasSaveStateContext';
+import { useEditCanvasToolsContext } from '../../hooks/editFabricCanvasHooks/EditCanvasToolsContext';
 
 
 const RotateFlipButtons = (): JSX.Element => {
-  const { setIsSaveState } = useHistoryContext();
+  const { setIsSaveState } = useSaveStateContext();
   const { setRotate90, setFlipState } = useEditCanvasToolsContext();
 
 

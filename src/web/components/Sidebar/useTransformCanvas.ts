@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useHistoryContext } from '../../CanvasHistoryContext';
-import { useEditCanvasToolsContext } from '../canvasTrimHooks/EditCanvasToolsContext';
+import { useSaveStateContext } from '../../CanvasSaveStateContext';
+import { useEditCanvasToolsContext } from '../../hooks/editFabricCanvasHooks/EditCanvasToolsContext';
 import { useSidebarStateContext } from './SidebarStateContext';
 import { useValidateAndAdjustSize } from './useValidateAndAdjustSize';
 
 export const useTransformCanvas = () => {
-	const { setIsSaveState } = useHistoryContext();
+	const { setIsSaveState } = useSaveStateContext();
 	const {
     setIsTrimCanvas, setTrimRegionChanged, currentCanvasWidth, currentCanvasHeight,
     isTrimAspectRatioLocked, isResizeAspectRatioLocked,

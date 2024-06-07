@@ -1,33 +1,32 @@
 import {
   SideBar,
   GuideBar,
+  CanvasContextMenu,
+  CanvasModalWindow
 } from './components';
 import CanvasComponent from './canvas'
-import { useCanvasFlipContext } from './CanvasToolsContext';
-import CanvasModalWindow from './components/modalWindow/ScaleModalWindow';
 import { CanvasModalWindowProvider } from './components/modalWindow/CanvasModalWindowContext';
+import { ContextMenuProvider } from './components/canvasContextMenu/ContextMenuContext';
+import { useMenuItemFlipEffects } from './hooks/useMenuItemFlipEffects';
 
-const CanvasInterface = (): JSX.Element => {  
-  const { isFlipped } = useCanvasFlipContext();
+const CanvasInterface = (): JSX.Element => {
+  const { topSectionStyle, sideBarStyle } = useMenuItemFlipEffects();
 
-  const topSectionStyle = {
-    height: isFlipped ? '100%' : 'calc(100% - 48px)',
-  };
-
-  const sidebarStyle = {
-    boxShadow: isFlipped ? '-5px 0 5px rgba(0, 0, 0, 0.1)' : '-8px 0 3px -3px rgba(0, 0, 0, 0.1)',
-  };
+  // console.log('render CanvasInterface');
 
   return (
     <>
       <CanvasModalWindowProvider>
         <GuideBar />
         <div className="top-section" style={topSectionStyle}>
+          <ContextMenuProvider>
             <CanvasComponent />
-            <div className="sidebar" style={sidebarStyle}>
+            <CanvasContextMenu />
+            <div className="sidebar" style={sideBarStyle}>
               <SideBar />
             </div>
-        </div>
+          </ContextMenuProvider>
+        </div>  
         <CanvasModalWindow />
       </CanvasModalWindowProvider>
     </>

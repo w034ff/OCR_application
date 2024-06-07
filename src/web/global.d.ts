@@ -29,6 +29,11 @@ declare global {
       width: string;
       height: string;
     }
+    export interface ContextMenuState {
+      visible: boolean;
+      x: number;
+      y: number;
+    }
 }
 
 declare module 'fabric' {

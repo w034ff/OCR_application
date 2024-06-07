@@ -1,8 +1,8 @@
 import { useCanvasToolsContext } from '../../CanvasToolsContext';
 import { useCanvasModalWindowContext } from '../modalWindow/CanvasModalWindowContext';
-import { useSidebarStateContext } from '../sidebar/SidebarStateContext';
+import { useSidebarStateContext } from '../Sidebar/SidebarStateContext';
 import { getNextScale } from '../../utils/scaleUtils';
-import { useScaleUpdate } from '../../hooks/ScaleUpdate';
+import { useCanvasScaleControls } from '../../hooks/ScaleUpdate';
 import Slider from '../Slider/Slider';
 
 
@@ -20,7 +20,7 @@ const GuideItem: (props: GuideItemProps) => JSX.Element = ({ icon, svg, text, on
 
   // console.log("render GuideItem")
 
-  const updateScale = useScaleUpdate(); // scaleを変更する処理をまとめたカスタムフック
+  const { updateScale } = useCanvasScaleControls(); // scaleを変更する処理をまとめたカスタムフック
   
 
   const guideItemClassNames = ['guide-item'];

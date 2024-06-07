@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useContextMenuContext } from './components/canvasContextMenu/ContextMenuContext';
 
 const MENU_WIDTH = 183; // コンテキストメニューの横幅
 const MENU_HEIGHT = 278; // コンテキスメニューの縦幅
@@ -18,17 +19,14 @@ const adjustMenuPosition = (
 };
 
 
-export const useControlContextMenu = (
-	dragging: boolean,
-	drawing: boolean
-) => {
-	const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0 });
+export const useControlContextMenu = () => {
+	const { setContextMenu } = useContextMenuContext();
 	// ブラウザウィンドウのサイズを取得
 	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 	const [windowHeight, setWindowHeight] = useState(window.innerHeight);
 
-	const openContextMenu = (e: MouseEvent) => {
-		if (e.button === 2 && !dragging && !drawing) {
+	const openContextMenu = (e: MouseEvent, drawing: boolean, dragging: boolean) => {
+		if (e.button === 2 && !drawing && !dragging) {
 			e.preventDefault();
 			e.stopPropagation();
 			const { adjustedX, adjustedY } = adjustMenuPosition(e.clientX, e.clientY, windowWidth, windowHeight);
@@ -63,5 +61,5 @@ export const useControlContextMenu = (
 		};
 	}, []);
 
-	return { contextMenu, openContextMenu, closeContextMenu };
+	return { openContextMenu, closeContextMenu };
 }

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { fabric } from 'fabric';
 import { useEditCanvasToolsContext } from './EditCanvasToolsContext';
-import { useSidebarStateContext } from '../sidebar/SidebarStateContext';
+import { useSidebarStateContext } from '../../components/Sidebar/SidebarStateContext';
 import { isFabricRect, resizeAndMoveObjects } from '../../utils/fabricEditCanvasUtils';
 
 

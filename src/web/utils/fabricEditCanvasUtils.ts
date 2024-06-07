@@ -1,6 +1,6 @@
 import { fabric } from 'fabric';
 import { isNumber, isRectPropsNumber } from './validators'
-import { MIN_LEFT_TOP, EDGE_OFFSET } from '../components/canvasTrimHooks/editCanvasConstants';
+import { MIN_LEFT_TOP, EDGE_OFFSET } from '../hooks/editFabricCanvasHooks/editCanvasConstants';
 
 
 // fabricEditCanvasに関して、追加したRectオブジェクトのスケールが1を超えないよう調整

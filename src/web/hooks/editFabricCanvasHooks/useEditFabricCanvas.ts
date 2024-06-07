@@ -1,4 +1,3 @@
-import { useInitializeEditCanvas } from './useInitializeEditCanvas';
 import { useUpdateEditCanvasSize } from './useUpdateEditCanvas';
 import { useEditCanvasSetup } from './useEditCanvasSetup';
 import { useTrimmingPreview } from './useTrimmingPreview';
@@ -12,12 +11,9 @@ import { useFlipCanvas } from './useFlipCanvas';
 
 export const useEditFabricCanvas = (
   fabricCanvas: fabric.Canvas | null,
+  fabricEditCanvas: fabric.Canvas | null,
   canvasRef: React.RefObject<HTMLCanvasElement>,
-  editCanvasRef:React.RefObject<HTMLCanvasElement>,
 ) => {
-  // 切り取り領域用のfabricキャンバスの初期化するカスタムフック
-  const fabricEditCanvas = useInitializeEditCanvas(editCanvasRef);
-  
   // drawing-canvasの大きさが変更された際、fabricEditCanvasの大きさを更新するカスタムフック
   useUpdateEditCanvasSize(fabricEditCanvas, canvasRef);
 
@@ -36,6 +32,6 @@ export const useEditFabricCanvas = (
   useTransformFromSidebar(fabricCanvas, fabricEditCanvas);
   // モーダルウィンドウからリサイズするカスタムフック（アスペクト比を維持しつつリサイズする）
   useResizeFromModal(fabricCanvas);
-  // fabricCanvasを水平・垂直方向に反転させるカスタムフック
+  // drawing-canvasを水平・垂直方向に反転させるカスタムフック
   useFlipCanvas(fabricCanvas);
 };

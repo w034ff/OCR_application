@@ -1,6 +1,6 @@
 import '../../styles/modal-window.css';
 import { useState } from 'react';
-import { useHistoryContext } from '../../CanvasHistoryContext';
+import { useSaveStateContext } from '../../CanvasSaveStateContext';
 import { useCanvasModalWindowContext } from './CanvasModalWindowContext';
 import { useAlertSound } from '../../hooks/AlertSound';
 import { useChangeScaleModal } from './useChangeScaleModal';
@@ -15,7 +15,7 @@ const resizeRatioValues: number[] = [
 ]
 
 const CanvasModalWindow = (): JSX.Element | null  => {
-  const { setIsSaveState } = useHistoryContext();
+  const { setIsSaveState } = useSaveStateContext();
   const { canvasModalMode, setCanvasModalMode } = useCanvasModalWindowContext();
   const [selectedScale, setSelectedScale] = useState<number>(1);
   const [animationKey, setAnimationKey] = useState(0); 

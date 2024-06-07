@@ -1,4 +1,4 @@
-import { useEditCanvasToolsContext } from '../canvasTrimHooks/EditCanvasToolsContext';
+import { useEditCanvasToolsContext } from '../../hooks/editFabricCanvasHooks/EditCanvasToolsContext';
 import { useSidebarStateContext } from './SidebarStateContext';
 
 
@@ -25,7 +25,7 @@ export const useValidateAndAdjustSize = (
     } else if (isTrimAspectRatioLocked || (resizeModeActive && isResizeAspectRatioLocked)) {
       adjustDimensionsKeepingAspectRatio(name, value);
     }
-    setInputChanged((flag: boolean) => !flag);
+    setInputChanged(flag => !flag);
   };
 
 

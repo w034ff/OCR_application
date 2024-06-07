@@ -24,7 +24,7 @@ export const useChangeScaleModal = (setSelectedScale: React.Dispatch<React.SetSt
 
     setZoomScaleValue(selectedScale / Math.max(1, scale));
     setScale(selectedScale);
-    setScaleUpdateFlag((flag: boolean) => !flag);
+    setScaleUpdateFlag(flag => !flag);
   };
 
   const applyResizeCanvas = (selectedScale: number) => {

@@ -12,7 +12,8 @@ export const ContextMenuItems = [
     text: 'やり直し',
   },
   {
-    divider: true
+    divider: true,
+    text: 'divider'
   },
   {
     icon: <InsertIcon className="icon" style={{ width: "20px", height: "20px" }} />,

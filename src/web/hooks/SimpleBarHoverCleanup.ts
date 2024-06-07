@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-export const useSimpleBarHoverCleanup = (selector: string) => {
+export const useSimpleBarHoverCleanup = (scrollables: NodeListOf<Element>) => {
   //  Simplebarの例外処理（simplebar-hoverをsimplebarがhoverでないとき、removeするよう修正）
 	const handleDetectMouseMove = (e: MouseEvent) => {
 		document.querySelectorAll('.simplebar-scrollbar').forEach(scrollbar => {
@@ -16,11 +16,11 @@ export const useSimpleBarHoverCleanup = (selector: string) => {
 
   //  スクロールバーを押したとき、デフォルトのsimplebar-hoverを削除し、カスタムしたsimplebar-draggingを追加
   const handleMousedown = (e: MouseEvent) => {
-    const clickedElement = document.elementFromPoint(e.clientX, e.clientY);
-    if (clickedElement?.classList.contains('simplebar-scrollbar')) {
-      clickedElement.classList.remove('simplebar-hover');
-      clickedElement.classList.add('simplebar-dragging');
-    }
+    // const clickedElement = document.elementFromPoint(e.clientX, e.clientY);
+    // if (clickedElement?.classList.contains('simplebar-scrollbar')) {
+    //   clickedElement.classList.remove('simplebar-hover');
+    //   clickedElement.classList.add('simplebar-dragging');
+    // }
   };
 
   //  スクロールバーを離したとき、スクロールバーの上ならhoverを追加、そうでないならdraggingを削除
@@ -37,8 +37,6 @@ export const useSimpleBarHoverCleanup = (selector: string) => {
   
 
   useEffect(() => {
-    const scrollables = document.querySelectorAll(selector);
-
     window.addEventListener('mouseup', handleMouseup, true);
 		scrollables.forEach((scrollable) => {
 			if (scrollable instanceof HTMLDivElement) {
@@ -56,5 +54,5 @@ export const useSimpleBarHoverCleanup = (selector: string) => {
         }
 		  });
     }
-	}, [selector]);
+	}, [scrollables]);
 }

@@ -1,8 +1,6 @@
-import React, { createContext, useContext, ReactNode, useState } from 'react';
+import { createContext, useContext, ReactNode, useState } from 'react';
 
 interface HistoryContextProps {
-  isSaveState: boolean;
-  setIsSaveState: React.Dispatch<React.SetStateAction<boolean>>;
   historyValue: number;
   setHistoryValue: React.Dispatch<React.SetStateAction<number>>;
   maxHistory: number;
@@ -22,7 +20,6 @@ interface CanvasHistoryProviderProps {
 }
 
 export const CanvasHistoryProvider = ({ children }: CanvasHistoryProviderProps): JSX.Element => {
-  const [isSaveState, setIsSaveState] = useState<boolean>(false);
   const [historyValue, setHistoryValue] = useState<number>(0);
   const [maxHistory, setMaxHistory] = useState<number>(0);
 
@@ -30,10 +27,10 @@ export const CanvasHistoryProvider = ({ children }: CanvasHistoryProviderProps):
   const [redoStack, setRedoStack] = useState<FabricCanvasState[]>([]);
   const [undoRedoState, setUndoRedoState] = useState<UndoRedoState>({ isUndo: false, isRedo: false, count: 1});
 
-
+  console.log('ssssssssssssssssssssssss')
   return (
     <HistoryContext.Provider value={{
-      isSaveState, setIsSaveState, historyValue, setHistoryValue, 
+      historyValue, setHistoryValue, 
       maxHistory, setMaxHistory,undoStack, setUndoStack,
       redoStack, setRedoStack, undoRedoState, setUndoRedoState
     }}>

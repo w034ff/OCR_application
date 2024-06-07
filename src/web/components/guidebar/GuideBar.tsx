@@ -1,15 +1,10 @@
 import '../../styles/Guidebar.css';
 import { startGuideItems, endGuideItems } from './guideItems';
 import GuideGroup from './GuideGroup';
-import { useCanvasFlipContext } from '../../CanvasToolsContext';
+import { useMenuItemFlipEffects } from '../../hooks/useMenuItemFlipEffects';
 
 const GuideBar = (): JSX.Element | null => {  
-  const { isFlipped } = useCanvasFlipContext();
-
-  const guideBarStyle = {
-    display: isFlipped ? 'none' : 'flex',
-    height: isFlipped ? '0px' : '48px',
-  };
+  const { guideBarStyle } = useMenuItemFlipEffects();
 
   // console.log("render GuideBar")
 

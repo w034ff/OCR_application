@@ -4,8 +4,8 @@ import { STROKE_WIDTH } from './editCanvasConstants';
 import { isNumber } from '../../utils/validators';
 import { isFabricRect, shiftObjects, resizeAndMoveObjects } from '../../utils/fabricEditCanvasUtils';
 import { useEditCanvasToolsContext } from './EditCanvasToolsContext';
-import { useSidebarStateContext } from '../sidebar/SidebarStateContext';
-import { useHistoryContext } from '../../CanvasHistoryContext';
+import { useSidebarStateContext } from '../../components/Sidebar/SidebarStateContext';
+import { useSaveStateContext } from '../../CanvasSaveStateContext';
 
 
 export const useTransformFromSidebar = (
@@ -17,15 +17,15 @@ export const useTransformFromSidebar = (
 		trimRegionChanged, trimRegionWidth, trimRegionHeight
 	} = useEditCanvasToolsContext();
   const { resizeModeActive } = useSidebarStateContext();
-	const { setIsSaveState } = useHistoryContext();
+	const { setIsSaveState } = useSaveStateContext();
 
 	const [ execFlag, setExecFlag ] = useState<boolean>(false);
 
 	useEffect(() => {
 		if (currentCanvasWidth !== trimRegionWidth || currentCanvasHeight !== trimRegionHeight) {
 			if (resizeModeActive) {
-				setExecFlag((flag: boolean) => !flag);
-				setIsSaveState((flag: boolean) => !flag); 
+				setExecFlag(flag => !flag);
+				setIsSaveState(flag => !flag); 
 			}
 		}
 	}, [trimRegionChanged]);

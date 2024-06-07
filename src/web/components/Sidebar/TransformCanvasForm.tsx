@@ -1,5 +1,5 @@
 import RotateFlipButtons from './RotateFlipButtons';
-import { useEditCanvasToolsContext } from '../canvasTrimHooks/EditCanvasToolsContext';
+import { useEditCanvasToolsContext } from '../../hooks/editFabricCanvasHooks/EditCanvasToolsContext';
 import { useSidebarStateContext } from './SidebarStateContext';
 import { useCanvasModalWindowContext } from '../modalWindow/CanvasModalWindowContext';
 import { useTransformCanvas } from './useTransformCanvas';

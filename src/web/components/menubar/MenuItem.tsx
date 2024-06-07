@@ -4,7 +4,9 @@ import FileInput from '../FileInput/FileInput';
 import SortIcon from '../assets/svgs/SortIcon';
 import { useHistoryContext } from '../../CanvasHistoryContext'
 import { useCanvasFlipContext } from '../../CanvasToolsContext';
-import { useSidebarStateContext } from '../sidebar/SidebarStateContext';
+import { useSidebarStateContext } from '../Sidebar/SidebarStateContext';
+import { useMenuItemDisabled } from '../../utils/useMenuItemDisabled';
+import { useMenuItemFlipEffects } from '../../hooks/useMenuItemFlipEffects';
 
 
 interface MenuItemProps {
@@ -13,16 +15,17 @@ interface MenuItemProps {
 }
 
 const MenuItem: (props: MenuItemProps) => JSX.Element = ({ icon, text }) => {
-  const { isFlipped, setIsFlipped } = useCanvasFlipContext();
+  const { setIsFlipped } = useCanvasFlipContext();
   const { setTrimModeActive, setResizeModeActive } = useSidebarStateContext();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isAccordionOpen, setAccordionOpen] = useState(false);
-  const { historyValue, maxHistory, setUndoRedoState } = useHistoryContext();
-  const isRedoDisabled = historyValue === maxHistory;
-  const isUndoDisabled = historyValue === 0;
+  const { setUndoRedoState } = useHistoryContext();
+  const isActionDisabled = useMenuItemDisabled();
+  const { flipMenuItemStyle } = useMenuItemFlipEffects();
+
 
   const menuItemClassNames = ['menu-item'];
-  if (isRedoDisabled && text === 'やり直し' || isUndoDisabled && text === '元に戻す') menuItemClassNames.push('disabled');
+  if (isActionDisabled(text)) menuItemClassNames.push('disabled');
   if (text === '閉じる') menuItemClassNames.push('close');
 
   const menuItemClasses = menuItemClassNames.join(' ');
@@ -30,6 +33,7 @@ const MenuItem: (props: MenuItemProps) => JSX.Element = ({ icon, text }) => {
   const handleItemClick = () => {
     setTrimModeActive(false);
     setResizeModeActive(false);
+    if (isActionDisabled(text)) return;
     if (text === 'キャンバス') {
       setResizeModeActive(true)
     } else if (text === '挿入') {
@@ -41,7 +45,7 @@ const MenuItem: (props: MenuItemProps) => JSX.Element = ({ icon, text }) => {
     } else if (text === 'やり直し') {
       setUndoRedoState(prevState => ({...prevState, isRedo: !prevState.isRedo, count: 1}));
     } else if (text === '閉じる') {
-      setIsFlipped(!isFlipped);
+      setIsFlipped(flag => !flag);
     }
   };
 
@@ -59,11 +63,7 @@ const MenuItem: (props: MenuItemProps) => JSX.Element = ({ icon, text }) => {
         {text === '閉じる' && (
           <SortIcon
             className="flip-icon"
-            style={{
-              paddingTop: isFlipped ? "none" : "17px",
-              paddingBottom: isFlipped ? "17px" : "none",
-              transform: isFlipped ? 'scaleY(-1)' : 'none'
-            }}
+            style={flipMenuItemStyle}
           />
         )}
         {text === '挿入' && <FileInput fileInputRef={fileInputRef} />}

@@ -1,4 +1,4 @@
-import { handleUndoRedoAction } from '../../hooks/UndoRedo';
+import { handleUndoRedoAction } from '../../utils/IPCconnectionsUtils';
 import { useHistoryContext } from '../../CanvasHistoryContext'
 
 

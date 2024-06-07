@@ -1,19 +1,12 @@
 import '../../styles/ContextMenu.css'; 
 import { useCanvasToolsContext } from '../../CanvasToolsContext';
+import { useContextMenuContext } from './ContextMenuContext';
 import { ContextMenuItems } from './ContextMenuItems';
 import ContextMenuItem from './ContextMenuItem';
 
-interface ContextMenuFrameProps {
-  visible: boolean;
-  adjustedX: number;
-  adjustedY: number;
-  closeEvent: () => void;
-}
 
-
-const ContextMenuFrameComponent: (props: ContextMenuFrameProps) => JSX.Element | null = ({
-  visible, adjustedX, adjustedY, closeEvent
-}) => {
+const CanvasContextMenuFrame = (): JSX.Element  => {
+  const { contextMenu } = useContextMenuContext();
   const { scale, setScale, handleScrollbarToCenter, setScaleUpdateFlag } = useCanvasToolsContext();
 
   const triggerViewReset = () => {
@@ -25,17 +18,17 @@ const ContextMenuFrameComponent: (props: ContextMenuFrameProps) => JSX.Element |
     }
   };
   
-  const contextMenuStyle: React.CSSProperties = visible
-    ? { left: `${adjustedX}px`, top: `${adjustedY}px` } 
+  const contextMenuStyle: React.CSSProperties = contextMenu.visible
+    ? { left: `${contextMenu.x}px`, top: `${contextMenu.y}px` } 
     : { visibility: 'hidden', opacity: 0 };
 
   return (
     <div>
-      {visible && <div className="modal-background" />}
+      {contextMenu.visible && <div className="modal-background" />}
       <div className="contextMenu" style={contextMenuStyle}>
         {ContextMenuItems.map((item, index) => (
           <ContextMenuItem key={index} icon={item.icon} text={item.text}
-            divider={item.divider} ViewReset={triggerViewReset} closeEvent={closeEvent}
+            divider={item.divider} ViewReset={triggerViewReset}
           />
           ))}
       </div>
@@ -43,4 +36,4 @@ const ContextMenuFrameComponent: (props: ContextMenuFrameProps) => JSX.Element |
   );
 };
 
-export default ContextMenuFrameComponent;
+export default CanvasContextMenuFrame;

@@ -43,7 +43,7 @@ export const useRotate90Canvas = (
 
         previousRotateState.current = rotate90;
         fabricCanvas.renderAll();
-        setResizeCompleted((flag: boolean) => !flag);
+        setResizeCompleted(flag => !flag);
       }
 
       return () => {

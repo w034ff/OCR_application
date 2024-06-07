@@ -1,23 +1,26 @@
 import { useRef } from 'react';
 import FileInput from '../FileInput/FileInput';
+import { useMenuItemDisabled } from '../../utils/useMenuItemDisabled';
+import { useControlContextMenu } from '../../useControlContextMenu';
 import { useHistoryContext } from '../../CanvasHistoryContext';
+import { useCanvasScaleControls } from '../../hooks/ScaleUpdate';
 
 interface ContextMenuItemProps {
   icon?: JSX.Element;
-  text?: string;
+  text: string;
   divider?: boolean;
   ViewReset: () => void;
-  closeEvent: () => void;
 }
 
-const ContextMenuItem: (props: ContextMenuItemProps) => JSX.Element = ({ icon, text, divider, ViewReset, closeEvent}) => {
+const ContextMenuItem: (props: ContextMenuItemProps) => JSX.Element = ({ icon, text, divider, ViewReset}) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { historyValue, maxHistory, setUndoRedoState } = useHistoryContext();
+  const { setUndoRedoState } = useHistoryContext();
+  const { closeContextMenu } = useControlContextMenu();
+  const isActionDisabled = useMenuItemDisabled();
+  const { triggerViewReset } = useCanvasScaleControls();
 
-  const isActionDisabled = (action?: string) : boolean => {
-    return (action === 'やり直し' && historyValue === maxHistory) ||
-           (action === '元に戻す' && historyValue === 0);
-  };
+  // console.log("render ContextMenuItem")
+
 
   const handleItemClick = () => {
     if (isActionDisabled(text)) return;
@@ -28,9 +31,9 @@ const ContextMenuItem: (props: ContextMenuItemProps) => JSX.Element = ({ icon, t
     } else if (text === '挿入') {
       fileInputRef.current?.click();
     } else if (text === 'ビューをリセットします') {
-      ViewReset();
+      triggerViewReset();
     }
-    closeEvent();
+    closeContextMenu();
   };
 
   if (divider) {
