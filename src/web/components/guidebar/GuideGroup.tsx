@@ -5,9 +5,9 @@ interface GuideGroupProps {
   className?: string;
   items: Array<{
     icon?: string;
-    svg?: JSX.Element;
     text: string;
-    onClick?: (e: React.MouseEvent) => void;
+    title: string;
+    className: string;
   }>;
 }
 
@@ -17,7 +17,7 @@ const GuideGroup: (props: GuideGroupProps) => JSX.Element = ({ justifyContent, c
   return (
     <div className={guideGroupClass} style={{ justifyContent }}>
       {items.map((item, index) => (
-        <GuideItem key={index} icon={item.icon} svg={item.svg} text={item.text} onClick={item.onClick} />
+        <GuideItem key={index} icon={item.icon} text={item.text} title={item.title} className={item.className} />
       ))}
     </div>
   );

@@ -1,5 +1,5 @@
 import { useAlertSound } from '../../hooks/AlertSound';
-import { useCanvasScaleControls } from '../../hooks/ScaleUpdate';
+import { useCanvasScaleControls } from '../../hooks/useCanvasScaleControls';
 
 const MIN_SCALE = 0.1; // 最小ズーム倍率（スライダー操作時）
 const MAX_SCALE = 4; // 最大ズーム倍率（スライダー操作時）

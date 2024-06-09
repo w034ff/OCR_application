@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
-import { useContextMenuContext } from './components/canvasContextMenu/ContextMenuContext';
+import { useEffect, useState, useCallback } from 'react';
+import { useContextMenuContext } from '../components/canvasContextMenu/ContextMenuContext';
+import { useCanvasToolsContext } from '../CanvasToolsContext';
 
 const MENU_WIDTH = 183; // コンテキストメニューの横幅
 const MENU_HEIGHT = 278; // コンテキスメニューの縦幅
@@ -20,10 +21,18 @@ const adjustMenuPosition = (
 
 
 export const useControlContextMenu = () => {
-	const { setContextMenu } = useContextMenuContext();
+	const { handleScrollbarToCenter } = useCanvasToolsContext();
+	const { contextMenu, setContextMenu } = useContextMenuContext();
 	// ブラウザウィンドウのサイズを取得
 	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 	const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+
+	// console.log('render useControlContextMenu')
+
+	// 
+	const contextMenuStyle: React.CSSProperties = contextMenu.visible
+    ? { left: `${contextMenu.x}px`, top: `${contextMenu.y}px` } 
+    : { visibility: 'hidden', opacity: 0 };
 
 	const openContextMenu = (e: MouseEvent, drawing: boolean, dragging: boolean) => {
 		if (e.button === 2 && !drawing && !dragging) {
@@ -35,31 +44,20 @@ export const useControlContextMenu = () => {
 	}
 
 	const closeContextMenu = () => {
-		setContextMenu({ visible: false, x: 0, y: 0 });
-	}
-
+    setContextMenu({ visible: false, x: 0, y: 0 });
+	};
+	
 	const handleResize = () => {
 		setWindowWidth(window.innerWidth);
 		setWindowHeight(window.innerHeight);
+		handleScrollbarToCenter();
 	};
 
-	const closeOnOutsideClick = (e: MouseEvent) => {
-		if ((e.target as HTMLElement).classList.contains('modal-background')) {
-			closeContextMenu();
-		}
+	return { 
+		isVisible: contextMenu.visible,
+		contextMenuStyle,
+		openContextMenu,
+		closeContextMenu,
+		handleResize
 	};
-
-	useEffect(() => {
-		window.addEventListener('blur', closeContextMenu); 
-		window.addEventListener('mousedown', closeOnOutsideClick);
-		window.addEventListener('resize', handleResize);
-
-		return () => {
-			window.removeEventListener('blur', closeContextMenu);
-			window.removeEventListener('mousedown', closeOnOutsideClick);
-			window.removeEventListener('resize', handleResize);
-		};
-	}, []);
-
-	return { openContextMenu, closeContextMenu };
 }

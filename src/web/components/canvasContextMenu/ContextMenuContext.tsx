@@ -15,7 +15,6 @@ interface ContextMenuProviderProps {
 export const ContextMenuProvider = ({ children }: ContextMenuProviderProps): JSX.Element => {
 	const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0 });
 
-  console.log('wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww')
   return (
 		<ContextMenuContext.Provider value = {{ contextMenu, setContextMenu }}>
 			{children}

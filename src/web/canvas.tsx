@@ -28,7 +28,7 @@ const CanvasComponent = (): JSX.Element  => {
 
 	const scrollables = useInitializeSimpleBar(simpleBarRef);
 	const { listenerRegistered } = useEventRegister();
-	useCanvasMouseEvents(scrollables, listenerRegistered);
+	useCanvasMouseEvents(scrollables);
 	// Rectオブジェクト等をFabricキャンバスに描画するためのカスタムフック
 	useDrawFabricCanvas(canvasRef, editCanvasRef, containerRef);
 	useChangeScaleUpperCanvases();

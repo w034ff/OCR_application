@@ -2,34 +2,27 @@ import { useCanvasToolsContext } from '../../CanvasToolsContext';
 import { useCanvasModalWindowContext } from '../modalWindow/CanvasModalWindowContext';
 import { useSidebarStateContext } from '../Sidebar/SidebarStateContext';
 import { getNextScale } from '../../utils/scaleUtils';
-import { useCanvasScaleControls } from '../../hooks/ScaleUpdate';
+import { useCanvasScaleControls } from '../../hooks/useCanvasScaleControls';
+import { useWindowIsActive } from '../../hooks/useWindowIsActive';
 import Slider from '../Slider/Slider';
 
 
 interface GuideItemProps {
   icon?: string;
-  svg?: JSX.Element;
   text: string;
-  onClick?: (e: React.MouseEvent) => void;
+  title: string;
+  className: string;
 }
 
-const GuideItem: (props: GuideItemProps) => JSX.Element = ({ icon, svg, text, onClick }) => {
+const GuideItem: (props: GuideItemProps) => JSX.Element = ({ icon, text, title, className }) => {
   const { scale } = useCanvasToolsContext();
   const { setTrimModeActive, setResizeModeActive } = useSidebarStateContext();
   const { setCanvasModalMode } = useCanvasModalWindowContext();
-
-  // console.log("render GuideItem")
-
+  const isActive = useWindowIsActive(); // アプリのアクティブ状態を追跡するカスタムフック
   const { updateScale } = useCanvasScaleControls(); // scaleを変更する処理をまとめたカスタムフック
-  
 
-  const guideItemClassNames = ['guide-item'];
-  if (text.includes('start')) guideItemClassNames.push('start');
-  if (text === 'scale') guideItemClassNames.push('display-scale');
-  if (text.includes('handle-scale')) guideItemClassNames.push('plus-minus-scale');
-  if (text === 'slider') guideItemClassNames.push('slider');
+  // console.log("render GuideItem");
 
-  const guideItemClasses = guideItemClassNames.join(' ');
 
   const handleItemClick = (e: React.MouseEvent) => {
     if (text === 'start-選択') {
@@ -47,17 +40,9 @@ const GuideItem: (props: GuideItemProps) => JSX.Element = ({ icon, svg, text, on
     }
   };
 
-
-  const titleClassNames = [''];
-  if (text === 'handle-scale-minus') titleClassNames.push('縮小');
-  if (text === 'handle-scale-plus') titleClassNames.push('拡大');
-  if (text === 'scale') titleClassNames.push('ズームを調整します');
-  
-  const title_texts = titleClassNames.join(' ');
-
   return (
     <>
-    <div className={guideItemClasses} title={title_texts} onClick={handleItemClick}>
+    <div className={className} title={isActive ? title : ''} onClick={handleItemClick}>
       {text.includes('start') && (
         <>
           <img src={icon} alt={text} className="icon" width="16" height="16" />
