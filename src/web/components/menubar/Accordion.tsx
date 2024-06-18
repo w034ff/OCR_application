@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, memo } from 'react';
 import Slider from '../Slider/Slider';
 
 interface AccordionProps {
@@ -6,7 +6,9 @@ interface AccordionProps {
   setAccordionOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Accordion = ({ isAccordionOpen, setAccordionOpen}: AccordionProps): JSX.Element | null => {
+const Accordion: (props: AccordionProps) => JSX.Element | null = ({
+  isAccordionOpen, setAccordionOpen
+}) => {
 
   useEffect(() => {
     const closeAccordion = (e: MouseEvent) => {
@@ -32,4 +34,4 @@ const Accordion = ({ isAccordionOpen, setAccordionOpen}: AccordionProps): JSX.El
   );
 }
 
-export default Accordion;
+export default memo(Accordion);

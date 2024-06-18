@@ -1,55 +1,46 @@
+import { useMemo } from 'react';
 import '../../styles/ContextMenu.css'; 
-import { useRef } from 'react';
-import { useMenuItemDisabled } from '../../utils/useMenuItemDisabled';
-import { useHistoryContext } from '../../CanvasHistoryContext';
-import { useCanvasScaleControls } from '../../hooks/useCanvasScaleControls';
 import { ContextMenuItems } from './ContextMenuItems';
 import ContextMenuItem from './ContextMenuItem';
 import { useControlContextMenu } from '../../hooks/useControlContextMenu';
+import { useMenuItemActions } from '../../hooks/useMenuItemActions';
 
 
 const CanvasContextMenuFrame = (): JSX.Element  => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const { setUndoRedoState } = useHistoryContext();
-  const isActionDisabled = useMenuItemDisabled();
-  const { triggerViewReset } = useCanvasScaleControls();
   const { isVisible, contextMenuStyle, closeContextMenu } = useControlContextMenu();
+  const { handleItemClick, fileInputRef, isActionDisabled } = useMenuItemActions();
 
-  console.log("render ContextMenuFrame", isVisible);
+  // console.log("render ContextMenuFrame", isVisible);
 
-  const handleItemClick = (text: string) => {
-    return () => {
-      if (isActionDisabled(text)) return;
-      switch (text) {
-        case '元に戻す':
-          setUndoRedoState(prevState => ({ ...prevState, isUndo: !prevState.isUndo, count: 1 }));
-          break;
-        case 'やり直し':
-          setUndoRedoState(prevState => ({ ...prevState, isRedo: !prevState.isRedo, count: 1 }));
-          break;
-        case '挿入':
-          fileInputRef.current?.click();
-          break;
-        case 'ビューをリセットします':
-          triggerViewReset();
-          break;
-        default:
-          break;
+  
+  // contextMenuItemsのメモ化を行う、特にクリックイベントはメモ化しにくいので注意が必要
+  const contextMenuItems = useMemo(() => {
+    return ContextMenuItems.map((item) => ({
+      ...item,
+      // handleItemClickイベントをラップし、コンテキストメニュー用のクリックイベントを各要素に対して作成する
+      clickEvent: () => {
+        handleItemClick(item.text);
+        closeContextMenu();
       }
-      closeContextMenu();
-    };
-  };
+    }));
+  }, []);
 
   return (
     <div>
       {isVisible && <div className="modal-background" />}
       <div className="contextMenu" style={contextMenuStyle}>
-        {ContextMenuItems.map((item, index) => (
-          <ContextMenuItem key={index} icon={item.icon} text={item.text} divider={item.divider}
-            className={item.className} isActionDisabled={isActionDisabled(item.text)}
-            fileInputRef={fileInputRef} clickEvent={handleItemClick(item.text)}
-          />
-          ))}
+      {contextMenuItems.map((item, index) => (
+        <ContextMenuItem
+          key={index}
+          icon={item.icon}
+          text={item.text}
+          divider={item.divider}
+          className={item.className}
+          isActionDisabled={isActionDisabled(item.text)}
+          fileInputRef={fileInputRef}
+          clickEvent={isActionDisabled(item.text) || item.divider ? undefined : item.clickEvent}
+        />
+      ))}
       </div>
     </div>
   );
