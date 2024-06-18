@@ -33,6 +33,8 @@
 }
 
 .contextMenu-item .icon {
+  width: 20px;
+  height: 20px;
   padding-left: 5px;
   -webkit-user-drag: none;
 }
