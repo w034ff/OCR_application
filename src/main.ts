@@ -1,5 +1,7 @@
 import path from 'node:path';
-import { BrowserWindow, app, ipcMain, Menu, dialog } from 'electron';
+import { BrowserWindow, app, ipcMain, Menu, dialog, session } from 'electron';
+import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
+
 var log = require('electron-log');
 
 process.on('uncaughtException', function(err) {
@@ -34,11 +36,24 @@ function createWindow () {
   });
   // レンダラープロセスをロード
   mainWindow.loadFile('dist/index.html');
+  mainWindow.loadURL('http://localhost:3000/');
+
   // Menu.setApplicationMenu(null);
+  mainWindow.webContents.openDevTools();
 };
 
-app.whenReady().then(() => {
-  createWindow()
+app.whenReady().then(async () => {
+  // React Developer Tools のインストール
+  try {
+    await installExtension(REACT_DEVELOPER_TOOLS);
+    log.info('React Developer Tools installed successfully');
+  } catch (err) {
+    log.error('Failed to install React Developer Tools: ', err);
+  }
+
+  session.defaultSession.clearCache().then(() => {
+    createWindow();
+  });
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {

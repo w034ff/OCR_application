@@ -9,7 +9,7 @@ services:
       dockerfile: Dockerfile
     container_name: 'ocr-frontend'
     working_dir: '/frontend'
-    network_mode: host
+    # network_mode: host
     environment:
       - DISPLAY=$DISPLAY
     tty: true
@@ -18,3 +18,5 @@ services:
       - /frontend/node_modules
       - /tmp/.X11-unix/:/tmp/.X11-unix
       - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro
+    ports:
+      - "127.0.0.1:3000:3000"
