@@ -21,7 +21,8 @@ const MenuBar = (): JSX.Element => {
           items={middleItems}
           handleItemClick={handleItemClick}
         />
-        <MenuGroup justifyContent='flex-end'
+        <MenuGroup 
+          justifyContent='flex-end'
           items={endItems} 
           isActionDisabled={isActionDisabled}
           fileInputRef={fileInputRef}

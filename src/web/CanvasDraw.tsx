@@ -37,10 +37,10 @@ export const useDrawFabricCanvas = (
   //  キャンバスのトリミング領域を設定および管理するためのカスタムフック
   useEditFabricCanvas(fabricCanvas, fabricEditCanvas, canvasRef);
 
-  console.log("render canvasDraw")
+  // console.log("render canvasDraw")
   
   useEffect(() => {
-    console.log('gggggggggggggggg')
+    // console.log('gggggggggggggggg')
     if (!fabricCanvas) return;
     const startDrawing = (o: fabric.IEvent) => {
       console.log('eeeeeeeeeeeeeeeeeeeeee')

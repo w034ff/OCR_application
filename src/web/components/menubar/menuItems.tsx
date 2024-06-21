@@ -37,12 +37,12 @@ export const middleItems = [
 
 export const endItems = [
   {
-    icon: <InsertIcon className="icon" />,
+    icon: <InsertIcon className="icon bold" />,
     text: '挿入',
     className: 'menu-item',
   },
   {
-    icon: <UnRedoIcon className="icon" />,
+    icon: <UnRedoIcon className="icon bold" />,
     text: '元に戻す',
     className: 'menu-item',
   },
@@ -52,12 +52,12 @@ export const endItems = [
     className: 'menu-item',
   },
   {
-    icon: <UnRedoIcon className="icon" style={{ transform: "scaleX(-1)" }} />,
+    icon: <UnRedoIcon className="icon bold" style={{ transform: "scaleX(-1)" }} />,
     text: 'やり直し',
     className: 'menu-item',
   },
   {
-    icon: <SortIcon className="flip-icon" />,
+    icon: <SortIcon className="flip-icon bold" />,
     text: '閉じる',
     className: 'menu-item close',
   },

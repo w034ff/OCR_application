@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useCallback, ReactNode, useState, JSX } from 'react';
+import { createContext, useContext, useCallback, ReactNode, useState } from 'react';
 
 interface CanvasToolsContextProps {
   scale: number;

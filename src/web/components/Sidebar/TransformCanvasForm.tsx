@@ -20,6 +20,8 @@ const TransformCanvasForm = (): JSX.Element => {
     handleInputChange,
     handleChangeClick
   } = useTransformCanvas();
+  
+  // console.log('render TransformCanvasForm')
 
 
   return (

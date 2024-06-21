@@ -32,7 +32,7 @@ export const useControlContextMenu = () => {
 	// 
 	const contextMenuStyle: React.CSSProperties = contextMenu.visible
     ? { left: `${contextMenu.x}px`, top: `${contextMenu.y}px` } 
-    : { visibility: 'hidden', opacity: 0 };
+    : { display: 'none' };
 
 	const openContextMenu = (e: MouseEvent, drawing: boolean, dragging: boolean) => {
 		if (e.button === 2 && !drawing && !dragging) {
@@ -43,9 +43,9 @@ export const useControlContextMenu = () => {
 		}
 	}
 
-	const closeContextMenu = () => {
+	const closeContextMenu = useCallback(() => {
     setContextMenu({ visible: false, x: 0, y: 0 });
-	};
+	}, []);
 	
 	const handleResize = () => {
 		setWindowWidth(window.innerWidth);

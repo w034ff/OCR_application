@@ -50,6 +50,11 @@
   -webkit-user-drag: none;
 }
 
+.menu-item .bold {
+  stroke: white;
+  stroke-width: 20;
+}
+
 .menu-item .text {
   font-size: 14px;
   color: #ffffff;

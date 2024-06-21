@@ -144,6 +144,6 @@ html, body {
   transform-origin: center center;
 }
 
-.hidden-input {
+.hidden {
   display: none;
 }

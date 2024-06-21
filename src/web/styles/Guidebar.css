@@ -36,7 +36,9 @@
 }
 
 .guide-item .icon {
-  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  fill: #222255;
   -webkit-user-drag: none;
 }
 

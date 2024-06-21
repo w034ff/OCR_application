@@ -46,7 +46,7 @@ const FileInput = ({ fileInputRef } : FileInputProps): JSX.Element => {
         accept="image/*"
         ref={fileInputRef} 
         onChange={handleFileInsert}
-        className="hidden-input"
+        className="hidden"
       />
     </div>
   );

@@ -6,7 +6,7 @@ export const useCanvasSizeObserver = (
 	canvasRef: React.RefObject<HTMLCanvasElement>,
 	InnercontainerRef: React.RefObject<HTMLDivElement>
 ) => {
-	const { scrollElement, handleScrollbarToCenter	} = useCanvasToolsContext();
+	const { scrollElement, handleScrollbarToCenter } = useCanvasToolsContext();
 	const { setCurrentCanvasWidth, setCurrentCanvasHeight } = useEditCanvasToolsContext();
 
 	// drawing-canvasのサイズが変更された際、inner-canvasのサイズも変更する。そうしなければキャンバスを中央に配置できなくなる。

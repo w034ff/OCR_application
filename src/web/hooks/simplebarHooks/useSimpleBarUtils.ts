@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import SimpleBarCore from 'simplebar-core';
 import { useCanvasToolsContext } from '../../CanvasToolsContext';
-import { useHistoryContext } from '../../CanvasHistoryContext';
+// import { useUndoRedoContext } from '../../CanvasUndoRedoContext';
 
 enum ActionType {
 	Undo = "Undo",
@@ -10,21 +10,21 @@ enum ActionType {
 
 export const useSimpleBarUtils = () => {
 	const { scrollElement, setScrollElement } = useCanvasToolsContext();
-	const { setUndoRedoState } = useHistoryContext();
+	// const { setUndoRedoState } = useUndoRedoContext();
 	const [listenerRegistered, setListenerRegistered] = useState(false);
 
-	const performCanvasAction = (action: string, count: number = 1) => {
-    switch (action) {
-      case ActionType.Undo:
-        setUndoRedoState(prevState => ({...prevState, isUndo: !prevState.isUndo, count: count}));
-        break;
-      case ActionType.Redo:
-        setUndoRedoState(prevState => ({...prevState, isRedo: !prevState.isRedo, count: count}));
-        break;
-      default:
-        throw new Error("No active window found");
-    }
-  };
+	// const performCanvasAction = (action: string, count: number = 1) => {
+  //   switch (action) {
+  //     case ActionType.Undo:
+  //       setUndoRedoState(prevState => ({...prevState, isUndo: !prevState.isUndo, count: count}));
+  //       break;
+  //     case ActionType.Redo:
+  //       setUndoRedoState(prevState => ({...prevState, isRedo: !prevState.isRedo, count: count}));
+  //       break;
+  //     default:
+  //       throw new Error("No active window found");
+  //   }
+  // };
 
 	const handleScrollbarToCenter = useCallback(() => {
     if (scrollElement) {

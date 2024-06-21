@@ -10,7 +10,7 @@ enum ActionType {
 }
 
 export const useEventRegister = () => {
-	const { scrollElement, handleScrollbarToCenter	} = useCanvasToolsContext();
+	const { scrollElement, handleScrollbarToCenter } = useCanvasToolsContext();
 	const { setUndoRedoState } = useHistoryContext();
 	const { closeContextMenu, handleResize } = useControlContextMenu();
 	const [listenerRegistered, setListenerRegistered] = useState(false);
@@ -43,6 +43,7 @@ export const useEventRegister = () => {
 			window.addEventListener('blur', closeContextMenu); 
 			window.addEventListener('mousedown', closeOnOutsideClick);
 			window.addEventListener('resize', handleResize);
+
 			handleScrollbarToCenter();
 			setListenerRegistered(true); // 登録状態を更新
 		}

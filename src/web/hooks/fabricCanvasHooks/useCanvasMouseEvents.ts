@@ -14,7 +14,7 @@ export const useCanvasMouseEvents = (
 	const [lastDragX, setLastDragX] = useState<number>(0);
 	const [lastDragY, setLastDragY] = useState<number>(0);
 
-	console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+	// console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
 	
 
 	const handleMousedown = (e: MouseEvent) => {

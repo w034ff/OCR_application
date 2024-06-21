@@ -38,7 +38,7 @@ const CanvasComponent = (): JSX.Element  => {
 	// drawing-canvasのサイズが変更された際、inner-canvasのサイズも変更するカスタムフック
 	useCanvasSizeObserver(canvasRef, InnercontainerRef);
 
-	console.log("render canvas")
+	// console.log("render canvas")
 
 	return (
 		<>

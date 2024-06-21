@@ -23,6 +23,8 @@ const CanvasModalWindow = (): JSX.Element | null  => {
   const { applyZoomCanvas, applyResizeCanvas } = useChangeScaleModal(setSelectedScale);
   let inputRadioArray: number[] = zoomRatioValues;
   let modalTitle: string = 'キャンバスの倍率を調整します';
+
+  // console.log('render modalWindow')
   
 
   if (canvasModalMode !== 'zoom-canvas' && canvasModalMode !== 'resize-canvas') {

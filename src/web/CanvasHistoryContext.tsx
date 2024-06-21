@@ -27,7 +27,6 @@ export const CanvasHistoryProvider = ({ children }: CanvasHistoryProviderProps):
   const [redoStack, setRedoStack] = useState<FabricCanvasState[]>([]);
   const [undoRedoState, setUndoRedoState] = useState<UndoRedoState>({ isUndo: false, isRedo: false, count: 1});
 
-  console.log('ssssssssssssssssssssssss')
   return (
     <HistoryContext.Provider value={{
       historyValue, setHistoryValue, 

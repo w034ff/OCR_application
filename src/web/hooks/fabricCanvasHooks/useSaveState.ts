@@ -8,7 +8,7 @@ export const useSaveState = (
 ) => {
   const { isSaveState } = useSaveStateContext();
 	const { setHistoryValue, setMaxHistory, undoStack, setUndoStack, setRedoStack } = useHistoryContext();
-  
+
   useEffect(() => {
     if (!fabricCanvas) return;
 
