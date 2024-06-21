@@ -18,7 +18,7 @@ const UnRedoIcon = ({ className, style }: UnRedoIconProps): JSX.Element => {
 			<g transform="translate(0.000000,48.000000) scale(0.100000,-0.100000)"
 			fill="#000000" stroke='none'>
 			<path
-				className="icon" 
+				className={className}
 				d="M165 349 l-65 -61 0 56 c0 31 -4 56 -10 56 -6 0 -10 -32 -10 -75 l0
 				-75 75 0 c43 0 75 4 75 10 0 6 -26 10 -57 10 l-58 0 62 60 c56 55 65 60 105
 				60 37 0 49 -6 76 -33 23 -24 32 -42 32 -67 0 -30 -12 -47 -96 -131 -53 -53

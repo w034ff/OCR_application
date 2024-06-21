@@ -18,7 +18,7 @@ const MenuIcon = ({ className, style }: MenuIconProps): JSX.Element => {
 			<g transform="translate(0.000000,42.000000) scale(0.100000,-0.100000)"
 			fill="#000000" stroke='none'>
 			<path
-				className="icon" 
+				className={className} 
 				d="M0 210 l0 -180 210 0 210 0 0 165 0 165 -129 0 c-102 0 -131 3 -141
         15 -9 11 -32 15 -81 15 l-69 0 0 -180z m145 130 c0 -11 -14 -16 -57 -18 -53
         -3 -58 -1 -58 18 0 19 5 21 58 18 43 -2 57 -7 57 -18z m245 -145 l0 -135 -180
