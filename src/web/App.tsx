@@ -1,6 +1,6 @@
 import { CanvasHistoryProvider } from './CanvasHistoryContext';
 import { CanvasToolsProvider } from './CanvasToolsContext';
-import { CanvasFlipProvider } from './CanvasToolsContext';
+import { GuideBarHiddenProvider } from './components/guidebar/GuideBarHiddenContext';
 import { CanvasSaveStateProvider } from './CanvasSaveStateContext';
 import { EditCanvasToolsProvider } from './hooks/editFabricCanvasHooks/EditCanvasToolsContext';
 import { SidebarStateProvider } from './components/Sidebar/SidebarStateContext';
@@ -16,7 +16,7 @@ const App = (): JSX.Element => {
     return (
 			<CanvasHistoryProvider>
 				<CanvasToolsProvider>
-					<CanvasFlipProvider>
+					<GuideBarHiddenProvider>
 						<CanvasSaveStateProvider>
 							<EditCanvasToolsProvider>
 								<SidebarStateProvider>
@@ -33,7 +33,7 @@ const App = (): JSX.Element => {
 								</SidebarStateProvider>
 							</EditCanvasToolsProvider>
 						</CanvasSaveStateProvider>
-					</CanvasFlipProvider>
+					</GuideBarHiddenProvider>
 				</CanvasToolsProvider>
 			</CanvasHistoryProvider>
     )

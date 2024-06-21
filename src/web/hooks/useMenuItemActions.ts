@@ -1,12 +1,12 @@
 import { useState, useRef, useCallback } from 'react';
-import { useCanvasFlipContext } from "../CanvasToolsContext";
+import { useGuideBarHiddenContext } from '../components/guidebar/GuideBarHiddenContext';
 import { useHistoryContext } from "../CanvasHistoryContext";
 import { useSidebarStateContext } from "../components/Sidebar/SidebarStateContext";
 import { useCanvasModalWindowContext } from '../components/modalWindow/CanvasModalWindowContext';
 import { useCanvasScaleControls } from "./useCanvasScaleControls";
 
 export const useMenuItemActions = () => {
-  const { setIsFlipped } = useCanvasFlipContext();
+  const { setIsFlipped } = useGuideBarHiddenContext();
   const { historyValue, maxHistory, setUndoRedoState } = useHistoryContext();
   const { setTrimModeActive, setResizeModeActive } = useSidebarStateContext();
   const { setCanvasModalMode } = useCanvasModalWindowContext();

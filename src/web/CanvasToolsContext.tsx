@@ -12,13 +12,7 @@ interface CanvasToolsContextProps {
   handleScrollbarToCenter: () => void;
 }
 
-interface CanvasFlipContextProps {
-  isFlipped: boolean;
-  setIsFlipped: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
 const CanvasToolsContext = createContext<CanvasToolsContextProps | undefined>(undefined);
-const CanvasFlipContext = createContext<CanvasFlipContextProps | undefined>(undefined);
 
 interface CanvasToolsProviderProps {
   children: ReactNode;
@@ -56,26 +50,4 @@ export const useCanvasToolsContext = (): CanvasToolsContextProps => {
     throw new Error('useCanvasToolsContext must be used within a CanvasToolsProvider');
   }
   return context;
-}
-
-interface CanvasFlipProviderProps {
-  children: ReactNode;
-}
-
-export const CanvasFlipProvider = ({ children }: CanvasFlipProviderProps): JSX.Element => {
-  const [isFlipped, setIsFlipped] = useState(false);
-
-  return (
-      <CanvasFlipContext.Provider value = {{ isFlipped, setIsFlipped }}>
-        {children}
-      </CanvasFlipContext.Provider>
-  );
-}
-
-export const useCanvasFlipContext = (): CanvasFlipContextProps => {
-  const FilpContext = useContext(CanvasFlipContext);
-  if (!FilpContext) {
-    throw new Error('CanvasFlipContext must be used within a CanvasFlipProvider');
-  }
-  return FilpContext;
 }

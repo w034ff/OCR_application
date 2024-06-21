@@ -1,7 +1,7 @@
-import { useCanvasFlipContext } from '../CanvasToolsContext';
+import { useGuideBarHiddenContext } from "../components/guidebar/GuideBarHiddenContext";
 
 export const useMenuItemFlipEffects = () => {
-  const { isFlipped } = useCanvasFlipContext();
+  const { isFlipped } = useGuideBarHiddenContext();
 
 	// MenuItemにあるFlipアイコンを反転させる
 	const flipMenuItemStyle = {
