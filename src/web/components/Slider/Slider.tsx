@@ -1,87 +1,54 @@
-import '../../styles/slider-styles.css';
-import { useState } from 'react';
-import { useCanvasToolsContext } from '../../CanvasToolsContext';
-import { useHistoryChangeSlider } from './useHistoryChangeSlider';
-import { useZoomScaleChangeSlider } from './useZoomScaleChangeSlider';
-import { useCalcDynamicStyle } from './useCalcDynamicStyle';
+import { memo } from 'react';
 
 interface SliderProps {
-	type: string;
+	className: string;
+	title?: string;
+	inputStyle: React.CSSProperties;
+	min: number;
+	max: number;
+	value: number;
+	step: number;
+	onChangeEvent: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	onMouseDown: () => void;
+	onMouseUp: () => void;
+	onMouseEnter: () => void;
+	onMouseLeave: () => void;
+	onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
-const Slider = ({ type }: SliderProps): JSX.Element => {
-	const { scale } = useCanvasToolsContext();
-	// Undo, Redoをスライダーで実行するためのカスタムフック
-	const { maxHistory, historyValue, handleHistoryChange } = useHistoryChangeSlider()
-	// キャンバスの拡大・縮小をスライダーで実行するためのカスタムフック
-	const { sliderValueToScale, scaleToSliderValue, handleScaleChange, handleKeyDown} = useZoomScaleChangeSlider();
-
-	const [isHovered, setIsHovered] = useState(false);
-	const [isGrabbed, setIsGrabbed] = useState(false);
-	const [isThumbHovered, setIsThumbHovered] = useState(false);
-	const [isThumbActive, setIsThumbActive] = useState(false);
-	
-	let scaledSliderValue = (scaleToSliderValue(scale) + 1) * 50;
-	if (type === 'accordion') {
-		scaledSliderValue = (historyValue / maxHistory) * 100;
-	}
-	
-	// スライダーのつまみとトラックのスタイルを動的に計算するカスタムフック
-	const dynamicStyle = useCalcDynamicStyle(scaledSliderValue, isGrabbed, isHovered, isThumbActive, isThumbHovered);
-
+const Slider = ({ 
+	className, inputStyle, title, min, max, value, step,
+	onChangeEvent, onMouseDown, onMouseUp, onMouseEnter, onMouseLeave, onKeyDown
+}: SliderProps): JSX.Element => {
+	// console.log("render Slider");
 	return (
-		<>
-		{type === 'accordion' && (
-			<div className='accordion-slider'>
-				<input type="range" min="0"
-					max={maxHistory}
-					value={historyValue}
-					readOnly
-					className='slider-style'
-					style={dynamicStyle}
-				/>
-				<input type="range" min="0"
-					max={maxHistory}
-					value={historyValue}
-					onChange={handleHistoryChange}
-					onMouseDown={() => { setIsGrabbed(true); setIsThumbActive(true); }}
-					onMouseUp={() => { setIsGrabbed(false); setIsThumbActive(false); }}
-					onMouseEnter={() => { setIsHovered(true); setIsThumbHovered(true); }}
-					onMouseLeave={() => { setIsHovered(false); setIsThumbHovered(false); }}
-					className='offscreen-slider'
-				/>
-			</div>
-		)}
-		{type === 'guidebar' && (
-			<div className='guidebar-slider' title='ズームを調整します'>
-			<input
+		<div className={className} title={title}>
+			<input 
 				type="range"
-				min={scaleToSliderValue(0.1)}
-				max={scaleToSliderValue(4)}
-				value={scaleToSliderValue(scale)}
-				readOnly
-				step="0.02"
 				className='slider-style'
-				style={dynamicStyle}
+				style={inputStyle}
+				min={min}
+				max={max}
+				value={value}
+				step={step}
+				readOnly
 			/>
-			<input
+			<input 
 				type="range"
-				min={scaleToSliderValue(0.1)}
-				max={scaleToSliderValue(4)}
-				step="0.02"
-				value={scaleToSliderValue(scale)}
-				onChange={(e) => handleScaleChange(sliderValueToScale(parseFloat(e.target.value)))}
-				onMouseDown={() => { setIsGrabbed(true); setIsThumbActive(true); }}
-				onMouseUp={() => { setIsGrabbed(false); setIsThumbActive(false); }}
-				onMouseEnter={() => { setIsHovered(true); setIsThumbHovered(true); }}
-				onMouseLeave={() => { setIsHovered(false); setIsThumbHovered(false); }}
-				onKeyDown={handleKeyDown}
 				className='offscreen-slider'
+				min={min}
+				max={max}
+				value={value}
+				step={step}
+				onChange={onChangeEvent}
+				onMouseDown={onMouseDown}
+				onMouseUp={onMouseUp}
+				onMouseEnter={onMouseEnter}
+				onMouseLeave={onMouseLeave}
+				onKeyDown={onKeyDown}
 			/>
 		</div>
-		)}
-		</>
 	);
 }
 
-export default Slider;
+export default memo(Slider);

@@ -1,5 +1,6 @@
 import { useEffect, memo } from 'react';
-import Slider from '../Slider/Slider';
+import clsx from 'clsx';
+import SliderContainer from '../Slider/SliderContainer';
 
 interface AccordionProps {
   isAccordionOpen: boolean;
@@ -9,14 +10,13 @@ interface AccordionProps {
 const Accordion: (props: AccordionProps) => JSX.Element | null = ({
   isAccordionOpen, setAccordionOpen
 }) => {
-
   useEffect(() => {
     const closeAccordion = (e: MouseEvent) => {
+      // クリック対象がアコーディオン内に含まれていない場合、アコーディオンを閉じる
       if (e.target instanceof Node && !document.querySelector('.accordion')?.contains(e.target)) {
         setAccordionOpen(false);
       }
     };
-  
     document.addEventListener('mousedown', closeAccordion);
   
     return () => {
@@ -25,12 +25,10 @@ const Accordion: (props: AccordionProps) => JSX.Element | null = ({
   }, []);
 
   return (
-    isAccordionOpen ? (
-      <div className="accordion" onClick={(e) => e.stopPropagation()}>
-        <div className="accordion-text">履歴</div>
-        <Slider type={'accordion'} />
-      </div>
-    ) : null
+    <div className={clsx('accordion', { hidden: ! isAccordionOpen})} onClick={(e) => e.stopPropagation()}>
+      <div className="accordion-text">履歴</div>
+      <SliderContainer type={'accordion'} isAccordionOpen={isAccordionOpen} />
+    </div>
   );
 }
 
