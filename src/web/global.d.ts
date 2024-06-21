@@ -25,6 +25,10 @@ declare global {
       isRedo: boolean;
       count: number;
     }
+    export interface ZoomScaling {
+      zoomFlag: boolean;
+      count: number;
+    }
     export interface Inputs {
       width: string;
       height: string;

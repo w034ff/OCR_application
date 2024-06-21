@@ -5,6 +5,7 @@ import { CanvasSaveStateProvider } from './CanvasSaveStateContext';
 import { EditCanvasToolsProvider } from './hooks/editFabricCanvasHooks/EditCanvasToolsContext';
 import { SidebarStateProvider } from './components/Sidebar/SidebarStateContext';
 import { FileInputProvider } from './components/FileInput/FileInputContext';
+import { CanvasModalWindowProvider } from './components/modalWindow/CanvasModalWindowContext';
 import {
     MenuBar,
 } from './components';
@@ -20,12 +21,14 @@ const App = (): JSX.Element => {
 							<EditCanvasToolsProvider>
 								<SidebarStateProvider>
 									<FileInputProvider>
-										<div className="app-container">
-											<MenuBar />
-											<div id="react-canvas">
-												<CanvasInterface /> 
+										<CanvasModalWindowProvider>
+											<div className="app-container">
+												<MenuBar />
+												<div id="react-canvas">
+													<CanvasInterface /> 
+												</div>
 											</div>
-										</div>
+										</CanvasModalWindowProvider>
 									</FileInputProvider>
 								</SidebarStateProvider>
 							</EditCanvasToolsProvider>

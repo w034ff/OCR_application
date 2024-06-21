@@ -1,18 +1,18 @@
-import cursorIcon from '../assets/icons/cursor.png';
-import trimIcon from '../assets/icons/trim.png';
-import plus from '../assets/icons/plus.png'
-import minus from '../assets/icons/minus.png'
+import CursorIcon from '../assets/svgs/CursorIcon';
+import TrimIcon from '../assets/svgs/TrimIcon';
+import MinusIcon from '../assets/svgs/MinusIcon';
+import PlusIcon from '../assets/svgs/PlusIcon';
 
 
 export const startGuideItems = [
   {
-    icon: cursorIcon, 
+    icon: <CursorIcon className="icon" />,
     text: 'start-選択',
     title: '選択',
     className: 'guide-item start',
   },
   {
-    icon: trimIcon, 
+    icon: <TrimIcon className="icon" />,
     text: 'start-トリミング',
     title: 'トリミング',
     className: 'guide-item start',
@@ -22,7 +22,7 @@ export const startGuideItems = [
 
 export const endGuideItems = [
   {
-    icon: minus,
+    icon: <MinusIcon className="icon" />,
     text: 'handle-scale-minus',
     title: '縮小',
     className: 'guide-item plus-minus-scale',
@@ -33,7 +33,7 @@ export const endGuideItems = [
     className: 'guide-item slider',
   },
   {
-    icon: plus,
+    icon: <PlusIcon className="icon" />,
     text: 'handle-scale-plus',
     title: '拡大',
     className: 'guide-item plus-minus-scale',
