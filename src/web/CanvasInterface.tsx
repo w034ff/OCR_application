@@ -5,7 +5,7 @@ import {
   CanvasModalWindow
 } from './components';
 import CanvasComponent from './canvas'
-import { ContextMenuProvider } from './components/canvasContextMenu/ContextMenuContext';
+import { ContextMenuProvider } from './components/ContextMenu/ContextMenuContext';
 import { useMenuItemFlipEffects } from './hooks/useMenuItemFlipEffects';
 
 const CanvasInterface = (): JSX.Element => {

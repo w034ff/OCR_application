@@ -1,4 +1,4 @@
-import { useGuideBarHiddenContext } from "../components/guidebar/GuideBarHiddenContext";
+import { useGuideBarHiddenContext } from "../components/GuideBar/GuideBarHiddenContext";
 
 export const useMenuItemFlipEffects = () => {
   const { isFlipped } = useGuideBarHiddenContext();

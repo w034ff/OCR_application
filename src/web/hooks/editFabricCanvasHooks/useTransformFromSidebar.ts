@@ -4,7 +4,7 @@ import { STROKE_WIDTH } from './editCanvasConstants';
 import { isNumber } from '../../utils/validators';
 import { isFabricRect, shiftObjects, resizeAndMoveObjects } from '../../utils/fabricEditCanvasUtils';
 import { useEditCanvasToolsContext } from './EditCanvasToolsContext';
-import { useSidebarStateContext } from '../../components/Sidebar/SidebarStateContext';
+import { useSidebarStateContext } from '../../components/SideBar/SidebarStateContext';
 import { useSaveStateContext } from '../../CanvasSaveStateContext';
 
 

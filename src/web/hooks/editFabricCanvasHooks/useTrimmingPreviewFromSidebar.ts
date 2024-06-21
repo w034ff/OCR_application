@@ -4,7 +4,7 @@ import { MIN_LEFT_TOP, EDGE_OFFSET, STROKE_WIDTH, TOTAL_STROKE_WIDTH } from './e
 import { isRectPropsNumber } from '../../utils/validators';
 import { adjustScale, isFabricRect } from '../../utils/fabricEditCanvasUtils';
 import { useEditCanvasToolsContext } from './EditCanvasToolsContext';
-import { useSidebarStateContext } from '../../components/Sidebar/SidebarStateContext';
+import { useSidebarStateContext } from '../../components/SideBar/SidebarStateContext';
 
 
 export const useTrimmingPreviewFromSidebar = (fabricEditCanvas: fabric.Canvas | null) => {

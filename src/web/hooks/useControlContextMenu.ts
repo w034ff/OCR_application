@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useContextMenuContext } from '../components/canvasContextMenu/ContextMenuContext';
+import { useContextMenuContext } from '../components/ContextMenu/ContextMenuContext';
 import { useCanvasToolsContext } from '../CanvasToolsContext';
 
 const MENU_WIDTH = 183; // コンテキストメニューの横幅

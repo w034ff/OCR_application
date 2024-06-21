@@ -2,7 +2,7 @@ import '../../styles/modal-window.css';
 import { useState } from 'react';
 import { useSaveStateContext } from '../../CanvasSaveStateContext';
 import { useCanvasModalWindowContext } from './CanvasModalWindowContext';
-import { useAlertSound } from '../../hooks/AlertSound';
+import { useAlertSound } from '../../hooks/useAlertSound';
 import { useChangeScaleModal } from './useChangeScaleModal';
 
 

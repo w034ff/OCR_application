@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useAlertSound } from '../../hooks/AlertSound';
+import { useAlertSound } from '../../hooks/useAlertSound';
 import { useCanvasToolsContext } from '../../CanvasToolsContext';
 import { useCanvasScaleControls } from '../../hooks/useCanvasScaleControls';
 

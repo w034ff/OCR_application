@@ -1,8 +1,8 @@
 import { useState, useRef, useCallback } from 'react';
-import { useGuideBarHiddenContext } from '../components/guidebar/GuideBarHiddenContext';
+import { useGuideBarHiddenContext } from '../components/GuideBar/GuideBarHiddenContext';
 import { useHistoryContext } from "../CanvasHistoryContext";
-import { useSidebarStateContext } from "../components/Sidebar/SidebarStateContext";
-import { useCanvasModalWindowContext } from '../components/modalWindow/CanvasModalWindowContext';
+import { useSidebarStateContext } from "../components/SideBar/SidebarStateContext";
+import { useCanvasModalWindowContext } from '../components/ModalWindow/CanvasModalWindowContext';
 import { useCanvasScaleControls } from "./useCanvasScaleControls";
 
 export const useMenuItemActions = () => {

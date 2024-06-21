@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useCanvasToolsContext } from '../CanvasToolsContext';
 import { getNextScale } from '../utils/scaleUtils';
-import { useScaleUpdateOnWheel } from './ScaleUpdateOnWheel';
+import { useScaleUpdateOnWheel } from './useScaleUpdateOnWheel';
 
 
 export const useAdjustScrollForCanvasZoom = (

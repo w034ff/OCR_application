@@ -1,11 +1,11 @@
 import { CanvasHistoryProvider } from './CanvasHistoryContext';
 import { CanvasToolsProvider } from './CanvasToolsContext';
-import { GuideBarHiddenProvider } from './components/guidebar/GuideBarHiddenContext';
+import { GuideBarHiddenProvider } from './components/GuideBar/GuideBarHiddenContext';
 import { CanvasSaveStateProvider } from './CanvasSaveStateContext';
 import { EditCanvasToolsProvider } from './hooks/editFabricCanvasHooks/EditCanvasToolsContext';
-import { SidebarStateProvider } from './components/Sidebar/SidebarStateContext';
+import { SidebarStateProvider } from './components/SideBar/SidebarStateContext';
 import { FileInputProvider } from './components/FileInput/FileInputContext';
-import { CanvasModalWindowProvider } from './components/modalWindow/CanvasModalWindowContext';
+import { CanvasModalWindowProvider } from './components/ModalWindow/CanvasModalWindowContext';
 import {
     MenuBar,
 } from './components';

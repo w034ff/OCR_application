@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { fabric } from 'fabric';
 import { isNumber } from '../../utils/validators';
-import { useCanvasModalWindowContext } from '../../components/modalWindow/CanvasModalWindowContext';
+import { useCanvasModalWindowContext } from '../../components/ModalWindow/CanvasModalWindowContext';
 
 
 export const useResizeFromModal = (

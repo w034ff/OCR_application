@@ -4,7 +4,7 @@ import { MIN_LEFT_TOP, EDGE_OFFSET, STROKE_WIDTH } from './editCanvasConstants';
 import { isRectPropsNumber } from '../../utils/validators';
 import { adjustScale } from '../../utils/fabricEditCanvasUtils';
 import { useEditCanvasToolsContext } from './EditCanvasToolsContext';
-import { useSidebarStateContext } from '../../components/Sidebar/SidebarStateContext';
+import { useSidebarStateContext } from '../../components/SideBar/SidebarStateContext';
 
 
 // rectがfabricCanvasの領域（左・上方向）を超えて移動しないよう制限する関数

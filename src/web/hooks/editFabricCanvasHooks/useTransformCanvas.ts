@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { fabric } from 'fabric';
 import { useSaveStateContext } from '../../CanvasSaveStateContext';
 import { useEditCanvasToolsContext } from './EditCanvasToolsContext';
-import { useSidebarStateContext } from '../../components/Sidebar/SidebarStateContext';
+import { useSidebarStateContext } from '../../components/SideBar/SidebarStateContext';
 import { isNumber, isRectPropsNumber } from '../../utils/validators';
 import { isFabricRect, shiftObjects, resizeAndMoveObjects } from '../../utils/fabricEditCanvasUtils';
 import { MIN_LEFT_TOP, STROKE_WIDTH } from './editCanvasConstants';
