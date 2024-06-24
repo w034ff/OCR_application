@@ -44,8 +44,9 @@
 
 .menu-item .icon {
   padding-top: 6px;
-  width: 24px;
-  height: 24px;
+  padding-bottom: 2px;
+  width: 22px;
+  height: 22px;
   fill: #FFFFFF;
   -webkit-user-drag: none;
 }

@@ -5,6 +5,8 @@ import UnRedoIcon from '../assets/svgs/UnRedoIcon';
 import InsertIcon from '../assets/svgs/InsertIcon';
 import HistoryIcon from '../assets/svgs/HistoryIcon';
 import SortIcon from '../assets/svgs/SortIcon';
+import SettingIcon from '../assets/svgs/SettingIcon';
+import PasteIcon from '../assets/svgs/PasteIcon';
 
 
 export const startItems = [
@@ -18,12 +20,17 @@ export const startItems = [
 
 export const middleItems = [
   {
-    // icon: menuIcon,
+    icon: <SettingIcon className="icon" />,
     text: '図形を追加',
     className: 'menu-item',
   },
   {
-    // icon: menuIcon,
+    icon: <SettingIcon className="icon" />,
+    text: '設定',
+    className: 'menu-item',
+  },
+  {
+    icon: <PasteIcon className="icon" />,
     text: '貼り付け',
     className: 'menu-item',
   },

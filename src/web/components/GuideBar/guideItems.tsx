@@ -22,7 +22,7 @@ export const startGuideItems = [
 
 export const endGuideItems = [
   {
-    icon: <MinusIcon className="icon" />,
+    icon: <MinusIcon className="icon bold" />,
     text: 'handle-scale-minus',
     title: '縮小',
     className: 'guide-item plus-minus-scale',
