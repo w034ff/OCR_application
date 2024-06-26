@@ -15,7 +15,6 @@ interface ContextMenuItemProps {
 const ContextMenuItem: (props: ContextMenuItemProps) => JSX.Element = ({
   icon, text, divider, className, isActionDisabled, fileInputRef, clickEvent
 }) => {
-
   // console.log("render ContextMenuItem");
 
   if (divider) {

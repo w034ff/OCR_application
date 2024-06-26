@@ -12,7 +12,7 @@ export const startGuideItems = [
     className: 'guide-item start',
   },
   {
-    icon: <TrimIcon className="icon" />,
+    icon: <TrimIcon className="icon bold" />,
     text: 'start-トリミング',
     title: 'トリミング',
     className: 'guide-item start',
@@ -22,7 +22,7 @@ export const startGuideItems = [
 
 export const endGuideItems = [
   {
-    icon: <MinusIcon className="icon bold" />,
+    icon: <MinusIcon className="icon" />,
     text: 'handle-scale-minus',
     title: '縮小',
     className: 'guide-item plus-minus-scale',

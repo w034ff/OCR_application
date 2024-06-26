@@ -19,8 +19,7 @@ const MinusIcon = ({ className, style }: MinusIconProps): JSX.Element => {
 			fill="#000000" stroke='none'>
 			<path
 				className={className}
-				d="M0 240 c0 -19 7 -20 240 -20 233 0 240 1 240 20 0 19 -7 20 -240 20
-				-233 0 -240 -1 -240 -20z"
+				d="M0 240 l0 -20 240 0 240 0 0 20 0 20 -240 0 -240 0 0 -20z"
 			/>
 			</g>
 		</svg>
