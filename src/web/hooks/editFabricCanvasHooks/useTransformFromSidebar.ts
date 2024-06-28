@@ -5,7 +5,7 @@ import { isNumber } from '../../utils/validators';
 import { isFabricRect, shiftObjects, resizeAndMoveObjects } from '../../utils/fabricEditCanvasUtils';
 import { useEditCanvasToolsContext } from './EditCanvasToolsContext';
 import { useSidebarStateContext } from '../../components/SideBar/SidebarStateContext';
-import { useSaveStateContext } from '../../CanvasSaveStateContext';
+import { useSetHistoryStateContext } from '../../CanvasHistoryContext';
 
 
 export const useTransformFromSidebar = (
@@ -17,7 +17,7 @@ export const useTransformFromSidebar = (
 		trimRegionChanged, trimRegionWidth, trimRegionHeight
 	} = useEditCanvasToolsContext();
   const { resizeModeActive } = useSidebarStateContext();
-	const { setIsSaveState } = useSaveStateContext();
+	const { toggleSaveState } = useSetHistoryStateContext();
 
 	const [ execFlag, setExecFlag ] = useState<boolean>(false);
 
@@ -25,7 +25,7 @@ export const useTransformFromSidebar = (
 		if (currentCanvasWidth !== trimRegionWidth || currentCanvasHeight !== trimRegionHeight) {
 			if (resizeModeActive) {
 				setExecFlag(flag => !flag);
-				setIsSaveState(flag => !flag); 
+				toggleSaveState();
 			}
 		}
 	}, [trimRegionChanged]);

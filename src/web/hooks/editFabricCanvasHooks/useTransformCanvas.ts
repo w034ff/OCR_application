@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { fabric } from 'fabric';
-import { useSaveStateContext } from '../../CanvasSaveStateContext';
+import { useSetHistoryStateContext } from '../../CanvasHistoryContext';
 import { useEditCanvasToolsContext } from './EditCanvasToolsContext';
 import { useSidebarStateContext } from '../../components/SideBar/SidebarStateContext';
 import { isNumber, isRectPropsNumber } from '../../utils/validators';
@@ -12,7 +12,7 @@ export const useTransformCanvas = (
 	fabricCanvas: fabric.Canvas | null,
   fabricEditCanvas: fabric.Canvas | null
 ) => {
-	const { setIsSaveState } = useSaveStateContext();
+	const { toggleSaveState } = useSetHistoryStateContext();
   const { setTrimRegionWidth, setTrimRegionHeight } = useEditCanvasToolsContext();
   const { resizeModeActive } = useSidebarStateContext();
 
@@ -24,7 +24,7 @@ export const useTransformCanvas = (
 		if (!(rect instanceof fabric.Rect)) return;
 
 		if (!initialScalingFlag.current) {
-			setIsSaveState(flag => !flag);
+			toggleSaveState();
 			initialScalingFlag.current = true;
 		}
 

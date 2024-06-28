@@ -1,26 +1,18 @@
 import { useState, useRef, useCallback } from 'react';
 import { useGuideBarHiddenContext } from '../components/GuideBar/GuideBarHiddenContext';
-import { useHistoryContext } from "../CanvasHistoryContext";
+import { useSetHistoryStateContext } from "../CanvasHistoryContext";
 import { useSidebarStateContext } from "../components/SideBar/SidebarStateContext";
-import { useCanvasModalWindowContext } from '../components/ModalWindow/CanvasModalWindowContext';
+import { useModalWindowContext } from '../components/ModalWindow/ModalWindowContext';
 import { useCanvasScaleControls } from "./useCanvasScaleControls";
 
 export const useMenuItemActions = () => {
   const { setIsFlipped } = useGuideBarHiddenContext();
-  const { historyValue, maxHistory, setUndoRedoState } = useHistoryContext();
+  const { setUndoRedoState } = useSetHistoryStateContext();
   const { setTrimModeActive, setResizeModeActive } = useSidebarStateContext();
-  const { setCanvasModalMode } = useCanvasModalWindowContext();
+  const { setModalMode } = useModalWindowContext();
   const { setIsViewReset, setZoomScaling } = useCanvasScaleControls();
   const [isAccordionOpen, setAccordionOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-
-  // Undo, Redoの処理を条件によって無効化する関数
-  const isActionDisabled = useCallback((action?: string) : boolean => {
-    return (action === 'やり直し' && historyValue === maxHistory) ||
-           (action === '元に戻す' && historyValue === 0);
-  }, [historyValue === maxHistory, historyValue === 0]);
-
 
   const handleItemClick = useCallback((text: string) => {
     setTrimModeActive(false);
@@ -62,7 +54,7 @@ export const useMenuItemActions = () => {
         setZoomScaling(prev => ({ ...prev, zoomFlag: !prev.zoomFlag, count: 1 }));
         break;
       case 'scale':
-        setCanvasModalMode('zoom-canvas');
+        setModalMode('zoom-canvas');
         break;
       case 'slider':
         break;
@@ -76,6 +68,5 @@ export const useMenuItemActions = () => {
     isAccordionOpen,
     setAccordionOpen,
     fileInputRef,
-    isActionDisabled,
   };
 };

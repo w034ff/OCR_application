@@ -1,13 +1,13 @@
-import { useSaveStateContext } from "../../CanvasSaveStateContext";
-import { useFileInputContext } from "./FileInputContext";
+import { useSetHistoryStateContext } from "../../CanvasHistoryContext";
+import { useSetStateImageContext } from "./FileInputContext";
 
 interface FileInputProps {
   fileInputRef: React.RefObject<HTMLInputElement>;
 }
 
 const FileInput = ({ fileInputRef } : FileInputProps): JSX.Element => {
-  const { setIsSaveState } = useSaveStateContext();
-  const { setImageURL, setLoadImageFlag } = useFileInputContext();
+  const { toggleSaveState } = useSetHistoryStateContext();
+  const { setImageURL, toggleLoadImageFlag } = useSetStateImageContext();
 
   const handleFileInsert = (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileInput = e.target;
@@ -18,8 +18,8 @@ const FileInput = ({ fileInputRef } : FileInputProps): JSX.Element => {
         const fileContent = e.target?.result;
         if (typeof fileContent === 'string' && fileContent.startsWith('data:image/')) {
           try {
-            setIsSaveState(flag => !flag);
-            setLoadImageFlag(flag => !flag);
+            toggleSaveState();
+            toggleLoadImageFlag();
             setImageURL(fileContent)
           } catch (error) {
             console.error('Failed to send the file URL:', error);

@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import MenuItem from './MenuItem';
 import Accordion  from './Accordion';
-import FileInput from '../FileInput/FileInput';
+
 
 interface MenuGroupProps {
   justifyContent?: string;
@@ -40,6 +40,7 @@ const MenuGroup: (props: MenuGroupProps) => JSX.Element = ({
             icon={item.icon}
             text={item.text}
             className={item.className}
+            fileInputRef={fileInputRef}
             isActionDisabled={isActionDisabled(item.text)}
             clickEvent={isActionDisabled(item.text) ? undefined : item.clickEvent}
           />
@@ -49,7 +50,6 @@ const MenuGroup: (props: MenuGroupProps) => JSX.Element = ({
               setAccordionOpen={setAccordionOpen}
             />
           )}
-          {item.text === '挿入' && fileInputRef && <FileInput fileInputRef={fileInputRef} />}
         </React.Fragment>
       ))}
     </div>

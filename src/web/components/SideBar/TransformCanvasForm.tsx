@@ -1,12 +1,12 @@
 import RotateFlipButtons from './RotateFlipButtons';
 import { useEditCanvasToolsContext } from '../../hooks/editFabricCanvasHooks/EditCanvasToolsContext';
 import { useSidebarStateContext } from './SidebarStateContext';
-import { useCanvasModalWindowContext } from '../ModalWindow/CanvasModalWindowContext';
+import { useModalWindowContext } from '../ModalWindow/ModalWindowContext';
 import { useTransformCanvas } from './useTransformCanvas';
 
 
 const TransformCanvasForm = (): JSX.Element => {
-  const { setCanvasModalMode } = useCanvasModalWindowContext();
+  const { setModalMode } = useModalWindowContext();
   const {
     isTrimAspectRatioLocked, setIsTrimAspectRatioLocked, isResizeAspectRatioLocked, setIsResizeAspectRatioLocked,
   } = useEditCanvasToolsContext();
@@ -93,7 +93,7 @@ const TransformCanvasForm = (): JSX.Element => {
             <label htmlFor="resizeAspectRatio" className="custom-label">縦横比を固定する</label>
           </div>
           <div className="horizontal-group modal-open">
-            <button onClick={() => setCanvasModalMode('resize-canvas')}>画像をリサイズする</button>
+            <button onClick={() => setModalMode('resize-canvas')}>画像をリサイズする</button>
           </div>
           <div className="text">回転と反転</div>
           <RotateFlipButtons />

@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useCanvasToolsContext } from '../../CanvasToolsContext';
-import { useHistoryContext } from '../../CanvasHistoryContext';
+import { useSetHistoryStateContext } from '../../CanvasHistoryContext';
 import { useControlContextMenu } from '../useControlContextMenu';
-
 
 enum ActionType {
 	Undo = "Undo",
@@ -11,7 +10,7 @@ enum ActionType {
 
 export const useEventRegister = () => {
 	const { scrollElement, handleScrollbarToCenter } = useCanvasToolsContext();
-	const { setUndoRedoState } = useHistoryContext();
+	const { setUndoRedoState } = useSetHistoryStateContext();
 	const { closeContextMenu, handleResize } = useControlContextMenu();
 	const [listenerRegistered, setListenerRegistered] = useState(false);
 

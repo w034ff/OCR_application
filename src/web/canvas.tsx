@@ -12,11 +12,8 @@ import { useInitializeSimpleBar } from './hooks/simplebarHooks/useInitializeSimp
 import { useEventRegister } from './hooks/fabricCanvasHooks/useEventRegister';
 import { useCanvasMouseEvents } from './hooks/fabricCanvasHooks/useCanvasMouseEvents';
 
-
-
 const CanvasComponent = (): JSX.Element  => {
 	const { trimModeActive, resizeModeActive } = useSidebarStateContext();;
-
 
 	const containerRef = useRef<HTMLDivElement>(null);
 	const InnercontainerRef = useRef<HTMLDivElement>(null);
@@ -38,7 +35,7 @@ const CanvasComponent = (): JSX.Element  => {
 	// drawing-canvasのサイズが変更された際、inner-canvasのサイズも変更するカスタムフック
 	useCanvasSizeObserver(canvasRef, InnercontainerRef);
 
-	// console.log("render canvas")
+	console.log("render canvas")
 
 	return (
 		<>

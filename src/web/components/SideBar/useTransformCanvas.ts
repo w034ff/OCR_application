@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useSaveStateContext } from '../../CanvasSaveStateContext';
+import { useSetHistoryStateContext } from '../../CanvasHistoryContext';
 import { useEditCanvasToolsContext } from '../../hooks/editFabricCanvasHooks/EditCanvasToolsContext';
 import { useSidebarStateContext } from './SidebarStateContext';
 import { useValidateAndAdjustSize } from './useValidateAndAdjustSize';
 
 export const useTransformCanvas = () => {
-	const { setIsSaveState } = useSaveStateContext();
+	const { toggleSaveState } = useSetHistoryStateContext();
 	const {
     setIsTrimCanvas, setTrimRegionChanged, currentCanvasWidth, currentCanvasHeight,
     isTrimAspectRatioLocked, isResizeAspectRatioLocked,
@@ -75,7 +75,7 @@ export const useTransformCanvas = () => {
   
   const handleChangeClick = () => {
     setIsTrimCanvas(flag => !flag);
-    setIsSaveState(flag => !flag);  // SaveStateを更新(ここで呼び出さないと正しくキャンバスの状態を保存できない)
+    toggleSaveState(); // SaveStateを更新(ここで呼び出さないと正しくキャンバスの状態を保存できない)
   }
 
 	return {

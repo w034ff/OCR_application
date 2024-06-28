@@ -4,15 +4,14 @@ import { ContextMenuItems } from './ContextMenuItems';
 import ContextMenuItem from './ContextMenuItem';
 import { useControlContextMenu } from '../../hooks/useControlContextMenu';
 import { useMenuItemActions } from '../../hooks/useMenuItemActions';
-
+import { useHistoryContext } from '../../CanvasHistoryContext';
 
 const CanvasContextMenuFrame = (): JSX.Element  => {
   const { isVisible, contextMenuStyle, closeContextMenu } = useControlContextMenu();
-  const { handleItemClick, fileInputRef, isActionDisabled } = useMenuItemActions();
+  const { handleItemClick, fileInputRef } = useMenuItemActions();
+  const { isActionDisabled } = useHistoryContext();
 
   // console.log("render ContextMenuFrame", isVisible);
-
-  
   // contextMenuItemsのメモ化を行う、特にクリックイベントはメモ化しにくいので注意が必要
   const contextMenuItems = useMemo(() => {
     return ContextMenuItems.map((item) => ({

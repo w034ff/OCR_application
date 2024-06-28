@@ -2,12 +2,11 @@ import '../../styles/Menubar.css';
 import { startItems, middleItems, endItems } from './menuItems';
 import MenuGroup from './MenuGroup';
 import { useMenuItemActions } from '../../hooks/useMenuItemActions';
+import { useHistoryContext } from '../../CanvasHistoryContext';
 
-
-const MenuBar = (): JSX.Element => { 
-  const { 
-    handleItemClick, fileInputRef, isActionDisabled, isAccordionOpen, setAccordionOpen
-  } = useMenuItemActions();
+const MenuBar = (): JSX.Element => {
+  const { handleItemClick, fileInputRef, isAccordionOpen, setAccordionOpen } = useMenuItemActions();
+  const { isActionDisabled } = useHistoryContext();
   
   return (
     <div id="react-menu-bar"> 

@@ -4,9 +4,8 @@ import { useInitializeFabricCanvas } from './hooks/fabricCanvasHooks/useInitiali
 import { useSaveState } from './hooks/fabricCanvasHooks/useSaveState';
 import { useLoadImageURL } from './hooks/useLoadImageURL';
 import { useEditFabricCanvas } from './hooks/editFabricCanvasHooks/useEditFabricCanvas';
-import { useHistoryContext } from './CanvasHistoryContext';
+import { useSetHistoryStateContext } from './CanvasHistoryContext';
 import { useCanvasToolsContext} from './CanvasToolsContext'
-import { useSaveStateContext } from './CanvasSaveStateContext';
 import { useUndo } from './hooks/fabricCanvasHooks/useUndo';
 import { useRedo } from './hooks/fabricCanvasHooks/useRedo';
 import { isNumber } from './utils/validators';
@@ -17,15 +16,13 @@ export const useDrawFabricCanvas = (
   editCanvasRef:React.RefObject<HTMLCanvasElement>,
   containerRef: React.RefObject<HTMLDivElement>,
 ) => {
-  const { setIsSaveState } = useSaveStateContext()
-	const { setUndoRedoState } = useHistoryContext();
+  const { setUndoRedoState, toggleSaveState } = useSetHistoryStateContext()
   const { scale } = useCanvasToolsContext();
   const [drawingMode, setDrawingMode] = useState('lin'); // 'line' または 'rect'
   const [startPoint, setStartPoint] = useState<fabric.Rect | null>(null);
 
   // 描画用fabricキャンバスと切り取り領域用fabricキャンバスを初期化するカスタムフック
   const { fabricCanvas, fabricEditCanvas } = useInitializeFabricCanvas(canvasRef, editCanvasRef);
-
   // drawing-canvasの状態を保存するカスタムフック（Undo, Redoの実行に不可欠なカスタムフック）
   useSaveState(fabricCanvas);
   // drawing-canvasをUndoするカスタムフック
@@ -105,7 +102,7 @@ export const useDrawFabricCanvas = (
         startDrawing(o);
       }
       console.log('ffffffffffffffffffff')
-      setIsSaveState(flag => !flag);
+      toggleSaveState();
     };
 
     const handleKeydown = (e: KeyboardEvent) => {
