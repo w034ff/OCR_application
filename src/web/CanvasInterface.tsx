@@ -2,10 +2,11 @@ import {
   SideBar,
   GuideBar,
   CanvasContextMenu,
-  CanvasModalWindow
+  ModalWindow
 } from './components';
 import CanvasComponent from './canvas'
 import { ContextMenuProvider } from './components/ContextMenu/ContextMenuContext';
+import { ResizeCanvasProvider } from './components/ModalWindow/ResizeCanvasContext';
 import { useMenuItemFlipEffects } from './hooks/useMenuItemFlipEffects';
 
 const CanvasInterface = (): JSX.Element => {
@@ -16,16 +17,18 @@ const CanvasInterface = (): JSX.Element => {
   return (
     <>
       <GuideBar />
-      <div className="top-section" style={topSectionStyle}>
-        <ContextMenuProvider>
-          <CanvasComponent />
-          <CanvasContextMenu />
-          <div className="sidebar" style={sideBarStyle}>
-            <SideBar />
-          </div>
-        </ContextMenuProvider>
-      </div>  
-      <CanvasModalWindow />
+      <ResizeCanvasProvider>
+        <div className="top-section" style={topSectionStyle}>
+          <ContextMenuProvider>
+            <CanvasComponent />
+            <CanvasContextMenu />
+            <div className="sidebar" style={sideBarStyle}>
+              <SideBar />
+            </div>
+          </ContextMenuProvider>
+        </div>  
+        <ModalWindow />
+      </ResizeCanvasProvider>
     </>
   );
 };

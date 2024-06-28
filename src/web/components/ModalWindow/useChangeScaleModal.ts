@@ -1,35 +1,77 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import { useSetHistoryStateContext } from '../../CanvasHistoryContext';
 import { useCanvasToolsContext } from "../../CanvasToolsContext";
-import { useCanvasModalWindowContext } from './CanvasModalWindowContext';
+import { useModalWindowContext } from './ModalWindowContext';
+import { useResizeCanvasContext } from './ResizeCanvasContext';
 
+interface ModalConfiguration {
+  title: string;
+  radioValues: number[];
+}
 
-export const useChangeScaleModal = (setSelectedScale: React.Dispatch<React.SetStateAction<number>>) => {
+interface ModalConfigurations {
+  'zoom-canvas': ModalConfiguration;
+  'resize-canvas': ModalConfiguration;
+  [key: string]: ModalConfiguration | undefined;
+}
+
+// モーダルモードごとの設定をオブジェクトで管理
+const modalConfigurations: ModalConfigurations = {
+  'zoom-canvas': {
+    title: 'キャンバスの倍率を調整します',
+    radioValues: [0.33, 0.5, 0.66, 1.0, 2.0, 4.0]
+  },
+  'resize-canvas': {
+    title: '画像をリサイズします',
+    radioValues: [0.25, 0.5, 0.75, 1.5, 2.0, 4.0]
+  }
+};
+
+export const useChangeScaleModal = () => {
+  const { toggleSaveState } = useSetHistoryStateContext()
   const { scale, setScale, setZoomScaleValue, setScaleUpdateFlag  } = useCanvasToolsContext();
-  const { canvasModalMode, setResizeRatio } = useCanvasModalWindowContext();
+  const { ModalMode, closeModal } = useModalWindowContext();
+  const { resizeRatio, setResizeRatio } = useResizeCanvasContext();
 
-  // scaleの大きさが更新されるとradioの入力値を更新する
+  // 現在のモーダルモードに基づいて設定を取得
+  const { title, radioValues } = modalConfigurations[ModalMode] || {
+    title: '', radioValues: []
+  };
+
+  // selectedScale の初期値を決定する
+  const initialScale = ModalMode === 'resize-canvas' ? 1 : scale;
+  const [selectedScale, setSelectedScale] = useState<number>(initialScale);
+
+  // scaleの大きさが更新されるとラジオボタンの入力値を更新する
   useEffect(() => {
-    setSelectedScale(scale);
-  }, [scale]);
+    setSelectedScale(initialScale);
+  }, [scale, initialScale, resizeRatio.isResize]);
 
-  // モーダルを開いて画像をリサイズするときは、ラジオボタンの初期値を1にする（選択されていない状態にする）
-  useEffect(() => {
-    if (canvasModalMode === 'resize-canvas') {
-      setSelectedScale(1);
-    }
-  }, [canvasModalMode]); 
+  // ラジオボタンのonChangeイベント
+  const handleScaleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const newScale = parseFloat(e.target.value);
+    setSelectedScale(newScale);
+  }, []);
 
-  const applyZoomCanvas = (selectedScale: number) => {
+  // キャンバスのズーム倍率を適応させる処理
+  const applyZoomCanvas = useCallback(() => {
     if (selectedScale === scale) return;
 
     setZoomScaleValue(selectedScale / Math.max(1, scale));
     setScale(selectedScale);
     setScaleUpdateFlag(flag => !flag);
-  };
+  }, [selectedScale]);
 
-  const applyResizeCanvas = (selectedScale: number) => {
-    setResizeRatio(selectedScale);
-  };
+  // モーダルのOKボタンを押すと設定をキャンバスに反映させる 
+  const handleChangeClick = useCallback(() => {
+    closeModal(); // モーダルを閉じる
+    if (ModalMode === 'zoom-canvas') {
+      applyZoomCanvas();
+    } else if (ModalMode === 'resize-canvas') {
+      toggleSaveState();
+      setResizeRatio(prev => ({ ...prev, isResize: !prev.isResize, ratio: selectedScale }));  // リサイズする比率を設定する
+    }
+  }, [applyZoomCanvas, ModalMode]);
 
-  return { applyZoomCanvas, applyResizeCanvas };
+  return { selectedScale, title, radioValues, handleScaleChange, handleChangeClick };
 }
