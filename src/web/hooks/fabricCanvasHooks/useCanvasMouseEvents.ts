@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useCanvasToolsContext } from '../../CanvasToolsContext';
+import { useCanvasSimpleBarContext } from '../../CanvasSimpleBarContext';
 import { useControlContextMenu } from '../useControlContextMenu';
 
 
-export const useCanvasMouseEvents = (
-	scrollables: NodeListOf<Element>,
-) => {
-	const { scale, scrollElement } = useCanvasToolsContext();
+export const useCanvasMouseEvents = () => {
+	const { scale } = useCanvasToolsContext();
+	const { scrollables, scrollElement } = useCanvasSimpleBarContext();
 	const { isVisible, openContextMenu } = useControlContextMenu();
 
 	const [drawing, setDrawing] = useState(false);
@@ -15,11 +15,10 @@ export const useCanvasMouseEvents = (
 	const [lastDragY, setLastDragY] = useState<number>(0);
 
 	// console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
-	
-
 	const handleMousedown = (e: MouseEvent) => {
 		const clickedElement = document.elementFromPoint(e.clientX, e.clientY);
     if (clickedElement?.classList.contains('simplebar-scrollbar')) {
+			//  スクロールバーを押したとき、デフォルトのsimplebar-hoverを削除し、カスタムしたsimplebar-draggingを追加
       clickedElement.classList.remove('simplebar-hover');
       clickedElement.classList.add('simplebar-dragging');
     } else if (e.button === 0 && !isVisible && !dragging) {

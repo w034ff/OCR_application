@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useContextMenuContext } from '../components/ContextMenu/ContextMenuContext';
-import { useCanvasToolsContext } from '../CanvasToolsContext';
+import { useCanvasSimpleBarContext } from '../CanvasSimpleBarContext';
 
 const MENU_WIDTH = 183; // コンテキストメニューの横幅
 const MENU_HEIGHT = 278; // コンテキスメニューの縦幅
@@ -21,7 +21,7 @@ const adjustMenuPosition = (
 
 
 export const useControlContextMenu = () => {
-	const { handleScrollbarToCenter } = useCanvasToolsContext();
+	const { handleScrollbarToCenter } = useCanvasSimpleBarContext();
 	const { contextMenu, setContextMenu } = useContextMenuContext();
 	// ブラウザウィンドウのサイズを取得
 	const [windowWidth, setWindowWidth] = useState(window.innerWidth);

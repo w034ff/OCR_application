@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useCanvasToolsContext } from '../CanvasToolsContext';
+import { useCanvasSimpleBarContext } from '../CanvasSimpleBarContext';
 import { getNextScale } from '../utils/scaleUtils';
 import { useScaleUpdateOnWheel } from './useScaleUpdateOnWheel';
 
@@ -9,9 +10,8 @@ export const useAdjustScrollForCanvasZoom = (
 	editCanvasRef:React.RefObject<HTMLCanvasElement>,
 	InnercontainerRef: React.RefObject<HTMLDivElement>,
 ) => {
-	const {
-		scale, zoomScaleValue, scaleUpdateFlag,	scrollElement, handleScrollbarToCenter
-	} = useCanvasToolsContext();
+	const { scale, zoomScaleValue, scaleUpdateFlag } = useCanvasToolsContext();
+	const { scrollElement, handleScrollbarToCenter } = useCanvasSimpleBarContext();
 
 	// マウスホイールイベントでscaleを変更した際の処理をまとめたカスタムフック
 	const { isWheelScaleUpdate, clientX, clientY, updateScaleOnWheel } = useScaleUpdateOnWheel();

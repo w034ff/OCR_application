@@ -1,10 +1,16 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useCanvasToolsContext } from '../CanvasToolsContext';
+import { useCanvasSimpleBarContext } from '../CanvasSimpleBarContext';
 import { getNextScale } from '../utils/scaleUtils';
 
+interface ZoomScaling {
+  zoomFlag: boolean;
+  count: number;
+}
 
 export const useCanvasScaleControls = () => {
-  const { scale, setScale, setZoomScaleValue, setScaleUpdateFlag, handleScrollbarToCenter } = useCanvasToolsContext();
+  const { scale, setScale, setZoomScaleValue, setScaleUpdateFlag } = useCanvasToolsContext();
+  const { handleScrollbarToCenter } = useCanvasSimpleBarContext();
   const [isViewReset, setIsViewReset] = useState<boolean>(false);
   const [zoomScaling, setZoomScaling] = useState<ZoomScaling>({ zoomFlag: false, count: 0 });
 

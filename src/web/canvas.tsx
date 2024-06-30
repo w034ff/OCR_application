@@ -13,23 +13,22 @@ import { useEventRegister } from './hooks/fabricCanvasHooks/useEventRegister';
 import { useCanvasMouseEvents } from './hooks/fabricCanvasHooks/useCanvasMouseEvents';
 
 const CanvasComponent = (): JSX.Element  => {
-	const { trimModeActive, resizeModeActive } = useSidebarStateContext();;
-
-	const containerRef = useRef<HTMLDivElement>(null);
-	const InnercontainerRef = useRef<HTMLDivElement>(null);
+	const { trimModeActive, resizeModeActive } = useSidebarStateContext();
+	
 	const simpleBarRef = useRef<SimpleBarCore | null>(null);
+	const InnercontainerRef = useRef<HTMLDivElement>(null);
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
 	const editCanvasRef = useRef<HTMLCanvasElement | null>(null);
 	
 	// カスタムフックを使用
 
-	const scrollables = useInitializeSimpleBar(simpleBarRef);
-	const { listenerRegistered } = useEventRegister();
-	useCanvasMouseEvents(scrollables);
+	useInitializeSimpleBar(simpleBarRef);
+	const listenerRegistered = useEventRegister();
+	useCanvasMouseEvents();
 	// Rectオブジェクト等をFabricキャンバスに描画するためのカスタムフック
-	useDrawFabricCanvas(canvasRef, editCanvasRef, containerRef);
+	useDrawFabricCanvas(canvasRef, editCanvasRef);
 	useChangeScaleUpperCanvases();
-	useSimpleBarHoverCleanup(scrollables);
+	useSimpleBarHoverCleanup();
 	// キャンバスのズーム及び、ズーム後のスクロール(simplebar)の位置を調整するカスタムフック
 	useAdjustScrollForCanvasZoom(canvasRef, editCanvasRef, InnercontainerRef);
 	// drawing-canvasのサイズが変更された際、inner-canvasのサイズも変更するカスタムフック
@@ -38,9 +37,8 @@ const CanvasComponent = (): JSX.Element  => {
 	console.log("render canvas")
 
 	return (
-		<>
-		<div ref={containerRef} id="outer-canvas-container">
-			<div className="trim-overlay" style={{ backgroundColor: trimModeActive ? '#373737' : 'transparent' }}>
+		<div id="outer-canvas-container">
+			<div id="trim-overlay" style={{ backgroundColor: trimModeActive ? '#373737' : 'transparent' }}>
 				<SimpleBar ref={simpleBarRef} style={{ width: '100%', height: '100%' }}>
 					<div id="inner-canvas-container" ref={InnercontainerRef}>
 						<canvas id="drawing-canvas" ref={canvasRef} width="800" height="600" style={{ zIndex: 1, opacity: listenerRegistered ? '1' : '0'} } />
@@ -49,7 +47,6 @@ const CanvasComponent = (): JSX.Element  => {
 				</SimpleBar>
 			</div>
 		</div>
-		</>
 	);
 }
 

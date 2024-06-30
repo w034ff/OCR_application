@@ -21,11 +21,11 @@
 	justify-content: space-around;
 }
 
-.horizontal-group-small {
+.margin-top {
 	margin-top: 10px;
 }
 
-.horizontal-group-two-buttons {
+.two-buttons {
 	margin-top: 20px;
 }
 
@@ -76,7 +76,7 @@
 	margin: 20px 4px 10px;
 }
   
-.horizontal-group-two-buttons button {
+.two-buttons button {
 	display: flex;
 	justify-content: center;
   align-items: center;
@@ -87,7 +87,7 @@
 	border: 1px solid rgb(180, 180, 180);
 }
 
-.horizontal-four-buttons button {
+.four-buttons button {
 	display: flex;
 	justify-content: center;
   align-items: center;

@@ -2,14 +2,14 @@ import { useState, useRef, useCallback } from 'react';
 import { useGuideBarHiddenContext } from '../components/GuideBar/GuideBarHiddenContext';
 import { useSetHistoryStateContext } from "../CanvasHistoryContext";
 import { useSidebarStateContext } from "../components/SideBar/SidebarStateContext";
-import { useModalWindowContext } from '../components/ModalWindow/ModalWindowContext';
+import { useSetModalContext } from '../components/ModalWindow/ModalWindowContext';
 import { useCanvasScaleControls } from "./useCanvasScaleControls";
 
 export const useMenuItemActions = () => {
   const { setIsFlipped } = useGuideBarHiddenContext();
   const { setUndoRedoState } = useSetHistoryStateContext();
   const { setTrimModeActive, setResizeModeActive } = useSidebarStateContext();
-  const { setModalMode } = useModalWindowContext();
+  const { setModalMode } = useSetModalContext();
   const { setIsViewReset, setZoomScaling } = useCanvasScaleControls();
   const [isAccordionOpen, setAccordionOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);

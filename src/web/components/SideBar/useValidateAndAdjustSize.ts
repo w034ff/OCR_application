@@ -1,7 +1,6 @@
 import { useEditCanvasToolsContext } from '../../hooks/editFabricCanvasHooks/EditCanvasToolsContext';
 import { useSidebarStateContext } from './SidebarStateContext';
 
-
 export const useValidateAndAdjustSize = (
   inputs: Inputs,
   setInputs: React.Dispatch<React.SetStateAction<Inputs>>,
@@ -9,8 +8,8 @@ export const useValidateAndAdjustSize = (
   aspectRatio: number
   ) => {
   const {
-    currentCanvasWidth, currentCanvasHeight, isTrimAspectRatioLocked,
-    setIsTrimAspectRatioLocked, isResizeAspectRatioLocked
+    currentCanvasWidth, currentCanvasHeight, lockTrimAspectRatio,
+    setLockTrimAspectRatio, lockResizeAspectRatio
   } = useEditCanvasToolsContext();
   const { trimModeActive, resizeModeActive } = useSidebarStateContext();
 
@@ -21,8 +20,8 @@ export const useValidateAndAdjustSize = (
       window.ShowError.sendMain('Invalid value Error', errorMessage);
       const currentValue = name === 'width' ? currentCanvasWidth.toString() : currentCanvasHeight.toString();
       setInputs({ ...inputs, [name]: currentValue });
-      setIsTrimAspectRatioLocked(false);
-    } else if (isTrimAspectRatioLocked || (resizeModeActive && isResizeAspectRatioLocked)) {
+      setLockTrimAspectRatio(false);
+    } else if ((trimModeActive && lockTrimAspectRatio) || (resizeModeActive && lockResizeAspectRatio)) {
       adjustDimensionsKeepingAspectRatio(name, value);
     }
     setInputChanged(flag => !flag);

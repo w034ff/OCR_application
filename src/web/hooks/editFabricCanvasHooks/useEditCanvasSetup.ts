@@ -14,7 +14,7 @@ export const useEditCanvasSetup = (
   fabricEditCanvas: fabric.Canvas | null,
 ) => {
   const { trimModeActive, resizeModeActive } = useSidebarStateContext();
-  const { isTrimAspectRatioLocked, isResizeAspectRatioLocked } = useEditCanvasToolsContext();
+  const { lockTrimAspectRatio, lockResizeAspectRatio } = useEditCanvasToolsContext();
 
   const [rotationCompleted, setRotationCompleted] = useState(false);
   const cleanupRef = useRef<() => void>(() => {});
@@ -26,13 +26,13 @@ export const useEditCanvasSetup = (
   // 縦横比を固定するにチェックがある際、アスペクト比を維持しながら切り取り領域を操作する
   useEffect(() => {
     if (fabricEditCanvas) {
-      const shouldUniformScaling = (trimModeActive && isTrimAspectRatioLocked) || (resizeModeActive && isResizeAspectRatioLocked);
+      const shouldUniformScaling = (trimModeActive && lockTrimAspectRatio) || (resizeModeActive && lockResizeAspectRatio);
       // 現在の uniformScaling の状態と異なる場合のみ設定する
       if (fabricEditCanvas.uniformScaling !== shouldUniformScaling) {
         fabricEditCanvas.uniformScaling = shouldUniformScaling;
       }
     }
-  }, [trimModeActive, resizeModeActive, isTrimAspectRatioLocked, isResizeAspectRatioLocked]);
+  }, [trimModeActive, resizeModeActive, lockTrimAspectRatio, lockResizeAspectRatio]);
 
 
   // fabricCanvasのオブジェクトをデアクティブ化し、edit-canvasにおけるupper-canvasのZ-Indexの値を調整

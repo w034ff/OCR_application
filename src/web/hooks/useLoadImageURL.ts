@@ -9,14 +9,14 @@ import { isNumber } from '../utils/validators';
 export const useLoadImageURL = (
   fabricCanvas: fabric.Canvas | null,
   canvasRef: React.RefObject<HTMLCanvasElement>,
-  containerRef: React.RefObject<HTMLDivElement>,
 ) => {
   const { imageURL, loadImageFlag } = useFileInputContext();
   const { setScale, setScaleUpdateFlag } = useCanvasToolsContext();
 
+  // 画像ファイルをキャンバスに挿入する処理
   useEffect(() => {
     const canvas = canvasRef.current;
-    const container = containerRef.current;
+    const container = document.querySelector('#outer-canvas-container');
     if (!fabricCanvas || !canvas || !container) return;
 
     fabric.Image.fromURL(imageURL, (img: FabricImage) => {

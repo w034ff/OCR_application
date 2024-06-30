@@ -1,14 +1,11 @@
 import { useEffect } from 'react';
 import SimpleBarCore from 'simplebar-core';
-import { useCanvasToolsContext } from '../../CanvasToolsContext';
-
+import { useCanvasSimpleBarContext } from '../../CanvasSimpleBarContext';
 
 export const useInitializeSimpleBar = (
 	simpleBarRef: React.RefObject<SimpleBarCore>
 ) => {
-	const { setScrollElement } = useCanvasToolsContext();
-
-	const scrollables = document.querySelectorAll('.simplebar-scrollable-x, .simplebar-scrollable-y');
+	const { setScrollElement } = useCanvasSimpleBarContext();
 
 	useEffect(() => {
 		if (simpleBarRef.current) {
@@ -16,6 +13,4 @@ export const useInitializeSimpleBar = (
 			setScrollElement(currentScrollElement);
 		}
 	}, []);
-
-	return scrollables;
 }

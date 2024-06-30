@@ -1,80 +1,45 @@
-import RotateFlipButtons from './RotateFlipButtons';
 import { useEditCanvasToolsContext } from '../../hooks/editFabricCanvasHooks/EditCanvasToolsContext';
 import { useSidebarStateContext } from './SidebarStateContext';
-import { useModalWindowContext } from '../ModalWindow/ModalWindowContext';
+import { useSetModalContext } from '../ModalWindow/ModalWindowContext';
 import { useTransformCanvas } from './useTransformCanvas';
-
+import ResizeInputField from './ResizeInputField';
+import Checkbox from './Checkbox';
+import RotateFlipButtons from './RotateFlipButtons';
 
 const TransformCanvasForm = (): JSX.Element => {
-  const { setModalMode } = useModalWindowContext();
+  const { setModalMode } = useSetModalContext();
   const {
-    isTrimAspectRatioLocked, setIsTrimAspectRatioLocked, isResizeAspectRatioLocked, setIsResizeAspectRatioLocked,
+    lockTrimAspectRatio, setLockTrimAspectRatio, lockResizeAspectRatio, setLockResizeAspectRatio,
   } = useEditCanvasToolsContext();
   const { trimModeActive, setTrimModeActive, resizeModeActive } = useSidebarStateContext();
+
+  console.log('render TransformCanvasForm');
   
   // トリミング領域と入力された数値を管理するカスタムフック
-  const { 
+  const {
     inputs,
     handleInputBlur,
     handleKeyUp,
     handleInputChange,
     handleChangeClick
   } = useTransformCanvas();
-  
-  // console.log('render TransformCanvasForm')
-
 
   return (
     <div className="sidebar-content">
       <h3>キャンバス</h3>
       <div className="text">キャンバスのサイズ変更</div>
-      <div className="horizontal-group horizontal-group-small">
+      <div className="horizontal-group margin-top">
         <div className="group-text">幅</div>
         <div className="group-text">高さ</div>
       </div>
-      <div className="horizontal-group horizontal-group-small">
-        <div className="input-wrapper">
-          <input 
-            type="text"
-            name="width"
-            value={inputs.width} 
-            onChange={handleInputChange}
-            onBlur={handleInputBlur}
-            onKeyUp={handleKeyUp}
-            maxLength={5}
-            onFocus={(e) => e.target.select()}
-            onDragStart={(e) => e.preventDefault()}
-          />
-          <span className="unit-text">ピクセル</span>
-        </div>
-        <div className="input-wrapper">
-          <input 
-            type="text"
-            name="height"
-            value={inputs.height} 
-            onChange={handleInputChange}
-            onBlur={handleInputBlur}
-            onKeyUp={handleKeyUp}
-            maxLength={5}
-            onFocus={(e) => e.target.select()}
-            onDragStart={(e) => e.preventDefault()}
-          />
-          <span className="unit-text">ピクセル</span>
-        </div>
+      <div className="horizontal-group margin-top">
+        <ResizeInputField name="width" value={inputs.width} onChange={handleInputChange} onBlur={handleInputBlur} onKeyUp={handleKeyUp} />
+        <ResizeInputField name="height" value={inputs.height} onChange={handleInputChange} onBlur={handleInputBlur} onKeyUp={handleKeyUp} />
       </div>
       {trimModeActive && (
         <>
-          <div className="checkbox">
-            <input 
-              type="checkbox"
-              id="trimAspectRatio"
-              className="custom-checkbox"
-              checked={isTrimAspectRatioLocked}
-              onChange={(e) => setIsTrimAspectRatioLocked(e.target.checked)}
-            />
-            <label htmlFor="trimAspectRatio" className="custom-label">縦横比を固定する</label>
-          </div>
-          <div className="horizontal-group horizontal-group-two-buttons">
+          <Checkbox id="trim" checked={lockTrimAspectRatio} onChange={(e) => setLockTrimAspectRatio(e.target.checked)} label="縦横比を固定する" />
+          <div className="horizontal-group two-buttons">
             <button onClick={() => setTrimModeActive(false)}>キャンセル</button>
             <button onClick={handleChangeClick}>完了</button>
           </div>
@@ -82,16 +47,7 @@ const TransformCanvasForm = (): JSX.Element => {
       )}
       {resizeModeActive && (
         <>
-          <div className="checkbox">
-            <input 
-              type="checkbox"
-              id="resizeAspectRatio"
-              className="custom-checkbox"
-              checked={isResizeAspectRatioLocked}
-              onChange={(e) => setIsResizeAspectRatioLocked(e.target.checked)}
-            />
-            <label htmlFor="resizeAspectRatio" className="custom-label">縦横比を固定する</label>
-          </div>
+          <Checkbox id="resize" checked={lockResizeAspectRatio} onChange={(e) => setLockResizeAspectRatio(e.target.checked)} label="縦横比を固定する" />
           <div className="horizontal-group modal-open">
             <button onClick={() => setModalMode('resize-canvas')}>画像をリサイズする</button>
           </div>

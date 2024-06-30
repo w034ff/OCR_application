@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
-import { useCanvasToolsContext } from '../../CanvasToolsContext';
+import { useCanvasSimpleBarContext } from '../../CanvasSimpleBarContext';
 import { useEditCanvasToolsContext } from '../editFabricCanvasHooks/EditCanvasToolsContext';
 
 export const useCanvasSizeObserver = (
 	canvasRef: React.RefObject<HTMLCanvasElement>,
 	InnercontainerRef: React.RefObject<HTMLDivElement>
 ) => {
-	const { scrollElement, handleScrollbarToCenter } = useCanvasToolsContext();
+	const { scrollElement, handleScrollbarToCenter } = useCanvasSimpleBarContext();
 	const { setCurrentCanvasWidth, setCurrentCanvasHeight } = useEditCanvasToolsContext();
 
 	// drawing-canvasのサイズが変更された際、inner-canvasのサイズも変更する。そうしなければキャンバスを中央に配置できなくなる。

@@ -8,7 +8,7 @@ export const useTransformCanvas = () => {
 	const { toggleSaveState } = useSetHistoryStateContext();
 	const {
     setIsTrimCanvas, setTrimRegionChanged, currentCanvasWidth, currentCanvasHeight,
-    isTrimAspectRatioLocked, isResizeAspectRatioLocked,
+    lockTrimAspectRatio, lockResizeAspectRatio,
     trimRegionWidth, setTrimRegionWidth, trimRegionHeight, setTrimRegionHeight,
   } = useEditCanvasToolsContext();
 	const { trimModeActive, resizeModeActive } = useSidebarStateContext();
@@ -17,10 +17,10 @@ export const useTransformCanvas = () => {
   const [inputChanged, setInputChanged] = useState<boolean>(false);
   const [isEnterPressed, setIsEnterPressed] = useState<boolean>(false);
 
-
 	// 入力されたトリミングサイズの検証及びオプションでアスペクト比を維持しながらサイズを調整するカスタムフック
   const validateAndAdjustSize = useValidateAndAdjustSize(inputs, setInputs, setInputChanged, aspectRatio);
 
+  // console.log('vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv')
 
 	// トリミングまたはキャンバス要素をクリックするとトリミング領域を初期化する
   useEffect(() => {
@@ -42,14 +42,14 @@ export const useTransformCanvas = () => {
   
   // チェックボックスをクリックするとアスペクト比を更新する
   useEffect(() => {
-    if (isResizeAspectRatioLocked) {
+    if (lockResizeAspectRatio && resizeModeActive) {
       setAspectRatio(currentCanvasWidth / currentCanvasHeight);
-    } else if (isTrimAspectRatioLocked) {
+    } else if (lockTrimAspectRatio && trimModeActive) {
       setAspectRatio(trimRegionWidth / trimRegionHeight);
     }
-  }, [isTrimAspectRatioLocked, isResizeAspectRatioLocked]);
+  }, [lockTrimAspectRatio, lockResizeAspectRatio, trimModeActive, resizeModeActive]);
 
-
+  // フォーカスが入力フィールドから外れたときに呼び出されるハンドラ関数
   const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     if (isEnterPressed) {
       setIsEnterPressed(false);
@@ -59,6 +59,7 @@ export const useTransformCanvas = () => {
     validateAndAdjustSize(name, value);
   };
 
+  // 入力フィールドで'Enter'キーが押された後に呼び出されるハンドラ関数
   const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       setIsEnterPressed(true);
@@ -66,13 +67,14 @@ export const useTransformCanvas = () => {
       validateAndAdjustSize(name, value);
     }
   };
-
+  
+  // ユーザーが入力フィールドを変更した際に発火するイベントハンドラー
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setInputs({ ...inputs, [name]: value });
   };
 
-  
+  //「完了」ボタンがクリックされた際に実行される関数
   const handleChangeClick = () => {
     setIsTrimCanvas(flag => !flag);
     toggleSaveState(); // SaveStateを更新(ここで呼び出さないと正しくキャンバスの状態を保存できない)

@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import { useHistoryContext } from '../../CanvasHistoryContext';
-import { useCanvasToolsContext } from '../../CanvasToolsContext';
+import { useCanvasSimpleBarContext } from '../../CanvasSimpleBarContext';
 import { getCurrentFabricCanvasState, applyCanvasState } from '../../utils/canvasUtils';
 
 export const useRedo = (
 	fabricCanvas: fabric.Canvas | null,
 ) => {
   const { setHistoryValue, undoStack, setUndoStack, redoStack, setRedoStack, undoRedoState } = useHistoryContext();
-  const { handleScrollbarToCenter } = useCanvasToolsContext();
+  const { handleScrollbarToCenter } = useCanvasSimpleBarContext();
 
   useEffect(() => {
     if (redoStack.length === 0 || !fabricCanvas) return;

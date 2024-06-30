@@ -1,12 +1,13 @@
 import '../../styles/modal-window.css';
 import clsx from 'clsx';
-import { useModalWindowContext } from './ModalWindowContext';
+import { useModalWindowContext, useSetModalContext } from './ModalWindowContext';
 import { useModalAnimation } from './useModalAnimation';
 import { useChangeScaleModal } from './useChangeScaleModal';
 import ChangeScaleModal from './ChangeScaleModal';
 
 const ModalWindow = (): JSX.Element | null  => {
-  const { ModalMode, closeModal } = useModalWindowContext();
+  const { ModalMode } = useModalWindowContext();
+  const { closeModal } = useSetModalContext();
   const { animationKey, handleOverlayClick } = useModalAnimation();
   const { selectedScale, title, radioValues, handleScaleChange, handleChangeClick } = useChangeScaleModal();
 

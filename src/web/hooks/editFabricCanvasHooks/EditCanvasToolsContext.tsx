@@ -6,10 +6,10 @@ interface EditCanvasToolsContextProps {
   setIsTrimCanvas: React.Dispatch<React.SetStateAction<boolean>>;
   trimRegionChanged: boolean;
   setTrimRegionChanged: React.Dispatch<React.SetStateAction<boolean>>;
-  isTrimAspectRatioLocked: boolean;
-  setIsTrimAspectRatioLocked: React.Dispatch<React.SetStateAction<boolean>>;
-  isResizeAspectRatioLocked: boolean;
-  setIsResizeAspectRatioLocked: React.Dispatch<React.SetStateAction<boolean>>;
+  lockTrimAspectRatio: boolean;
+  setLockTrimAspectRatio: React.Dispatch<React.SetStateAction<boolean>>;
+  lockResizeAspectRatio: boolean;
+  setLockResizeAspectRatio: React.Dispatch<React.SetStateAction<boolean>>;
   currentCanvasWidth: number;
   setCurrentCanvasWidth: React.Dispatch<React.SetStateAction<number>>;
   currentCanvasHeight: number;
@@ -34,8 +34,8 @@ interface EditCanvasToolsProviderProps {
 export const EditCanvasToolsProvider = ({ children }: EditCanvasToolsProviderProps): JSX.Element => {
   const [isTrimCanvas, setIsTrimCanvas] = useState<boolean>(false);
   const [trimRegionChanged, setTrimRegionChanged] = useState<boolean>(false);
-  const [isTrimAspectRatioLocked, setIsTrimAspectRatioLocked] = useState<boolean>(false);
-  const [isResizeAspectRatioLocked, setIsResizeAspectRatioLocked] = useState<boolean>(false);
+  const [lockTrimAspectRatio, setLockTrimAspectRatio] = useState<boolean>(false);
+  const [lockResizeAspectRatio, setLockResizeAspectRatio] = useState<boolean>(false);
   const [currentCanvasWidth, setCurrentCanvasWidth] = useState<number>(800);
   const [currentCanvasHeight, setCurrentCanvasHeight] = useState<number>(600);
   const [trimRegionWidth, setTrimRegionWidth] = useState<number>(800);
@@ -47,7 +47,7 @@ export const EditCanvasToolsProvider = ({ children }: EditCanvasToolsProviderPro
   return (
     <EditCanvasToolsContext.Provider value = {{
       isTrimCanvas, setIsTrimCanvas, trimRegionChanged, setTrimRegionChanged,
-      isTrimAspectRatioLocked, setIsTrimAspectRatioLocked, isResizeAspectRatioLocked, setIsResizeAspectRatioLocked,
+      lockTrimAspectRatio, setLockTrimAspectRatio, lockResizeAspectRatio, setLockResizeAspectRatio,
       currentCanvasWidth, setCurrentCanvasWidth, currentCanvasHeight, setCurrentCanvasHeight,
       trimRegionWidth, setTrimRegionWidth, trimRegionHeight, setTrimRegionHeight,
       rotate90, setRotate90, flipState, setFlipState

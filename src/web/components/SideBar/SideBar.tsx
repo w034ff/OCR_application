@@ -3,7 +3,7 @@ import '../../styles/Sidebar.css';
 import TransformCanvasForm from './TransformCanvasForm';
 
 
-const SideBar = (): JSX.Element | undefined => {
+const SideBar = (): JSX.Element => {
   // const { trimModeActive } = useSidebarStateContext();
 
   // if (trimModeActive) {

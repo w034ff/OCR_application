@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useSetHistoryStateContext } from '../../CanvasHistoryContext';
 import { useCanvasToolsContext } from "../../CanvasToolsContext";
-import { useModalWindowContext } from './ModalWindowContext';
+import { useModalWindowContext, useSetModalContext } from './ModalWindowContext';
 import { useResizeCanvasContext } from './ResizeCanvasContext';
 
 interface ModalConfiguration {
@@ -30,7 +30,8 @@ const modalConfigurations: ModalConfigurations = {
 export const useChangeScaleModal = () => {
   const { toggleSaveState } = useSetHistoryStateContext()
   const { scale, setScale, setZoomScaleValue, setScaleUpdateFlag  } = useCanvasToolsContext();
-  const { ModalMode, closeModal } = useModalWindowContext();
+  const { ModalMode } = useModalWindowContext();
+  const { closeModal } = useSetModalContext();
   const { resizeRatio, setResizeRatio } = useResizeCanvasContext();
 
   // 現在のモーダルモードに基づいて設定を取得

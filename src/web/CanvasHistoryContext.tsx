@@ -1,5 +1,11 @@
 import { createContext, useContext, ReactNode, useState, useCallback, useMemo } from 'react';
 
+interface UndoRedoState {
+  isUndo: boolean;
+  isRedo: boolean;
+  count: number;
+}
+
 interface HistoryContextProps {
   historyValue: number;
   setHistoryValue: React.Dispatch<React.SetStateAction<number>>;

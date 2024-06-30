@@ -20,23 +20,9 @@ declare global {
       width: number;
       height: number;
     }
-    export interface UndoRedoState {
-      isUndo: boolean;
-      isRedo: boolean;
-      count: number;
-    }
-    export interface ZoomScaling {
-      zoomFlag: boolean;
-      count: number;
-    }
     export interface Inputs {
       width: string;
       height: string;
-    }
-    export interface ContextMenuState {
-      visible: boolean;
-      x: number;
-      y: number;
     }
 }
 

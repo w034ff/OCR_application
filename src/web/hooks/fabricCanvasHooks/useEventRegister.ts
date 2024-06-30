@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useCanvasToolsContext } from '../../CanvasToolsContext';
+import { useCanvasSimpleBarContext } from '../../CanvasSimpleBarContext';
 import { useSetHistoryStateContext } from '../../CanvasHistoryContext';
 import { useControlContextMenu } from '../useControlContextMenu';
 
@@ -9,7 +9,7 @@ enum ActionType {
 }
 
 export const useEventRegister = () => {
-	const { scrollElement, handleScrollbarToCenter } = useCanvasToolsContext();
+	const { scrollElement, handleScrollbarToCenter } = useCanvasSimpleBarContext();
 	const { setUndoRedoState } = useSetHistoryStateContext();
 	const { closeContextMenu, handleResize } = useControlContextMenu();
 	const [listenerRegistered, setListenerRegistered] = useState(false);
@@ -56,5 +56,5 @@ export const useEventRegister = () => {
 		};
 	}, [scrollElement]);
 
-	return { listenerRegistered };
+	return listenerRegistered;
 }

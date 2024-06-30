@@ -1,5 +1,10 @@
 import { createContext, useContext, ReactNode, useState } from 'react';
 
+interface ContextMenuState {
+  visible: boolean;
+  x: number;
+  y: number;
+}
 
 interface ContextMenuContextProps {
   contextMenu: ContextMenuState;

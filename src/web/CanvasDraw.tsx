@@ -14,7 +14,6 @@ import { isNumber } from './utils/validators';
 export const useDrawFabricCanvas = (
   canvasRef: React.RefObject<HTMLCanvasElement>,
   editCanvasRef:React.RefObject<HTMLCanvasElement>,
-  containerRef: React.RefObject<HTMLDivElement>,
 ) => {
   const { setUndoRedoState, toggleSaveState } = useSetHistoryStateContext()
   const { scale } = useCanvasToolsContext();
@@ -30,14 +29,13 @@ export const useDrawFabricCanvas = (
   // drawing-canvasをRedoするカスタムフック
   useRedo(fabricCanvas);
   // Fabricキャンバスに画像を挿入するカスタムフック
-  useLoadImageURL(fabricCanvas, canvasRef, containerRef);
+  useLoadImageURL(fabricCanvas, canvasRef);
   //  キャンバスのトリミング領域を設定および管理するためのカスタムフック
   useEditFabricCanvas(fabricCanvas, fabricEditCanvas, canvasRef);
 
   // console.log("render canvasDraw")
   
   useEffect(() => {
-    // console.log('gggggggggggggggg')
     if (!fabricCanvas) return;
     const startDrawing = (o: fabric.IEvent) => {
       console.log('eeeeeeeeeeeeeeeeeeeeee')

@@ -1,5 +1,6 @@
 import { CanvasHistoryProvider } from './CanvasHistoryContext';
 import { CanvasToolsProvider } from './CanvasToolsContext';
+import { CanvasSimpleBarProvider } from './CanvasSimpleBarContext';
 import { GuideBarHiddenProvider } from './components/GuideBar/GuideBarHiddenContext';
 import { EditCanvasToolsProvider } from './hooks/editFabricCanvasHooks/EditCanvasToolsContext';
 import { SidebarStateProvider } from './components/SideBar/SidebarStateContext';
@@ -15,22 +16,24 @@ const App = (): JSX.Element => {
     return (
 			<CanvasHistoryProvider>
 				<CanvasToolsProvider>
-					<GuideBarHiddenProvider>
-						<EditCanvasToolsProvider>
-							<SidebarStateProvider>
-								<FileInputProvider>
-									<ModalWindowProvider>
-										<div className="app-container">
-											<MenuBar />
-											<div id="react-canvas">
-												<CanvasInterface /> 
+					<CanvasSimpleBarProvider>
+						<GuideBarHiddenProvider>
+							<EditCanvasToolsProvider>
+								<SidebarStateProvider>
+									<FileInputProvider>
+										<ModalWindowProvider>
+											<div className="app-container">
+												<MenuBar />
+												<div id="react-canvas">
+													<CanvasInterface /> 
+												</div>
 											</div>
-										</div>
-									</ModalWindowProvider>
-								</FileInputProvider>
-							</SidebarStateProvider>
-						</EditCanvasToolsProvider>
-					</GuideBarHiddenProvider>
+										</ModalWindowProvider>
+									</FileInputProvider>
+								</SidebarStateProvider>
+							</EditCanvasToolsProvider>
+						</GuideBarHiddenProvider>
+					</CanvasSimpleBarProvider>
 				</CanvasToolsProvider>
 			</CanvasHistoryProvider>
     )
