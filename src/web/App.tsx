@@ -13,30 +13,30 @@ import CanvasInterface from './CanvasInterface';
 import './Home.css';
 
 const App = (): JSX.Element => {
-    return (
-			<CanvasHistoryProvider>
-				<CanvasToolsProvider>
-					<CanvasSimpleBarProvider>
-						<GuideBarHiddenProvider>
-							<EditCanvasToolsProvider>
-								<SidebarStateProvider>
-									<FileInputProvider>
-										<ModalWindowProvider>
-											<div className="app-container">
-												<MenuBar />
-												<div id="react-canvas">
-													<CanvasInterface /> 
-												</div>
+	return (
+		<CanvasHistoryProvider>
+			<CanvasToolsProvider>
+				<CanvasSimpleBarProvider>
+					<GuideBarHiddenProvider>
+						<EditCanvasToolsProvider>
+							<SidebarStateProvider>
+								<FileInputProvider>
+									<ModalWindowProvider>
+										<div className="app-container">
+											<MenuBar />
+											<div id="react-canvas">
+												<CanvasInterface /> 
 											</div>
-										</ModalWindowProvider>
-									</FileInputProvider>
-								</SidebarStateProvider>
-							</EditCanvasToolsProvider>
-						</GuideBarHiddenProvider>
-					</CanvasSimpleBarProvider>
-				</CanvasToolsProvider>
-			</CanvasHistoryProvider>
-    )
+										</div>
+									</ModalWindowProvider>
+								</FileInputProvider>
+							</SidebarStateProvider>
+						</EditCanvasToolsProvider>
+					</GuideBarHiddenProvider>
+				</CanvasSimpleBarProvider>
+			</CanvasToolsProvider>
+		</CanvasHistoryProvider>
+	)
 }
 
 export default App

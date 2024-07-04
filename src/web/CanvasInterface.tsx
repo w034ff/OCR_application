@@ -2,9 +2,9 @@ import {
   SideBar,
   GuideBar,
   CanvasContextMenu,
-  ModalWindow
+  ModalWindow,
+  CanvasContainer
 } from './components';
-import CanvasContainer from './canvas'
 import { ContextMenuProvider } from './components/ContextMenu/ContextMenuContext';
 import { ResizeCanvasProvider } from './components/ModalWindow/ResizeCanvasContext';
 import { useMenuItemFlipEffects } from './hooks/useMenuItemFlipEffects';

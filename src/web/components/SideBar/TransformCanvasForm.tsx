@@ -1,17 +1,21 @@
 import { useEditCanvasToolsContext } from '../../hooks/editFabricCanvasHooks/EditCanvasToolsContext';
-import { useSidebarStateContext } from './SidebarStateContext';
 import { useSetModalContext } from '../ModalWindow/ModalWindowContext';
 import { useTransformCanvas } from './useTransformCanvas';
 import ResizeInputField from './ResizeInputField';
 import Checkbox from './Checkbox';
 import RotateFlipButtons from './RotateFlipButtons';
 
-const TransformCanvasForm = (): JSX.Element => {
+interface TransformCanvasFormProps {
+  trimModeActive: boolean;
+  setTrimModeActive: React.Dispatch<React.SetStateAction<boolean>>;
+  resizeModeActive: boolean
+}
+
+const TransformCanvasForm = ({ trimModeActive, setTrimModeActive, resizeModeActive }: TransformCanvasFormProps): JSX.Element => {
   const { setModalMode } = useSetModalContext();
   const {
     lockTrimAspectRatio, setLockTrimAspectRatio, lockResizeAspectRatio, setLockResizeAspectRatio,
   } = useEditCanvasToolsContext();
-  const { trimModeActive, setTrimModeActive, resizeModeActive } = useSidebarStateContext();
 
   console.log('render TransformCanvasForm');
   

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useCanvasToolsContext } from '../../CanvasToolsContext';
 import { useCanvasSimpleBarContext } from '../../CanvasSimpleBarContext';
 import { useControlContextMenu } from '../useControlContextMenu';
+import { handleScrollbarClick } from '../../utils/clickEventUtils';
 
 
 export const useCanvasMouseEvents = () => {
@@ -14,14 +15,13 @@ export const useCanvasMouseEvents = () => {
 	const [lastDragX, setLastDragX] = useState<number>(0);
 	const [lastDragY, setLastDragY] = useState<number>(0);
 
-	// console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+	
 	const handleMousedown = (e: MouseEvent) => {
-		const clickedElement = document.elementFromPoint(e.clientX, e.clientY);
-    if (clickedElement?.classList.contains('simplebar-scrollbar')) {
-			//  スクロールバーを押したとき、デフォルトのsimplebar-hoverを削除し、カスタムしたsimplebar-draggingを追加
-      clickedElement.classList.remove('simplebar-hover');
-      clickedElement.classList.add('simplebar-dragging');
-    } else if (e.button === 0 && !isVisible && !dragging) {
+		if (handleScrollbarClick(e)) {
+			return; // スクロールバーがクリックされたので、他の処理をスキップ
+		}
+
+		if (e.button === 0 && !isVisible && !dragging) {
 			setDrawing(true);
 		} else if (e.button === 1 && !isVisible && !drawing){
 			e.preventDefault();
@@ -74,5 +74,5 @@ export const useCanvasMouseEvents = () => {
 		};
 	}, [scrollElement, isVisible, drawing, dragging, lastDragX, lastDragY]);
 
-	// return { drawing };
+	return {drawing, dragging};
 }

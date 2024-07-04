@@ -19,8 +19,8 @@ export const useTransformCanvas = (
 	const initialScalingFlag = useRef<boolean>(false);
 	
 
-	const handleFabricRectScaling = (e: fabric.IEvent) => {
-		const rect = e.target;
+	const handleFabricRectScaling = (o: fabric.IEvent) => {
+		const rect = o.target;
 		if (!(rect instanceof fabric.Rect)) return;
 
 		if (!initialScalingFlag.current) {
@@ -58,7 +58,6 @@ export const useTransformCanvas = (
 			initialScalingFlag.current = false;
 		}
 	};
-
   
   useEffect(() => {
     if (!fabricEditCanvas || !resizeModeActive) return;

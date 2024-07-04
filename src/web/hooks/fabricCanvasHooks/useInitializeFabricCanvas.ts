@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { fabric } from 'fabric';
 
-
 export const useInitializeFabricCanvas = (
 	canvasRef: React.RefObject<HTMLCanvasElement>,
 	editCanvasRef: React.RefObject<HTMLCanvasElement>
@@ -12,8 +11,10 @@ export const useInitializeFabricCanvas = (
 	// 描画用fabricキャンバスの初期化
 	useEffect(() => {
 		if (canvasRef.current && !fabricCanvas) {
-			const newFabricCanvas = new fabric.Canvas(canvasRef.current);
-			newFabricCanvas.uniformScaling = false;
+			const newFabricCanvas = new fabric.Canvas(canvasRef.current, {
+				uniformScaling: false,
+				selection: true,
+			});
 			setFabricCanvas(newFabricCanvas);
 		}
 	}, [canvasRef]);
@@ -27,6 +28,8 @@ export const useInitializeFabricCanvas = (
 			});
 			newFabricCanvas.upperCanvasEl.style.top = '-500px';
 			newFabricCanvas.upperCanvasEl.style.left = '-500px';
+			newFabricCanvas.upperCanvasEl.classList.remove('upper-canvas');
+			newFabricCanvas.upperCanvasEl.classList.add('upper-edit-canvas');
 			newFabricCanvas.setDimensions({ width: 1800, height: 1600 });
 			setFabricEditCanvas(newFabricCanvas);
 		}

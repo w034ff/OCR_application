@@ -14,6 +14,7 @@ export const useEventRegister = () => {
 	const { closeContextMenu, handleResize } = useControlContextMenu();
 	const [listenerRegistered, setListenerRegistered] = useState(false);
 
+	// Undo, RedoをIPC通信を用いて実行する関数
 	const performCanvasAction = (action: string, count: number = 1) => {
     switch (action) {
       case ActionType.Undo:
@@ -27,9 +28,10 @@ export const useEventRegister = () => {
     }
   };
 
-
+	// モーダルをクリックするとコンテキストメニューを閉じる関数 
 	const closeOnOutsideClick = (e: MouseEvent) => {
-		if ((e.target as HTMLElement).classList.contains('modal-background')) {
+		const target = e.target;
+		if (target instanceof HTMLElement && target.classList.contains('modal-background')) {
 			closeContextMenu();
 		}
 	};
@@ -37,7 +39,6 @@ export const useEventRegister = () => {
 	useEffect(() => {
 		// 依存配列にscrollElementを含めることで、scrollElementが設定された後にこのEffectが実行される
 		if (scrollElement && !listenerRegistered && window.UnRedo && typeof window.UnRedo.on === 'function') {
-			console.log('render EventRegister')
 			window.UnRedo.on('UnRedo-action', performCanvasAction);
 			window.addEventListener('blur', closeContextMenu); 
 			window.addEventListener('mousedown', closeOnOutsideClick);

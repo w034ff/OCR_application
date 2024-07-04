@@ -1,9 +1,7 @@
-import React, { useEffect } from 'react';
-import { useCanvasToolsContext } from '../CanvasToolsContext';
-import { useCanvasSimpleBarContext } from '../CanvasSimpleBarContext';
-import { getNextScale } from '../utils/scaleUtils';
+import { useEffect } from 'react';
+import { useCanvasToolsContext } from '../../CanvasToolsContext';
+import { useCanvasSimpleBarContext } from '../../CanvasSimpleBarContext';
 import { useScaleUpdateOnWheel } from './useScaleUpdateOnWheel';
-
 
 export const useAdjustScrollForCanvasZoom = (
 	canvasRef: React.RefObject<HTMLCanvasElement>,
@@ -14,9 +12,9 @@ export const useAdjustScrollForCanvasZoom = (
 	const { scrollElement, handleScrollbarToCenter } = useCanvasSimpleBarContext();
 
 	// マウスホイールイベントでscaleを変更した際の処理をまとめたカスタムフック
-	const { isWheelScaleUpdate, clientX, clientY, updateScaleOnWheel } = useScaleUpdateOnWheel();
+	const { isWheelScaleUpdate, clientX, clientY } = useScaleUpdateOnWheel(InnercontainerRef);
 
-	// マウスホイールでキャンパスの倍率を変更する処理
+	// isWheelScaleUpdateが変更された際、zoomとscrollの位置を調整（マウスホイールでズーム倍率を変更する処理）
 	useEffect(() => {
     const canvas = canvasRef.current;
     const editCanvas = editCanvasRef.current;
@@ -46,34 +44,14 @@ export const useAdjustScrollForCanvasZoom = (
     editCanvas.style.transform = `scale(${scale})`;
   }, [isWheelScaleUpdate]);
 
-	useEffect(() => {
-		const handleWheelEvent = (e: WheelEvent) => {
-			e.preventDefault();
-			if (e.deltaY < 0 && scale < 64.0) {
-				updateScaleOnWheel(getNextScale(scale, 1), e);
-			} else if (e.deltaY > 0 && scale > 0.1) {
-				updateScaleOnWheel(getNextScale(scale, -1), e);
-			}
-		};
 
-		if (InnercontainerRef.current){
-			InnercontainerRef.current.addEventListener("wheel", handleWheelEvent);
-		}
-
-		return () => {
-			if (InnercontainerRef.current) {
-				InnercontainerRef.current.removeEventListener("wheel", handleWheelEvent);
-			}
-		};
-	}, [scale]);
-  
-
-  // zoomScaleValueもしくはscaleUpdateFlagが変更された際、zoomとscrollの位置を調整
+  // scaleUpdateFlagが変更された際、zoomとscrollの位置を調整（GuideItem等でズーム倍率を変更する処理）
 	useEffect(() => {
 		const canvas = canvasRef.current;
 		const editCanvas = editCanvasRef.current;
 		const Innercontainer = InnercontainerRef.current;
 		if (!canvas || !editCanvas || !Innercontainer || !scrollElement) return;
+		
 		if (scale <= 1) {
 			Innercontainer.style.padding = `50% 60%`;
 			handleScrollbarToCenter();

@@ -1,11 +1,12 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useContextMenuContext } from '../components/ContextMenu/ContextMenuContext';
 import { useCanvasSimpleBarContext } from '../CanvasSimpleBarContext';
 
 const MENU_WIDTH = 183; // コンテキストメニューの横幅
 const MENU_HEIGHT = 278; // コンテキスメニューの縦幅
 
-const adjustMenuPosition = (
+// 画面外にコンテキストメニューが表示されないよう調整する関数
+export const adjustMenuPosition = (
   x: number, y: number, windowWidth: number, windowHeight: number
 ): {adjustedX: number, adjustedY: number} => {
   let adjustedX = x;
@@ -19,21 +20,19 @@ const adjustMenuPosition = (
   return { adjustedX, adjustedY };
 };
 
-
 export const useControlContextMenu = () => {
 	const { handleScrollbarToCenter } = useCanvasSimpleBarContext();
-	const { contextMenu, setContextMenu } = useContextMenuContext();
+	const { contextMenu, setContextMenu, closeContextMenu } = useContextMenuContext();
 	// ブラウザウィンドウのサイズを取得
 	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 	const [windowHeight, setWindowHeight] = useState(window.innerHeight);
 
-	// console.log('render useControlContextMenu')
-
-	// 
+	// コンテキストメニューのスタイル
 	const contextMenuStyle: React.CSSProperties = contextMenu.visible
     ? { left: `${contextMenu.x}px`, top: `${contextMenu.y}px` } 
     : { display: 'none' };
 
+	// コンテキストメニューを開く関数
 	const openContextMenu = (e: MouseEvent, drawing: boolean, dragging: boolean) => {
 		if (e.button === 2 && !drawing && !dragging) {
 			e.preventDefault();
@@ -42,11 +41,8 @@ export const useControlContextMenu = () => {
 			setContextMenu({ visible: true, x: adjustedX, y: adjustedY});
 		}
 	}
-
-	const closeContextMenu = useCallback(() => {
-    setContextMenu({ visible: false, x: 0, y: 0 });
-	}, []);
 	
+	// ウィンドウのリサイズ時、ウィンドウのサイズを保存＆キャンバスを中央揃えする関数
 	const handleResize = () => {
 		setWindowWidth(window.innerWidth);
 		setWindowHeight(window.innerHeight);

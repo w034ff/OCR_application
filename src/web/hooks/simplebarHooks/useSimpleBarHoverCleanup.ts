@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
-import { useCanvasSimpleBarContext } from '../CanvasSimpleBarContext';
+import { useCanvasSimpleBarContext } from '../../CanvasSimpleBarContext';
 
 export const useSimpleBarHoverCleanup = () => {
   const { scrollables } = useCanvasSimpleBarContext();
 
-  //  Simplebarの例外処理（simplebar-hoverをsimplebarがhoverでないとき、removeするよう修正）
+  // Simplebarの例外処理（simplebar-hoverをsimplebarがhoverでないとき、removeするよう修正）
 	const handleDetectMouseMove = (e: MouseEvent) => {
 		document.querySelectorAll('.simplebar-scrollbar').forEach(scrollbar => {
 			if (scrollbar instanceof HTMLDivElement) {
@@ -17,7 +17,7 @@ export const useSimpleBarHoverCleanup = () => {
 		});
 	};
 
-  //  スクロールバーを離したとき、スクロールバーの上ならhoverを追加、そうでないならdraggingを削除
+  // スクロールバーを離したとき、スクロールバーの上ならhoverを追加、そうでないならdraggingを削除
   const handleMouseup = (e: MouseEvent) => {
     const elementAtMouseUpPoint = document.elementFromPoint(e.clientX, e.clientY);
     if (elementAtMouseUpPoint?.classList.contains('simplebar-scrollbar')) {

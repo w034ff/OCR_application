@@ -3,7 +3,7 @@ import { fabric } from 'fabric';
 import { useSidebarStateContext } from '../../components/SideBar/SidebarStateContext';
 import { useEditCanvasToolsContext } from './EditCanvasToolsContext';
 import { useRotate90Canvas } from './useRotate90Canvas';
-import { createRectProps } from './createRectProps';
+import { createEditRectProps } from './createRectProps';
 import { addRectToCanvas } from '../../utils/fabricEditCanvasUtils';
 import { MIN_LEFT_TOP, STROKE_WIDTH } from './editCanvasConstants';
 
@@ -39,16 +39,14 @@ export const useEditCanvasSetup = (
   useEffect(() => {
     if (!fabricCanvas) return;
 
-    const editLowerCanvas = document.getElementById('edit-canvas');
-    const editCanvasContainer = editLowerCanvas?.parentElement;
-    const editUpperCanvas = editCanvasContainer?.querySelector('.upper-canvas');
-    if (editUpperCanvas instanceof HTMLElement) {
+    const upperEditCanvas = document.querySelector('.upper-edit-canvas');
+    if (upperEditCanvas instanceof HTMLElement) {
       if (trimModeActive || resizeModeActive) {
-        editUpperCanvas.style.zIndex = "10";
+        upperEditCanvas.style.zIndex = "10";
         fabricCanvas.discardActiveObject(); // アクティブなオブジェクトをデアクティブ化
         fabricCanvas.renderAll();
       } else {
-        editUpperCanvas.style.zIndex = "-1";
+        upperEditCanvas.style.zIndex = "-1";
       }
     }
   }, [trimModeActive, resizeModeActive]);
@@ -79,13 +77,13 @@ export const useEditCanvasSetup = (
         fabricEditCanvas.add(backgroundRect);
 
         // 切り取り領域を表す四角形の作成
-        const rectProps = createRectProps(MIN_LEFT_TOP, STROKE_WIDTH, canvas.width, canvas.height, 'trimModeActive');
+        const rectProps = createEditRectProps(MIN_LEFT_TOP, STROKE_WIDTH, canvas.width, canvas.height, 'trimModeActive');
         cleanupRef.current = addRectToCanvas(fabricEditCanvas, rectProps);
       }
 
       if (resizeModeActive) {
         // リサイズ領域を表す四角形の作成
-        const rectProps = createRectProps(MIN_LEFT_TOP, STROKE_WIDTH, canvas.width, canvas.height, 'resizeModeActive');
+        const rectProps = createEditRectProps(MIN_LEFT_TOP, STROKE_WIDTH, canvas.width, canvas.height, 'resizeModeActive');
         cleanupRef.current = addRectToCanvas(fabricEditCanvas, rectProps);
       }
 
@@ -103,7 +101,7 @@ export const useEditCanvasSetup = (
 
       if (resizeModeActive) {
         // リサイズ領域を表す四角形の作成
-        const rectProps = createRectProps(MIN_LEFT_TOP, STROKE_WIDTH, canvas.width, canvas.height, 'resizeModeActive');
+        const rectProps = createEditRectProps(MIN_LEFT_TOP, STROKE_WIDTH, canvas.width, canvas.height, 'resizeModeActive');
         cleanupRef.current = addRectToCanvas(fabricEditCanvas, rectProps);
       }
     }

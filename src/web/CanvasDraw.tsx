@@ -6,18 +6,20 @@ import { useLoadImageURL } from './hooks/useLoadImageURL';
 import { useEditFabricCanvas } from './hooks/editFabricCanvasHooks/useEditFabricCanvas';
 import { useSetHistoryStateContext } from './CanvasHistoryContext';
 import { useCanvasToolsContext} from './CanvasToolsContext'
+import { useSidebarStateContext } from './components/SideBar/SidebarStateContext';
 import { useUndo } from './hooks/fabricCanvasHooks/useUndo';
 import { useRedo } from './hooks/fabricCanvasHooks/useRedo';
 import { isNumber } from './utils/validators';
-
+import { addRectProps } from './hooks/editFabricCanvasHooks/createRectProps';
+import { handleScrollbarClick } from './utils/clickEventUtils';
 
 export const useDrawFabricCanvas = (
   canvasRef: React.RefObject<HTMLCanvasElement>,
   editCanvasRef:React.RefObject<HTMLCanvasElement>,
 ) => {
-  const { setUndoRedoState, toggleSaveState } = useSetHistoryStateContext()
+  const { toggleSaveState } = useSetHistoryStateContext();
   const { scale } = useCanvasToolsContext();
-  const [drawingMode, setDrawingMode] = useState('lin'); // 'line' または 'rect'
+  const { drawingMode, setDrawingMode } = useSidebarStateContext();
   const [startPoint, setStartPoint] = useState<fabric.Rect | null>(null);
 
   // 描画用fabricキャンバスと切り取り領域用fabricキャンバスを初期化するカスタムフック
@@ -30,7 +32,7 @@ export const useDrawFabricCanvas = (
   useRedo(fabricCanvas);
   // Fabricキャンバスに画像を挿入するカスタムフック
   useLoadImageURL(fabricCanvas, canvasRef);
-  //  キャンバスのトリミング領域を設定および管理するためのカスタムフック
+  // キャンバスのトリミング領域を設定および管理するためのカスタムフック
   useEditFabricCanvas(fabricCanvas, fabricEditCanvas, canvasRef);
 
   // console.log("render canvasDraw")
@@ -38,25 +40,11 @@ export const useDrawFabricCanvas = (
   useEffect(() => {
     if (!fabricCanvas) return;
     const startDrawing = (o: fabric.IEvent) => {
-      console.log('eeeeeeeeeeeeeeeeeeeeee')
       fabricCanvas.selection = false; 
       const pointer = fabricCanvas.getPointer(o.e);
-      const rect = new fabric.Rect({
-        left: pointer.x,
-        top: pointer.y,
-        originX: 'left',
-        originY: 'top',
-        width: 0,
-        height: 0,
-        stroke: 'black',
-        strokeWidth: 3 / scale,
-        fill: 'transparent',
-        lockRotation: true,
-        strokeUniform: true,
-        scaleX: 1 / scale,
-        scaleY: 1 / scale,
-      });
+      const rect = new fabric.Rect(addRectProps(pointer, scale))
       setStartPoint(rect);
+      rect.setControlsVisibility({ mtr: false });
       fabricCanvas.add(rect);
     };
 
@@ -82,49 +70,59 @@ export const useDrawFabricCanvas = (
 
     const finishDrawing = () => {
       if (startPoint) {
-        // 必要な場合はここで四角形のプロパティを最終調整
-        // startPoint.set({ fill: 'blue' });
         fabricCanvas.setActiveObject(startPoint);
-        
+        setStartPoint(null);
+        setDrawingMode('');
+        fabricCanvas.renderAll();
       }
-      fabricCanvas.renderAll();
-      setStartPoint(null);
-      // setDrawingMode('line');
+      fabricCanvas.selection = true;
     };
 
     const handleMouseDown = (o: fabric.IEvent) => {
+      if (o.e instanceof MouseEvent && handleScrollbarClick(o.e)) {
+        fabricCanvas.selection = false;
+        const activeObject = fabricCanvas.getActiveObject();
+        if (activeObject) {
+          toggleSaveState();
+        }
+        return; // スクロールバーがクリックされたので、他の処理をスキップ
+      }
+
       if (fabricCanvas.getActiveObject()) {
         // 既にアクティブなオブジェクトがある場合の処理
         // ここで不適切な位置変更が行われていないか確認
-      } else if (drawingMode === 'lin') {
+      } else if (drawingMode === '') {
+        return;
+      } else if (drawingMode === 'rect' || drawingMode === 'table') {
         startDrawing(o);
       }
-      console.log('ffffffffffffffffffff')
       toggleSaveState();
     };
 
-    const handleKeydown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
-        e.preventDefault();
-        setUndoRedoState(prevState => ({...prevState, isUndo: !prevState.isUndo, count: 1}));
+    const handleSelectionCreated = () => {
+      const group = fabricCanvas.getActiveObject();
+      if (group && group.type === 'activeSelection') {
+        group.set({
+          borderColor: 'red',
+          cornerSize: 24,
+          cornerStrokeColor: '#0064b6',
+          lockRotation: true,
+        });
+        group.setControlsVisibility({ mtr: false });
       }
-      if (e.ctrlKey && e.key === 'y') {
-        e.preventDefault();
-        setUndoRedoState(prevState => ({...prevState, isRedo: !prevState.isRedo, count: 1}));
-      }
+      fabricCanvas.renderAll();
     };
 
     fabricCanvas.on('mouse:down', handleMouseDown);
     fabricCanvas.on('mouse:move', keepDrawing);
     fabricCanvas.on('mouse:up', finishDrawing);
-    document.addEventListener('keydown', handleKeydown);
+    fabricCanvas.on('selection:created', handleSelectionCreated);
 
     return () => {
       fabricCanvas.off('mouse:down', handleMouseDown);
       fabricCanvas.off('mouse:move', keepDrawing);
       fabricCanvas.off('mouse:up', finishDrawing);
-      document.removeEventListener('keydown', handleKeydown);
+      fabricCanvas.off('selection:created', handleSelectionCreated);
     };
-  }, [fabricCanvas, startPoint, scale]);
-
-};
+  }, [fabricCanvas, scale, startPoint, drawingMode]);
+}
