@@ -36,7 +36,8 @@ const AddFabricObjectsForm = (): JSX.Element => {
       </div> */}
       <div className="horizontal-group two-buttons">
         <button onClick={() => setDrawingMode('rect')}>キャンセル</button>
-        <button onClick={() => setDrawingMode('rect')}>完了</button>
+        <button onClick={() => setDrawingMode('grid')}>格子
+        </button>
       </div>
       {/* {trimModeActive && (
         <>

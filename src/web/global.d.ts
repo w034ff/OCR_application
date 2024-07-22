@@ -31,6 +31,10 @@ declare module 'fabric' {
     interface Canvas {
       upperCanvasEl: HTMLCanvasElement;
     }
+    interface ILineOptions {
+      row?: number | null;
+      col?: number | null;
+    }
   }
 }
 
