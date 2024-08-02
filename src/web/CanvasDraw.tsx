@@ -9,8 +9,9 @@ import { useCanvasToolsContext} from './CanvasToolsContext'
 import { useSidebarStateContext } from './components/SideBar/SidebarStateContext';
 import { useUndo } from './hooks/fabricCanvasHooks/useUndo';
 import { useRedo } from './hooks/fabricCanvasHooks/useRedo';
-import { isNumber } from './utils/validators';
-import { addRectProps } from './hooks/editFabricCanvasHooks/createRectProps';
+import { isNumber, isActiveSelection } from './utils/validators';
+import { addRectProps } from './utils/createRectProps';
+import { createGridLinesProps, groupGridLines } from './utils/createGridLinesProps';
 import { handleScrollbarClick } from './utils/clickEventUtils';
 
 export const useDrawFabricCanvas = (
@@ -21,6 +22,8 @@ export const useDrawFabricCanvas = (
   const { scale } = useCanvasToolsContext();
   const { drawingMode, setDrawingMode } = useSidebarStateContext();
   const [startPoint, setStartPoint] = useState<fabric.Rect | null>(null);
+  const gridLinesData: { gridLines: fabric.Line[], maxSize: number }[] = [];
+  let gridLinesGroup: fabric.Group | null = null;
 
   // 描画用fabricキャンバスと切り取り領域用fabricキャンバスを初期化するカスタムフック
   const { fabricCanvas, fabricEditCanvas } = useInitializeFabricCanvas(canvasRef, editCanvasRef);
@@ -37,89 +40,49 @@ export const useDrawFabricCanvas = (
 
   // console.log("render canvasDraw")
 
-  const createGrid = (pointer: {x: number, y: number}, canvas: fabric.Canvas, gridSize: number, spacing: number) => {
-    const rect = new fabric.Rect({
-      // left: pointer.x,
-      // top: pointer.y,
-      // originX: "center",
-      // originY: "center",
-      width: gridSize * spacing,
-      height: gridSize * spacing,
-      fill: "transparent",
-      stroke: "black",
-      strokeWidth: 3 / scale,
-      selectable: false,
-      hasControls: false,
-      hasBorders: false,
-      perPixelTargetFind: true,
-    });
-    const gridLines: fabric.Line[] = [];
+  const createGrid = (canvas: fabric.Canvas, gridSize: number, spacing: number) => {
+    const gridLines = createGridLinesProps(canvas.getWidth() / 2, canvas.getHeight() / 2, gridSize, spacing, scale);
 
-    for (let i = 0; i <= gridSize; i++) {
-      const lineX = new fabric.Line([i * spacing, 0, i * spacing, gridSize * spacing], {
-        row: null,
-        col: i,
-        stroke: "black",
-        strokeWidth: 3 / scale,
-        // clipPath: rect,
-        // perPixelTargetFind: true,
-        selectable: true, // オブジェクトを選択可能に
-    lockScalingX: false, // X軸のスケーリングを許可
-    lockScalingY: false, // Y軸のスケーリングを許可
-        hasControls: true,
-      });
-      const lineY = new fabric.Line([0, i * spacing, gridSize * spacing, i * spacing], {
-        row: i,
-        col: null,
-        stroke: "black",
-        strokeWidth: 3 / scale,
-        // clipPath: rect,
-        hasControls: true,
-        selectable: true, // オブジェクトを選択可能に
-    lockScalingX: false, // X軸のスケーリングを許可
-    lockScalingY: false, // Y軸のスケーリングを許可
-        // perPixelTargetFind: true,
-      });
-  
-      gridLines.push(lineX, lineY);
-    }
-    canvas.on("selection:created", () => {
-      const selectedObject = canvas.getActiveObject();
-      console.log('sssssssssssss', gridLines, selectedObject)
-      if (selectedObject instanceof fabric.Line && gridLines.includes(selectedObject)) {
-        const row = selectedObject.row;
-        const col = selectedObject.col;
-        console.log(`Selected line: row ${row}, col ${col}`);
-        // ここで、選択された行と列の情報を利用できます。
+    canvas.on('selection:created', () => {
+      const selectedObjects = canvas.getActiveObject();
+      if (selectedObjects && isActiveSelection(selectedObjects)) {
+        const objects = selectedObjects.getObjects();
+        objects.forEach((obj: fabric.Object) => {
+          if (obj instanceof fabric.Line) {
+            canvas.discardActiveObject();
+            return;
+          }
+        })
+        // selectedObjects.set({
+        //   borderColor: 'red',
+        //   cornerSize: 24,
+        //   cornerStrokeColor: '#0064b6',
+        //   lockRotation: true,
+        // });
+        // selectedObjects.setControlsVisibility({ mtr: false });
+      }
+      gridLinesGroup = groupGridLines(gridLinesData, selectedObjects, gridLinesGroup, canvas);
+    });
+    canvas.on('selection:cleared', () => {
+      // グループを解除
+      if (gridLinesGroup) {
+        const objects = gridLinesGroup._objects;
+        gridLinesGroup._restoreObjectsState();
+        gridLinesGroup.getObjects().forEach((object) => {
+          object.set({ left: object.left, top: object.top });
+        });
+        canvas.remove(gridLinesGroup);
+        canvas.add(...objects);
+        gridLinesGroup = null; // グループをリセット
       }
     });
-    const group = new fabric.Group([rect, ...gridLines], {
-      left: pointer.x,
-      top: pointer.y,
-      originX: "left",
-      originY: "top",
-      width: gridSize * spacing,
-      height: gridSize * spacing,
-      // perPixelTargetFind: true,
-      // subTargetCheck: true, // グループ内のオブジェクトを選択可能にする
-    });
-    group.on("mousedown", (e) => {
-      if (e.subTargets && e.subTargets.length > 0) {
-        const clickedObject = e.subTargets[0]; // クリックされたオブジェクト
-        console.log("Clicked object:", clickedObject, e.target);
-        if (gridLines.includes(clickedObject as fabric.Line)) {
-          e.e.stopImmediatePropagation();
-          canvas.setActiveObject(clickedObject);
-          canvas.requestRenderAll();
-      return; // グループの操作を停止
-        }
-      }
+    canvas.on('selection:updated', () => {
+      const selectedObjects = canvas.getActiveObject();
+      gridLinesGroup = groupGridLines(gridLinesData, selectedObjects, gridLinesGroup, canvas);
     });
 
-    // group.setControlsVisibility({ mtr: false });
-    canvas.add(...gridLines ); 
-    // canvas.setActiveObject(group);
-    setDrawingMode('');
+    gridLinesData.push({ gridLines, maxSize: gridSize });
+    canvas.add(...gridLines); 
   }
   
   useEffect(() => {
@@ -133,7 +96,8 @@ export const useDrawFabricCanvas = (
         rect.setControlsVisibility({ mtr: false });
         fabricCanvas.add(rect);
       } else if (drawingMode === 'grid') {
-        createGrid(pointer, fabricCanvas, 4, 75);
+        createGrid(fabricCanvas, 4, 100);
+        setDrawingMode('');
       }
     };
 
@@ -195,7 +159,7 @@ export const useDrawFabricCanvas = (
 
     const handleSelectionCreated = () => {
       const group = fabricCanvas.getActiveObject();
-      if (group && group.type === 'activeSelection') {
+      if (group && isActiveSelection(group)) {
         group.set({
           borderColor: 'red',
           cornerSize: 24,

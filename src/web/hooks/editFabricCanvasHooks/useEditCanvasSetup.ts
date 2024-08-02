@@ -3,7 +3,7 @@ import { fabric } from 'fabric';
 import { useSidebarStateContext } from '../../components/SideBar/SidebarStateContext';
 import { useEditCanvasToolsContext } from './EditCanvasToolsContext';
 import { useRotate90Canvas } from './useRotate90Canvas';
-import { createEditRectProps } from './createRectProps';
+import { createEditRectProps } from '../../utils/createRectProps';
 import { addRectToCanvas } from '../../utils/fabricEditCanvasUtils';
 import { MIN_LEFT_TOP, STROKE_WIDTH } from './editCanvasConstants';
 

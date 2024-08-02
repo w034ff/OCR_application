@@ -15,3 +15,7 @@ export const isRectPropsNumber = (
     isNumber(rect.scaleY)
   );
 };
+
+export const isActiveSelection = (object: fabric.Object): object is fabric.ActiveSelection => {
+  return object.type === 'activeSelection';
+}
