@@ -3,6 +3,8 @@ import { useHistoryContext } from '../../CanvasHistoryContext';
 
 export const useSaveState = (
   fabricCanvas: fabric.Canvas | null,
+  isObjectMoving: boolean,
+  prevCanvasState: fabric.Object[] | null
 ) => {
 	const { setHistoryValue, setMaxHistory, undoStack, setUndoStack, setRedoStack, isSaveState } = useHistoryContext();
 
@@ -10,7 +12,7 @@ export const useSaveState = (
     if (!fabricCanvas) return;
 
     const canvasState: FabricCanvasState = {
-      objects: fabricCanvas.toJSON(['objects']).objects,
+      objects: (isObjectMoving && prevCanvasState) ? prevCanvasState : fabricCanvas.toJSON().objects,
       width: fabricCanvas.getWidth(),
       height: fabricCanvas.getHeight(),
     };

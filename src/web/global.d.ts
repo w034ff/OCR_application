@@ -34,6 +34,7 @@ declare module 'fabric' {
     interface ILineOptions {
       row?: number | null;
       col?: number | null;
+      label: string;
     }
   }
 }

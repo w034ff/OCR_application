@@ -4,14 +4,22 @@ import ResizeInputField from './ResizeInputField';
 import Checkbox from './Checkbox';
 import RotateFlipButtons from './RotateFlipButtons';
 import { useSidebarStateContext } from './SidebarStateContext';
+import { useSetHistoryStateContext } from '../../CanvasHistoryContext';
 
 const AddFabricObjectsForm = (): JSX.Element => {
   const { setDrawingMode } = useSidebarStateContext();
+  const { toggleSaveState } = useSetHistoryStateContext();
   const {
     lockTrimAspectRatio, setLockTrimAspectRatio, lockResizeAspectRatio, setLockResizeAspectRatio,
   } = useEditCanvasToolsContext();
 
   console.log('render AddFabricObjectsForm');
+
+  const clickedGridLines = () => {
+    toggleSaveState();
+    setDrawingMode('grid')
+    console.log('ssssssssssssss')
+  }
   
   // トリミング領域と入力された数値を管理するカスタムフック
   // const {
@@ -36,7 +44,7 @@ const AddFabricObjectsForm = (): JSX.Element => {
       </div> */}
       <div className="horizontal-group two-buttons">
         <button onClick={() => setDrawingMode('rect')}>キャンセル</button>
-        <button onClick={() => setDrawingMode('grid')}>格子
+        <button onClick={clickedGridLines}>格子
         </button>
       </div>
       {/* {trimModeActive && (
