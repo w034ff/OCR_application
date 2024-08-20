@@ -1,4 +1,3 @@
-import { useUpdateEditCanvasSize } from './useUpdateEditCanvas';
 import { useEditCanvasSetup } from './useEditCanvasSetup';
 import { useTrimmingPreview } from './useTrimmingPreview';
 import { useTrimmingPreviewFromSidebar } from './useTrimmingPreviewFromSidebar';
@@ -8,17 +7,12 @@ import { useTransformFromSidebar } from './useTransformFromSidebar';
 import { useResizeFromModal } from './useResizeFromModal';
 import { useFlipCanvas } from './useFlipCanvas';
 
-
 export const useEditFabricCanvas = (
   fabricCanvas: fabric.Canvas | null,
   fabricEditCanvas: fabric.Canvas | null,
-  canvasRef: React.RefObject<HTMLCanvasElement>,
 ) => {
-  // drawing-canvasの大きさが変更された際、fabricEditCanvasの大きさを更新するカスタムフック
-  useUpdateEditCanvasSize(fabricEditCanvas, canvasRef);
-
   // trimModeActive, resizeModeActiveが変更された際、編集用オブジェクトを追加・削除するカスタムフック
-  useEditCanvasSetup(fabricCanvas, canvasRef, fabricEditCanvas);
+  useEditCanvasSetup(fabricCanvas, fabricEditCanvas);
   // fabricEditCanvas上で切り取り領域を変更した際の処理（drawing-canvas外を切り取らないようにする処理）
   useTrimmingPreview(fabricEditCanvas);
   // サイドバーから切り取り領域を変更した際の処理（drawing-canvas外を切り取らないようにする処理）

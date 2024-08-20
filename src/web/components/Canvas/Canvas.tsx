@@ -1,8 +1,10 @@
 import { useRef } from 'react';
 import { useSidebarStateContext } from '../SideBar/SidebarStateContext';
 import { useEventRegister } from '../../hooks/fabricCanvasHooks/useEventRegister';
+import { useInitializeFabricCanvas } from '../../hooks/fabricCanvasHooks/useInitializeFabricCanvas';
 import { useCanvasMouseEvents } from '../../hooks/fabricCanvasHooks/useCanvasMouseEvents';
 import { useDrawFabricCanvas } from '../../CanvasDraw';
+import { useEditFabricCanvas } from '../../hooks/editFabricCanvasHooks/useEditFabricCanvas';
 import { useAdjustScrollForCanvasZoom } from '../../hooks/simplebarHooks/useAdjustScrollForCanvasZoom';
 import { useCanvasSizeObserver } from '../../hooks/fabricCanvasHooks/useCanvasSizeObserver';
 import { useChangeUpperCanvas } from '../../hooks/fabricCanvasHooks/useChangeUpperCanvas';
@@ -17,16 +19,21 @@ const Canvas = (): JSX.Element => {
   
 	// 様々なイベントを登録するカスタムフック
 	const listenerRegistered = useEventRegister();
+  // 描画用fabricキャンバスと切り取り領域用fabricキャンバスを初期化するカスタムフック
+  const { fabricCanvas, fabricEditCanvas } = useInitializeFabricCanvas(canvasRef, editCanvasRef);
   // キャンバス用のマウスイベントをまとめたカスタムフック
   useCanvasMouseEvents();
 	// Rectオブジェクト等をFabricキャンバスに描画するためのカスタムフック
-	useDrawFabricCanvas(canvasRef, editCanvasRef);
+	useDrawFabricCanvas(fabricCanvas);
+
+  // キャンバスのトリミング領域を設定および管理するためのカスタムフック
+  useEditFabricCanvas(fabricCanvas, fabricEditCanvas);
 
 	// キャンバスのズーム及び、ズーム後のスクロール(simplebar)の位置を調整するカスタムフック
 	useAdjustScrollForCanvasZoom(canvasRef, editCanvasRef, InnercontainerRef);
 	// drawing-canvasのサイズが変更された際、Innercontainerのサイズも変更するカスタムフック
 	useCanvasSizeObserver(canvasRef, InnercontainerRef);
-  // drawing-canvasとedit-canvasにあるupper-canvasのscale値を変更するカスタムフック
+  // drawing-canvasとedit-canvasにあるupper-canvasのscaleとdrawing-canvasのopacityを変更するカスタムフック
 	useChangeUpperCanvas(listenerRegistered);
   
 

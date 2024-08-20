@@ -1,5 +1,5 @@
 
-type EditMode = 'trimModeActive' | 'resizeModeActive';
+type EditMode = 'trim' | 'resize';
 
 export const createEditRectProps = (
   MIN_LEFT_TOP: number,
@@ -22,7 +22,7 @@ export const createEditRectProps = (
     cornerStrokeColor: '#3c3f46',
   };
 
-  const specificProps: Partial<fabric.IObjectOptions> = editMode === 'trimModeActive' ? {
+  const specificProps: Partial<fabric.IObjectOptions> = editMode === 'trim' ? {
     stroke: 'red',
     fill: 'rgba(255, 255, 255, 0.4)',
     borderColor: 'white',

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { fabric } from 'fabric';
 import { addRectProps } from '../../utils/createRectProps';
 import { isNumber } from '../../utils/validators';
+import { handleScrollbarClick } from '../../utils/clickEventUtils';
 import { useCanvasToolsContext } from '../../CanvasToolsContext';
 import { useSidebarStateContext } from '../../components/SideBar/SidebarStateContext';
 
@@ -12,7 +13,8 @@ export const useAddRectObject = (fabricCanvas: fabric.Canvas | null) => {
 
   // ユーザーがクリックした位置を基に新しい四角形オブジェクトを作成し、キャンバスに追加する関数
   const startDrawing = (o: fabric.IEvent) => {
-    if (drawingMode === 'rect' && fabricCanvas && !fabricCanvas.getActiveObject()) {
+    if (drawingMode === 'rect' && fabricCanvas && !fabricCanvas.getActiveObject() &&
+        o.e instanceof MouseEvent && !handleScrollbarClick(o.e)) {
       fabricCanvas.selection = false;
       const pointer = fabricCanvas.getPointer(o.e);
       const rect = new fabric.Rect(addRectProps(pointer, scale));

@@ -73,6 +73,4 @@ export const useCanvasMouseEvents = () => {
 			});
 		};
 	}, [scrollElement, isVisible, drawing, dragging, lastDragX, lastDragY]);
-
-	return {drawing, dragging};
 }

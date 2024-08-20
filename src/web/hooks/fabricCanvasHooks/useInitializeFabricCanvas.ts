@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { fabric } from 'fabric';
+import { useUpdateEditCanvasSize } from '../editFabricCanvasHooks/useUpdateEditCanvas';
 
 export const useInitializeFabricCanvas = (
 	canvasRef: React.RefObject<HTMLCanvasElement>,
@@ -7,6 +8,9 @@ export const useInitializeFabricCanvas = (
 ) => {
 	const [fabricCanvas, setFabricCanvas] = useState<fabric.Canvas | null>(null);
 	const [fabricEditCanvas, setFabricEditCanvas] = useState<fabric.Canvas | null>(null);
+
+	// drawing-canvasの大きさが変更された際、fabricEditCanvasの大きさを更新するカスタムフック
+  useUpdateEditCanvasSize(fabricEditCanvas, canvasRef);
 
 	// 描画用fabricキャンバスの初期化
 	useEffect(() => {
