@@ -2,9 +2,10 @@ import { useRef } from 'react';
 import { useSidebarStateContext } from '../SideBar/SidebarStateContext';
 import { useEventRegister } from '../../hooks/fabricCanvasHooks/useEventRegister';
 import { useInitializeFabricCanvas } from '../../hooks/fabricCanvasHooks/useInitializeFabricCanvas';
-import { useCanvasMouseEvents } from '../../hooks/fabricCanvasHooks/useCanvasMouseEvents';
-import { useDrawFabricCanvas } from '../../CanvasDraw';
+import { useAddFabricObjects } from '../../hooks/fabricCanvasHooks/useAddFabricObjects';
+import { useLoadImageURL } from '../../hooks/useLoadImageURL';
 import { useEditFabricCanvas } from '../../hooks/editFabricCanvasHooks/useEditFabricCanvas';
+import { useCanvasNavigation } from '../../hooks/fabricCanvasHooks/useCanvasNavigation';
 import { useAdjustScrollForCanvasZoom } from '../../hooks/simplebarHooks/useAdjustScrollForCanvasZoom';
 import { useCanvasSizeObserver } from '../../hooks/fabricCanvasHooks/useCanvasSizeObserver';
 import { useChangeUpperCanvas } from '../../hooks/fabricCanvasHooks/useChangeUpperCanvas';
@@ -21,21 +22,22 @@ const Canvas = (): JSX.Element => {
 	const listenerRegistered = useEventRegister();
   // 描画用fabricキャンバスと切り取り領域用fabricキャンバスを初期化するカスタムフック
   const { fabricCanvas, fabricEditCanvas } = useInitializeFabricCanvas(canvasRef, editCanvasRef);
-  // キャンバス用のマウスイベントをまとめたカスタムフック
-  useCanvasMouseEvents();
-	// Rectオブジェクト等をFabricキャンバスに描画するためのカスタムフック
-	useDrawFabricCanvas(fabricCanvas);
+	// Fabricキャンバスにオブジェクトを追加及び追加したオブジェクトのselection等を管理するカスタムフック
+	useAddFabricObjects(fabricCanvas);
+  // fabricキャンバスに画像ファイルを挿入するカスタムフック
+  useLoadImageURL(fabricCanvas);
 
   // キャンバスのトリミング領域を設定および管理するためのカスタムフック
   useEditFabricCanvas(fabricCanvas, fabricEditCanvas);
 
+  // キャンバスのナビゲーションやインターフェース操作に関するカスタムフック
+  useCanvasNavigation();
 	// キャンバスのズーム及び、ズーム後のスクロール(simplebar)の位置を調整するカスタムフック
 	useAdjustScrollForCanvasZoom(canvasRef, editCanvasRef, InnercontainerRef);
 	// drawing-canvasのサイズが変更された際、Innercontainerのサイズも変更するカスタムフック
 	useCanvasSizeObserver(canvasRef, InnercontainerRef);
-  // drawing-canvasとedit-canvasにあるupper-canvasのscaleとdrawing-canvasのopacityを変更するカスタムフック
+  // drawing-canvasとedit-canvasにあるupper-canvasのscaleと初期時にdrawing-canvasのopacityを変更するカスタムフック
 	useChangeUpperCanvas(listenerRegistered);
-  
 
 	console.log("render Canvas")
 

@@ -4,8 +4,7 @@ import { useCanvasSimpleBarContext } from '../../CanvasSimpleBarContext';
 import { useControlContextMenu } from '../useControlContextMenu';
 import { handleScrollbarClick } from '../../utils/clickEventUtils';
 
-
-export const useCanvasMouseEvents = () => {
+export const useCanvasNavigation = () => {
 	const { scale } = useCanvasToolsContext();
 	const { scrollables, scrollElement } = useCanvasSimpleBarContext();
 	const { isVisible, openContextMenu } = useControlContextMenu();

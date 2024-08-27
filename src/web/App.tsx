@@ -11,6 +11,7 @@ import {
 } from './components';
 import CanvasInterface from './CanvasInterface';
 import './Home.css';
+import './utils/fabricConfig';
 
 const App = (): JSX.Element => {
 	return (

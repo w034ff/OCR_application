@@ -5,6 +5,7 @@ import { getCurrentFabricCanvasState, applyCanvasState } from '../../utils/canva
 
 export const useUndoRedo = (
 	fabricCanvas: fabric.Canvas | null,
+  gridLinesDataRef: React.MutableRefObject<{ gridLines: fabric.Line[] }[]>
 ) => {
   const { setHistoryValue, undoStack, setUndoStack, redoStack, setRedoStack, undoRedoState } = useHistoryContext();
   const { handleScrollbarToCenter } = useCanvasSimpleBarContext();
@@ -33,7 +34,7 @@ export const useUndoRedo = (
 
     // 保存された状態を適用し、キャンバスを更新
     if (stateToLoad) {
-      applyCanvasState(fabricCanvas, stateToLoad, handleScrollbarToCenter);
+      applyCanvasState(fabricCanvas, stateToLoad, handleScrollbarToCenter, gridLinesDataRef);
     }
 
     // Undoスタックを更新し、履歴の長さを設定
@@ -65,7 +66,7 @@ export const useUndoRedo = (
 
      // 保存された状態を適用し、キャンバスを更新
     if (stateToLoad) {
-      applyCanvasState(fabricCanvas, stateToLoad, handleScrollbarToCenter);
+      applyCanvasState(fabricCanvas, stateToLoad, handleScrollbarToCenter, gridLinesDataRef);
     }
     
     // Redoスタックを更新し、履歴の長さを設定

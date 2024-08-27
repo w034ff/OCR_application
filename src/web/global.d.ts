@@ -26,15 +26,23 @@ declare global {
     }
 }
 
+interface ICustomProperties {
+  row: number;
+  col: number;
+  label: string;
+  edgeType: string;
+}
+
 declare module 'fabric' {
   namespace fabric {
     interface Canvas {
       upperCanvasEl: HTMLCanvasElement;
     }
-    interface ILineOptions {
-      row?: number | null;
-      col?: number | null;
-      label: string;
+    interface ILineOptions extends ICustomProperties {
+      
+    }
+    interface Object extends ICustomProperties {
+      
     }
   }
 }

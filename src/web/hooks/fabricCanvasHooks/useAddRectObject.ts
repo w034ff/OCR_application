@@ -4,10 +4,12 @@ import { addRectProps } from '../../utils/createRectProps';
 import { isNumber } from '../../utils/validators';
 import { handleScrollbarClick } from '../../utils/clickEventUtils';
 import { useCanvasToolsContext } from '../../CanvasToolsContext';
+import { useSetHistoryStateContext } from '../../CanvasHistoryContext';
 import { useSidebarStateContext } from '../../components/SideBar/SidebarStateContext';
 
 export const useAddRectObject = (fabricCanvas: fabric.Canvas | null) => {
   const { scale } = useCanvasToolsContext();
+  const { toggleSaveState } = useSetHistoryStateContext();
   const { drawingMode, setDrawingMode } = useSidebarStateContext();
   const [tempRect, setTempRect] = useState<fabric.Rect | null>(null);
 
@@ -21,6 +23,7 @@ export const useAddRectObject = (fabricCanvas: fabric.Canvas | null) => {
       setTempRect(rect);
       rect.setControlsVisibility({ mtr: false });
       fabricCanvas.add(rect);
+      toggleSaveState();
     }
   };
 
@@ -43,7 +46,7 @@ export const useAddRectObject = (fabricCanvas: fabric.Canvas | null) => {
     fabricCanvas.renderAll();
   };
 
-  // 四角形の描画を終了し、最終的なサイズを確定する関数
+  // 四角形の描画を終了し、最終的なサイズを決定する関数
   const finishDrawing = () => {
     if (tempRect && fabricCanvas && isNumber(tempRect.width) && isNumber(tempRect.height)) {
       // 四角形の幅と高さの最低値を75px以上にする
@@ -53,7 +56,7 @@ export const useAddRectObject = (fabricCanvas: fabric.Canvas | null) => {
       fabricCanvas.setActiveObject(tempRect);
       fabricCanvas.renderAll();
       setTempRect(null);
-      setDrawingMode('');
+      setDrawingMode(''); // 描画モード(rect)をリセットする
     }
   };
 
