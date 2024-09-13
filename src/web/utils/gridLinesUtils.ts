@@ -1,4 +1,8 @@
 import { fabric } from 'fabric';
+import { isNumber } from './validators';
+
+// ラインオブジェクトのストロークの太さ。
+const LINE_STROKE_WIDTH = 8;
 
 // キャンバスを中心に縦横のgridLines（Power Pointの表みたいなオブジェクト）を生成する関数
 const createGridLinesProps = (
@@ -11,6 +15,7 @@ const createGridLinesProps = (
   const gridLines: fabric.Line[] = [];
   const halfGridSize = gridSize * spacing / 2;
   const existingLines = new Set<string>();
+  const lineOffset = LINE_STROKE_WIDTH / 2;
 
   // ラインを追加する共通関数
   const addLine = (
@@ -30,45 +35,57 @@ const createGridLinesProps = (
         label: label,
         edgeType: edgeType,
         stroke: 'black',
-        strokeWidth: 8,
-        hasControls: false,
+        strokeWidth: LINE_STROKE_WIDTH,
+        strokeUniform: true,
+        lockRotation: true,
         lockMovementX: lockMovementX,
         lockMovementY: lockMovementY,
+        lockScalingX: lockMovementY,
+        lockScalingY: lockMovementX,
+      });
+      line.setControlsVisibility({ 
+        mtr: false, tl: false, tr: false, bl: false, br: false,
+        mt: lockMovementY, mb: lockMovementY, ml: lockMovementX, mr: lockMovementX
       });
       gridLines.push(line);
     }
   };
+  
+  // 外周の辺の座標を求める
+  const borderLeftX = centerX - halfGridSize - lineOffset;
+  const borderTopY  = centerY - halfGridSize - lineOffset;
+  const borderRightX  = centerX + halfGridSize;
+  const borderBottomY  = centerY + halfGridSize;
+
+  // 外周の四辺を一つの大きな線分として追加
+  // 上辺
+  addLine([borderLeftX, borderTopY, borderRightX, borderTopY], 0, 0, 'top', true, true);
+  
+  // 下辺
+  addLine([borderLeftX, borderBottomY, borderRightX, borderBottomY], 0, gridSize, 'top-bottom', true, true);
+  
+  // 左辺
+  addLine([borderLeftX, borderTopY, borderLeftX, borderBottomY], 0, 0, 'left-right', true, true);
+
+  // 右辺
+  addLine([borderRightX , borderTopY, borderRightX, borderBottomY], gridSize, 0, 'right', true, true);
 
   // 各セルを構成する線分を生成
   for (let i = 0; i < gridSize; i++) {
     for (let j = 0; j < gridSize; j++) {
-      const topLeftX = centerX - halfGridSize + i * spacing;
-      const topLeftY = centerY - halfGridSize + j * spacing;
-      const bottomRightX = topLeftX + spacing;
-      const bottomRightY = topLeftY + spacing;
+      const cellLeftX = borderLeftX + i * spacing;
+      const cellTopY = borderTopY + j * spacing;
+      const cellRightX = cellLeftX + spacing + lineOffset;
+      const cellBottomY = cellTopY + spacing + lineOffset;
 
-      // 上辺を追加（最上辺についてはtopラベルを追加する
-      if (j === 0) {
-        addLine([topLeftX, topLeftY, bottomRightX, topLeftY], i, j, 'top', true, true);
-      } else {
-        addLine([topLeftX, topLeftY, bottomRightX, topLeftY], i, j, 'inner-top', true, false);
+      // 上辺を追加 (最上辺は大きな線分で作成済みなので追加しない)
+      if (j !== 0) {
+        addLine([cellLeftX, cellTopY, cellRightX, cellTopY], i, j, 'inner-top', true, false);
       }
 
-      // 下辺（最下段のみ追加）
-      if (j === gridSize - 1) {
-        addLine([topLeftX, bottomRightY, bottomRightX, bottomRightY], i, j + 1, 'bottom', true, true);
-      }
-
-      // 左辺（最左列のみ追加）
-      if (i === 0) {
-        addLine([topLeftX, topLeftY, topLeftX, bottomRightY], i, j, 'left', true, true);
-      }
-
-      // 右辺を追加（再右辺についてはrightラベルを追加する）
-      if (i === gridSize -1){
-        addLine([bottomRightX, topLeftY, bottomRightX, bottomRightY + 8], i + 1, j, 'right', true, true);
-      } else {
-        addLine([bottomRightX, topLeftY, bottomRightX, bottomRightY + 8], i + 1, j, 'inner-right', false, true);
+      // 右辺を追加 (最右辺は大きな線分で作成済みなので追加しない)
+      if (i !== gridSize -1) {
+        addLine([cellRightX, cellTopY, cellRightX, cellBottomY], i + 1, j, 'inner-right', false, true);
       }
     }
   }
@@ -94,6 +111,31 @@ export const addGridLines = (
   setDrawingMode('');
 };
 
+
+// gridLineの移動制限を行う汎用関数
+export const limitLineMovement = (
+  gridLine: fabric.Object,
+  adjacentLine1: fabric.Line | null,
+  adjacentLine2: fabric.Line | null,
+  axis: 'top' | 'left',
+  distance: number
+) => {
+  if (axis === 'top' && isNumber(gridLine.top)) {
+    if (isNumber(adjacentLine1?.top) && gridLine.top < adjacentLine1.top + distance) {
+      gridLine.set({ top: adjacentLine1.top + distance });
+    } else if (isNumber(adjacentLine2?.top) && gridLine.top > adjacentLine2.top - distance) {
+      gridLine.set({ top: adjacentLine2.top - distance });
+    }
+  } else if (axis === 'left' && isNumber(gridLine.left)) {
+    if (isNumber(adjacentLine1?.left) && gridLine.left < adjacentLine1.left + distance) {
+      gridLine.set({ left: adjacentLine1.left + distance });
+    } else if (isNumber(adjacentLine2?.left) && gridLine.left > adjacentLine2.left - distance) {
+      gridLine.set({ left: adjacentLine2.left - distance });
+    }
+  }
+};
+
+
 // 選択されたgridがgridLinesの一番外側の線である場合、gridLinesをグループ化する関数
 export const groupGridLines = (
   gridLinesData: { gridLines: fabric.Line[] }[],
@@ -107,7 +149,8 @@ export const groupGridLines = (
     if (gridData) {
       const { gridLines } = gridData;
       const edgeType = selectedObject.edgeType;
-      if (edgeType === 'left' || edgeType === 'top' || edgeType === 'right' || edgeType === 'bottom') {
+      const label = selectedObject.label;
+      if (edgeType === 'left-right' || edgeType === 'top' || edgeType === 'right' || edgeType === 'top-bottom') {
         gridLinesGroup = new fabric.Group(gridLines, {
           left: gridLines[0].left,
           top: gridLines[0].top,
@@ -129,22 +172,40 @@ export const groupGridLines = (
           gridLinesGroup = new fabric.Group(linesToGroup, {
             left: linesToGroup[0].left,
             top: linesToGroup[0].top,
-            // row: row,
-            // col: col,
-            // label: label,
+            row: selectedObject.row,
+            label: label,
+            edgeType: 'inner-top',
             hasControls: false,
-            // lockMovementX: lockMovementX,
             lockMovementX: true,
           });
-          gridLinesGroup.setControlsVisibility({ mtr: false });
+          canvas.add(gridLinesGroup);
+          canvas.setActiveObject(gridLinesGroup);
+          canvas.remove(...linesToGroup);
+        }
+      } else if (edgeType === 'inner-right' && event.e instanceof MouseEvent && !event.e.ctrlKey) {
+        // 同じ col の値を持つ線分をフィルタリング
+        const linesToGroup = gridLines.filter(
+          line => line.col === selectedObject.col && 
+          line.edgeType === 'inner-right' && line.left === selectedObject.left
+        );
+        if (linesToGroup.length > 1) {
+          gridLinesGroup = new fabric.Group(linesToGroup, {
+            left: linesToGroup[0].left,
+            top: linesToGroup[0].top,
+            col: selectedObject.col,
+            label: label,
+            edgeType: 'inner-right',
+            lockRotation: true,
+            lockMovementY: true,
+            lockScalingX: true,
+            // lockScalingY: lockMovementX,
+          });
+          gridLinesGroup.setControlsVisibility({ mtr: false, tl: false, tr: false, bl: false, br: false, ml: false, mr:false });
           canvas.add(gridLinesGroup);
           canvas.setActiveObject(gridLinesGroup);
           canvas.remove(...linesToGroup);
         }
       }
-      //  else if (edgeType === 'inner-top' ) {
-
-      // }
     } 
   }
   return gridLinesGroup;

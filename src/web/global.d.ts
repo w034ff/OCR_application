@@ -44,6 +44,12 @@ declare module 'fabric' {
     interface Object extends ICustomProperties {
       
     }
+    interface IGroupOptions {
+      row?: number;
+      col?: number;
+      label?: string;
+      edgeType?: string;
+    }
   }
 }
 

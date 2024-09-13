@@ -32,6 +32,7 @@ const updateGridLines = (obj: fabric.Object, gridLinesData: { gridLines: fabric.
     });
     
     if (index !== -1 && obj instanceof fabric.Line) {
+      obj.setControlsVisibility({ mtr: false, tl: false, tr: false, bl: false, br: false });
       data.gridLines[index] = obj; // 見つかった場合、そのオブジェクトを更新
     }
   });
@@ -58,9 +59,7 @@ export const applyCanvasState = (
     });
     // JSONからキャンバスの状態が復元された後、各オブジェクトに対しての設定を維持させる
     fabricCanvas.forEachObject((obj: fabric.Object) => {
-      if (obj.type === 'rect') {
-        obj.setControlsVisibility({ mtr: false });
-      } else if (obj.label && obj.label.startsWith('grid_')) {
+      if (obj.label && obj.label.startsWith('grid_')) {
         updateGridLines(obj, gridLinesDataRef.current)
       }
     });

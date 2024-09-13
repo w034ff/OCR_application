@@ -7,6 +7,7 @@ import { useSidebarStateContext } from '../../components/SideBar/SidebarStateCon
 import { useUndoRedo } from './useUndoRedo';
 import { useAddRectObject } from './useAddRectObject';
 import { useFabricMouseEvents } from './useFabricMouseEvents';
+import { useFabricKeyboardEvents } from './useFabricKeyboardEvents';
 import { addGridLines } from '../../utils/gridLinesUtils';
 
 export const useAddFabricObjects = (fabricCanvas: fabric.Canvas | null) => {
@@ -22,6 +23,8 @@ export const useAddFabricObjects = (fabricCanvas: fabric.Canvas | null) => {
   useUndoRedo(fabricCanvas, gridLinesDataRef);
   // fabricキャンバス上で、オブジェクトの選択や移動に関するマウスイベントを処理し、状態保存の管理を行うカスタムフック
   useFabricMouseEvents(fabricCanvas, isObjectMoved, prevCanvasState);
+  // fabricキャンバスを操作するキーボードイベントをまとめたカスタムフック
+  useFabricKeyboardEvents(fabricCanvas, gridLinesDataRef, isObjectMoved, prevCanvasState);
   // fabricキャンバスにRectオブジェクトを追加するカスタムフック
   useAddRectObject(fabricCanvas);
   // FabricJSのselectionを制御するカスタムフック

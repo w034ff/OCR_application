@@ -21,7 +21,6 @@ export const useAddRectObject = (fabricCanvas: fabric.Canvas | null) => {
       const pointer = fabricCanvas.getPointer(o.e);
       const rect = new fabric.Rect(addRectProps(pointer, scale));
       setTempRect(rect);
-      rect.setControlsVisibility({ mtr: false });
       fabricCanvas.add(rect);
       toggleSaveState();
     }
