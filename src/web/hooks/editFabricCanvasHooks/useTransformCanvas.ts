@@ -4,9 +4,8 @@ import { useSetHistoryStateContext } from '../../CanvasHistoryContext';
 import { useEditCanvasToolsContext } from './EditCanvasToolsContext';
 import { useSidebarStateContext } from '../../components/SideBar/SidebarStateContext';
 import { isNumber, isRectPropsNumber } from '../../utils/validators';
-import { isFabricRect, shiftObjects, resizeAndMoveObjects } from '../../utils/fabricEditCanvasUtils';
-import { MIN_LEFT_TOP, STROKE_WIDTH } from './editCanvasConstants';
-
+import { limitMaxSize, isFabricRect, shiftObjects, resizeAndMoveObjects } from '../../utils/fabricEditCanvasUtils';
+import { MIN_LEFT_TOP, STROKE_WIDTH, CANVAS_MAX_SIZE } from '../../utils/editCanvasConstants';
 
 export const useTransformCanvas = (
 	fabricCanvas: fabric.Canvas | null,
@@ -29,8 +28,23 @@ export const useTransformCanvas = (
 		}
 
 		if (isNumber(rect.width) && isNumber(rect.scaleX) && isNumber(rect.height) && isNumber(rect.scaleY)) {
-			setTrimRegionWidth(Math.round((rect.width - STROKE_WIDTH) * rect.scaleX));
-			setTrimRegionHeight(Math.round((rect.height - STROKE_WIDTH) * rect.scaleY));
+			const currentWidth = Math.round((rect.width - STROKE_WIDTH) * rect.scaleX);
+    	const currentHeight = Math.round((rect.height - STROKE_WIDTH) * rect.scaleY);
+
+			// トリミング領域の幅と高さを設定
+			setTrimRegionWidth(limitMaxSize(currentWidth));
+			setTrimRegionHeight(limitMaxSize(currentHeight));
+
+			// キャンバス最大サイズを超えないようにスケールを調整
+			const maxScaleX = CANVAS_MAX_SIZE / (rect.width - STROKE_WIDTH);
+			const maxScaleY = CANVAS_MAX_SIZE / (rect.height - STROKE_WIDTH);
+
+			// スケールの制限
+			rect.scaleX = Math.min(rect.scaleX, maxScaleX);
+			rect.scaleY = Math.min(rect.scaleY, maxScaleY);
+
+			// rectオブジェクトのスケールを再設定
+			rect.set({ scaleX: rect.scaleX , scaleY: rect.scaleY })
 		}
 	};
 
@@ -70,5 +84,4 @@ export const useTransformCanvas = (
 			fabricEditCanvas.off('mouse:up', finishDrawing);
     }
   }, [fabricEditCanvas, resizeModeActive]);
-
 }

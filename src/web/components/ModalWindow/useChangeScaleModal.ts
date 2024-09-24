@@ -3,6 +3,7 @@ import { useSetHistoryStateContext } from '../../CanvasHistoryContext';
 import { useCanvasToolsContext } from "../../CanvasToolsContext";
 import { useModalWindowContext, useSetModalContext } from './ModalWindowContext';
 import { useResizeCanvasContext } from './ResizeCanvasContext';
+import { CANVAS_MAX_SIZE } from '../../utils/editCanvasConstants';
 
 interface ModalConfiguration {
   title: string;
@@ -26,6 +27,9 @@ const modalConfigurations: ModalConfigurations = {
     radioValues: [0.25, 0.5, 0.75, 1.5, 2.0, 4.0]
   }
 };
+
+// キャンバスサイズが2000px未満であるとき、リサイズを行えるようにする関数
+const isCanvasSizeExceeding = (size: number) => size && size >= CANVAS_MAX_SIZE;
 
 export const useChangeScaleModal = () => {
   const { toggleSaveState } = useSetHistoryStateContext()
@@ -65,13 +69,25 @@ export const useChangeScaleModal = () => {
 
   // モーダルのOKボタンを押すと設定をキャンバスに反映させる 
   const handleChangeClick = useCallback(() => {
-    closeModal(); // モーダルを閉じる
     if (ModalMode === 'zoom-canvas') {
       applyZoomCanvas();
     } else if (ModalMode === 'resize-canvas') {
+      const upperCanvas = document.querySelector('.upper-canvas');
+      if (upperCanvas) {
+        const { clientWidth, clientHeight } = upperCanvas;
+        if ((isCanvasSizeExceeding(clientWidth) || isCanvasSizeExceeding(clientHeight)) && selectedScale > 1.0) {
+          setSelectedScale(initialScale);
+          
+          const errorMessage = `キャンバスをリサイズできません。\n${CANVAS_MAX_SIZE}ピクセルを超えないようにリサイズしてください。`;
+          window.ShowError.sendMain('Invalid Canvas Size', errorMessage);
+      
+          return;
+        }
+      }
       toggleSaveState();
       setResizeRatio(prev => ({ ...prev, isResize: !prev.isResize, ratio: selectedScale }));  // リサイズする比率を設定する
     }
+    closeModal(); // モーダルを閉じる
   }, [applyZoomCanvas, ModalMode]);
 
   return { selectedScale, title, radioValues, handleScaleChange, handleChangeClick };

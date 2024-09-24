@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { fabric } from 'fabric';
-import { MIN_LEFT_TOP, EDGE_OFFSET, STROKE_WIDTH } from './editCanvasConstants';
+import { MIN_LEFT_TOP, EDGE_OFFSET, STROKE_WIDTH } from '../../utils/editCanvasConstants';
 import { isRectPropsNumber } from '../../utils/validators';
 import { adjustScale } from '../../utils/fabricEditCanvasUtils';
 import { useEditCanvasToolsContext } from './EditCanvasToolsContext';

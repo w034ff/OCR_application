@@ -1,10 +1,12 @@
 import { fabric } from 'fabric';
 import { isNumber, isRectPropsNumber } from './validators'
-import { MIN_LEFT_TOP, EDGE_OFFSET } from '../hooks/editFabricCanvasHooks/editCanvasConstants';
-
+import { MIN_LEFT_TOP, EDGE_OFFSET, CANVAS_MAX_SIZE } from './editCanvasConstants';
 
 // fabricEditCanvasに関して、追加したRectオブジェクトのスケールが1を超えないよう調整
 export const adjustScale = (newScale: number) => Math.min(newScale, 1);
+
+// サイドバーに表示されるキャンバスの大きさが2000pxを超えて表示しないよう制限する関数
+export const limitMaxSize  = (size: number) => Math.min(size, CANVAS_MAX_SIZE);
 
 // 切り取り用オブジェクトがRect型であることを確認する関数
 export const isFabricRect = (obj: fabric.Rect): obj is fabric.Rect => {
@@ -84,10 +86,11 @@ const findObjectsToCopy = (
     const objCenter = obj.getCenterPoint();
 		if (isRectPropsNumber(rect)) {
 			if (
-				objCenter.x + edgeOffset >= rect.left &&
+				(objCenter.x + edgeOffset >= rect.left &&
 				objCenter.x + edgeOffset <= rect.left + rect.width * rect.scaleX &&
 				objCenter.y + edgeOffset >= rect.top &&
-				objCenter.y + edgeOffset <= rect.top + rect.height * rect.scaleY
+				objCenter.y + edgeOffset <= rect.top + rect.height * rect.scaleY) ||
+        obj.isBackground
 			) {
 				objectsToCopy.push(obj);
 			}

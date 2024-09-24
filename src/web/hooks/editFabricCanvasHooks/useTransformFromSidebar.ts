@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { fabric } from 'fabric';
-import { STROKE_WIDTH } from './editCanvasConstants';
+import { STROKE_WIDTH } from '../../utils/editCanvasConstants';
 import { isNumber } from '../../utils/validators';
 import { isFabricRect, shiftObjects, resizeAndMoveObjects } from '../../utils/fabricEditCanvasUtils';
 import { useEditCanvasToolsContext } from './EditCanvasToolsContext';

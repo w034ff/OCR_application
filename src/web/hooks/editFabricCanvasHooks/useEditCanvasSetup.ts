@@ -5,7 +5,7 @@ import { useEditCanvasToolsContext } from './EditCanvasToolsContext';
 import { useRotate90Canvas } from './useRotate90Canvas';
 import { createEditRectProps } from '../../utils/createRectProps';
 import { addRectToCanvas } from '../../utils/fabricEditCanvasUtils';
-import { MIN_LEFT_TOP, STROKE_WIDTH } from './editCanvasConstants';
+import { MIN_LEFT_TOP, STROKE_WIDTH } from '../../utils/editCanvasConstants';
 
 export const useEditCanvasSetup = (
   fabricCanvas: fabric.Canvas | null,

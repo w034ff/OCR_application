@@ -9,3 +9,6 @@ export const STROKE_WIDTH = 2;
 
 // Rectオブジェクトの両側のストロークの合計太さ。サイズ計算時に枠線を考慮するために使用
 export const TOTAL_STROKE_WIDTH = 4;
+
+// キャンバスサイズの最大値
+export const CANVAS_MAX_SIZE = 2000;
