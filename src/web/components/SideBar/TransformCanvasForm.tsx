@@ -1,6 +1,6 @@
 import { useEditCanvasToolsContext } from '../../hooks/editFabricCanvasHooks/EditCanvasToolsContext';
 import { useSetModalContext } from '../ModalWindow/ModalWindowContext';
-import { useTransformCanvas } from './useTransformCanvas';
+import { useSidebarCanvasTransform } from './useSidebarCanvasTransform';
 import ResizeInputField from './ResizeInputField';
 import Checkbox from './Checkbox';
 import RotateFlipButtons from './RotateFlipButtons';
@@ -26,7 +26,7 @@ const TransformCanvasForm = ({ trimModeActive, setTrimModeActive, resizeModeActi
     handleKeyUp,
     handleInputChange,
     handleChangeClick
-  } = useTransformCanvas();
+  } = useSidebarCanvasTransform();
 
   return (
     <div className="sidebar-content">

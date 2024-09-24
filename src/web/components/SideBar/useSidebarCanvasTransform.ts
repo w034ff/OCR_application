@@ -4,7 +4,7 @@ import { useEditCanvasToolsContext } from '../../hooks/editFabricCanvasHooks/Edi
 import { useSidebarStateContext } from './SidebarStateContext';
 import { useValidateAndAdjustSize } from './useValidateAndAdjustSize';
 
-export const useTransformCanvas = () => {
+export const useSidebarCanvasTransform = () => {
 	const { toggleSaveState } = useSetHistoryStateContext();
 	const {
     setIsTrimCanvas, setTrimRegionChanged, currentCanvasWidth, currentCanvasHeight,

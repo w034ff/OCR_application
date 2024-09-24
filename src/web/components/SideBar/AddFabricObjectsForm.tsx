@@ -1,5 +1,5 @@
 import { useEditCanvasToolsContext } from '../../hooks/editFabricCanvasHooks/EditCanvasToolsContext';
-import { useTransformCanvas } from './useTransformCanvas';
+import { useSidebarCanvasTransform } from './useSidebarCanvasTransform';
 import ResizeInputField from './ResizeInputField';
 import Checkbox from './Checkbox';
 import RotateFlipButtons from './RotateFlipButtons';
