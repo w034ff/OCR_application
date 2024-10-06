@@ -27,7 +27,8 @@ fabric.Object.prototype.toObject = (function(toObject) {
       row: this.row,         // カスタムプロパティ 'row'
       col: this.col,        // カスタムプロパティ 'col'
       label: this.label,    // カスタムプロパティ 'label'
-      edgeType: this.edgeType // カスタムプロパティ 'edgeType'
+      edgeType: this.edgeType, // カスタムプロパティ 'edgeType'
+      isBackground: this.isBackground // カスタムプロパティ 'isBackground'
     });
   };
 })(fabric.Object.prototype.toObject);

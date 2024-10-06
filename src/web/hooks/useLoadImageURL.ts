@@ -27,6 +27,7 @@ export const useLoadImageURL = (
             evented: false,
             hasControls: false,
             hasBorders: false,
+            isBackground: true // カスタムプロパティを追加
           });
         }
 

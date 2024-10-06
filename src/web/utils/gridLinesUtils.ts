@@ -98,15 +98,15 @@ const createGridLinesProps = (
 export const addGridLines = (
   canvas: fabric.Canvas,
   gridLinesLabelRef: React.MutableRefObject<number>,
-  gridLinesDataRef: React.MutableRefObject<{ gridLines: fabric.Line[] }[]>,
+  gridLinesDataRef: React.MutableRefObject<GridLinesData[]>,
   setDrawingMode: React.Dispatch<React.SetStateAction<string>>
 ) => {
   // オブジェクトを区別できるよう、オブジェクトにラベルを追加する
   const label = `grid_${gridLinesLabelRef.current}`;
   gridLinesLabelRef.current += 1;
 
-  const gridLines = createGridLinesProps(canvas.getWidth() / 2, canvas.getHeight() / 2, 4, 100, label);
-  gridLinesDataRef.current.push({ gridLines });
+  const gridLines = createGridLinesProps(canvas.getWidth() / 2, canvas.getHeight() / 2, 2, 100, label);
+  gridLinesDataRef.current.push({ label, gridLines });
   canvas.add(...gridLines);
   setDrawingMode('');
 };
@@ -138,7 +138,7 @@ export const limitLineMovement = (
 
 // 選択されたgridがgridLinesの一番外側の線である場合、gridLinesをグループ化する関数
 export const groupGridLines = (
-  gridLinesData: { gridLines: fabric.Line[] }[],
+  gridLinesData: GridLinesData[],
   selectedObject: fabric.Object | null,
   gridLinesGroup: fabric.Group | null,
   canvas: fabric.Canvas,
@@ -154,6 +154,7 @@ export const groupGridLines = (
         gridLinesGroup = new fabric.Group(gridLines, {
           left: gridLines[0].left,
           top: gridLines[0].top,
+          groupType: 'grid',
           cornerSize: 24,
           cornerStrokeColor: '#0064b6',
           lockRotation: true,
@@ -175,9 +176,11 @@ export const groupGridLines = (
             row: selectedObject.row,
             label: label,
             edgeType: 'inner-top',
-            hasControls: false,
+            lockRotation: true,
             lockMovementX: true,
+            lockScalingY: true
           });
+          gridLinesGroup.setControlsVisibility({ mtr: false, tl: false, tr: false, bl: false, br: false, mt: false, mb:false });
           canvas.add(gridLinesGroup);
           canvas.setActiveObject(gridLinesGroup);
           canvas.remove(...linesToGroup);
@@ -198,7 +201,6 @@ export const groupGridLines = (
             lockRotation: true,
             lockMovementY: true,
             lockScalingX: true,
-            // lockScalingY: lockMovementX,
           });
           gridLinesGroup.setControlsVisibility({ mtr: false, tl: false, tr: false, bl: false, br: false, ml: false, mr:false });
           canvas.add(gridLinesGroup);

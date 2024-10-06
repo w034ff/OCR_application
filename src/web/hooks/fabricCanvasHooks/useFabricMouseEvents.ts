@@ -24,8 +24,8 @@ export const useFabricMouseEvents = (
     }
   };
 
-  // オブジェクトが移動している間、実行される関数
-  const handleObjectMoving = () => {
+  // オブジェクトが移動またはスケーリングしている間、実行される関数
+  const handleObjectAction  = () => {
     isObjectMovedRef.current = true;
   };
 
@@ -44,12 +44,16 @@ export const useFabricMouseEvents = (
 
     fabricCanvas.on('mouse:down', handleMouseDown);
     fabricCanvas.on('mouse:up', handleMouseUp);
-    fabricCanvas.on('object:moving', handleObjectMoving);
+    ['object:moving', 'object:scaling'].forEach(event => {
+      fabricCanvas.on(event, handleObjectAction);
+    });
 
     return () => {
       fabricCanvas.off('mouse:down', handleMouseDown);
       fabricCanvas.off('mouse:up', handleMouseUp);
-      fabricCanvas.off('object:moving', handleObjectMoving);
+      ['object:moving', 'object:scaling'].forEach(event => {
+        fabricCanvas.off(event, handleObjectAction);
+      });
     };
   }, [fabricCanvas]);
 }

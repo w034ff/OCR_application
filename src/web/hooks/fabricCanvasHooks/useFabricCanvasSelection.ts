@@ -6,13 +6,14 @@ import { ungroupObjects } from '../../utils/canvasUtils';
 
 export const useFabricCanvasSelection = (
   fabricCanvas: fabric.Canvas | null,
-  gridLinesDataRef: React.MutableRefObject<{ gridLines: fabric.Line[] }[]>,
+  gridLinesDataRef: React.MutableRefObject<GridLinesData[]>,
 ) => {
   const gridLinesGroupRef = useRef<fabric.Group | null>(null);
+  const isGroupScaledRef = useRef<boolean>(false);
 
   // gridLinesのグループを解除する関数
   const clearGroup = () => {
-    if (gridLinesGroupRef.current && fabricCanvas) {
+    if (gridLinesGroupRef.current && fabricCanvas && !isGroupScaledRef.current) {
       ungroupObjects(gridLinesGroupRef.current, fabricCanvas);
       gridLinesGroupRef.current = null; // グループをリセット
     }
@@ -51,6 +52,43 @@ export const useFabricCanvasSelection = (
     clearGroup(); // グループを解除
     handleSelection(e);
   }
+
+  const scalingGroup = (e: fabric.IEvent) => {
+    const group = e.target;
+    if (group instanceof fabric.Group && group.groupType === 'grid') {
+      isGroupScaledRef.current = true;
+    }
+  }
+
+  // スケーリング後にグリッドオブジェクトを再グループ化する関数
+  const regroupGridObjects = (e: fabric.IEvent) => {
+    const group = e.target;
+    if (!(group instanceof fabric.Group) || !fabricCanvas || !isGroupScaledRef.current) return;
+    
+    // グループ内のオブジェクトを取得して、グループを解除
+    const gridObjects = group.getObjects();
+    group._restoreObjectsState(); // グループ解除
+    fabricCanvas.remove(group); // グループをキャンバスから削除
+
+    // グループを再作成してキャンバスに追加
+    const newGroup = new fabric.Group(gridObjects, {
+      label: group.label,
+      groupType: group.groupType,
+      cornerSize: 24,
+      cornerStrokeColor: '#0064b6',
+      lockRotation: true,
+    });
+
+    newGroup.setControlsVisibility({ mtr: false });
+    fabricCanvas.add(newGroup);
+    fabricCanvas.setActiveObject(newGroup);
+
+    if (gridLinesGroupRef.current) {
+      gridLinesGroupRef.current = newGroup;
+    }
+
+    isGroupScaledRef.current = false; // スケールフラグをリセット
+  };
   
   useEffect(() => {
     if (!fabricCanvas) return; 
@@ -58,11 +96,15 @@ export const useFabricCanvasSelection = (
     fabricCanvas.on('selection:created', handleSelection);
     fabricCanvas.on('selection:updated', selectionUpdated);
     fabricCanvas.on('selection:cleared', clearGroup);
+    fabricCanvas.on('mouse:up', regroupGridObjects);
+    fabricCanvas.on('object:scaling', scalingGroup);
 
     return () => {
       fabricCanvas.off('selection:created', handleSelection);
       fabricCanvas.off('selection:updated', selectionUpdated);
       fabricCanvas.off('selection:cleared', clearGroup);
+      fabricCanvas.off('mouse:up', regroupGridObjects);
+      fabricCanvas.off('object:scaling', scalingGroup);
     };
   }, [fabricCanvas]);
 }

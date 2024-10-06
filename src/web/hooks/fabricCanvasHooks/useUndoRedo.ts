@@ -5,7 +5,7 @@ import { getCurrentFabricCanvasState, applyCanvasState } from '../../utils/canva
 
 export const useUndoRedo = (
 	fabricCanvas: fabric.Canvas | null,
-  gridLinesDataRef: React.MutableRefObject<{ gridLines: fabric.Line[] }[]>
+  gridLinesDataRef: React.MutableRefObject<GridLinesData[]>
 ) => {
   const { setHistoryValue, undoStack, setUndoStack, redoStack, setRedoStack, undoRedoState } = useHistoryContext();
   const { handleScrollbarToCenter } = useCanvasSimpleBarContext();

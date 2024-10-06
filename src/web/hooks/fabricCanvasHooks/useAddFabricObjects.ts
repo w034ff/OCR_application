@@ -8,6 +8,7 @@ import { useUndoRedo } from './useUndoRedo';
 import { useAddRectObject } from './useAddRectObject';
 import { useFabricMouseEvents } from './useFabricMouseEvents';
 import { useFabricKeyboardEvents } from './useFabricKeyboardEvents';
+import { useFabrciCloneObjects } from './useFabricCloneObjects';
 import { addGridLines } from '../../utils/gridLinesUtils';
 
 export const useAddFabricObjects = (fabricCanvas: fabric.Canvas | null) => {
@@ -15,7 +16,7 @@ export const useAddFabricObjects = (fabricCanvas: fabric.Canvas | null) => {
   const gridLinesLabel = useRef(0);
   const isObjectMoved = useRef<boolean>(false);
   const prevCanvasState = useRef<fabric.Object[] | null>(null);
-  const gridLinesDataRef = useRef<{ gridLines: fabric.Line[] }[]>([]);
+  const gridLinesDataRef = useRef<GridLinesData[]>([]);
 
   // drawing-canvasの状態を保存するカスタムフック（Undo, Redoの実行に不可欠なカスタムフック）
   useSaveState(fabricCanvas, isObjectMoved, prevCanvasState.current);
@@ -30,7 +31,9 @@ export const useAddFabricObjects = (fabricCanvas: fabric.Canvas | null) => {
   // FabricJSのselectionを制御するカスタムフック
   useFabricCanvasSelection(fabricCanvas, gridLinesDataRef);
   // gridLineの移動する範囲を制限するカスタムフック
-  useActiveObject(fabricCanvas, gridLinesDataRef.current)
+  useActiveObject(fabricCanvas, gridLinesDataRef)
+
+  useFabrciCloneObjects(fabricCanvas, gridLinesDataRef, isObjectMoved, prevCanvasState);
 
   // サイドバーの格子ボタンを押した際、fabricキャンバスにgridLinesオブジェクトを追加するuseEffect
   useEffect(() => {

@@ -4,7 +4,7 @@ import { useSetHistoryStateContext } from '../../CanvasHistoryContext';
 
 export const useFabricKeyboardEvents = (
   fabricCanvas: fabric.Canvas | null,
-  gridLinesDataRef: React.MutableRefObject<{ gridLines: fabric.Line[] }[]>,
+  gridLinesDataRef: React.MutableRefObject<GridLinesData[]>,
   isObjectActivatedRef: React.MutableRefObject<boolean>,
   prevCanvasStateRef: React.MutableRefObject<fabric.Object[] | null>
 ) => {
@@ -15,17 +15,16 @@ export const useFabricKeyboardEvents = (
   
     // gridLinesDataRef から該当するラインを削除し、右側の列線のcolを更新
     gridLinesDataRef.current = gridLinesDataRef.current.map(data => ({
+      label: data.label,
       gridLines: data.gridLines
         .filter(line => line !== lineToRemove)  // 削除対象の線分を削除
         .map(line => {
           // 右側にある列線のcol値を更新
           if (line.row === row && line.col > col && edgeType.includes('right') && line.edgeType.includes('right') && line.label === label) {
             line.set({ col: line.col - 1 });
-            console.log('bbbbbbbbbbbb')
           }
           else if (line.row > row && line.col === col && edgeType.includes('top') && line.edgeType.includes('top') && line.label === label) {
             line.set({ row: line.row - 1 });
-            console.log('aaaaaaaaaa')
           }
           return line;
         })
@@ -43,11 +42,9 @@ export const useFabricKeyboardEvents = (
     if (selectedObjects.length > 0) {
       selectedObjects.forEach(obj => {
         if (obj instanceof fabric.Group) {
-          obj._restoreObjectsState();
           fabricCanvas.remove(obj); // グループ自体をキャンバスから削除
           obj.getObjects().forEach(groupedObj => {
             if (groupedObj instanceof fabric.Line) {
-              console.log(groupedObj, obj)
               removeLineFromGridData(groupedObj); // gridLinesDataRef から該当するラインを削除
             }
             fabricCanvas.remove(groupedObj); // グループ内のオブジェクトをキャンバスから削除

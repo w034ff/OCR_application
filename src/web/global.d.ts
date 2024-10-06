@@ -24,6 +24,10 @@ declare global {
       width: string;
       height: string;
     }
+    export interface GridLinesData {
+      label: string;
+      gridLines: fabric.Line[];
+    }
 }
 
 interface ICustomProperties {
@@ -42,13 +46,14 @@ declare module 'fabric' {
       
     }
     interface Object extends ICustomProperties {
-      
+      isBackground?: boolean
     }
     interface IGroupOptions {
       row?: number;
       col?: number;
       label?: string;
       edgeType?: string;
+      groupType?: string;
     }
   }
 }
