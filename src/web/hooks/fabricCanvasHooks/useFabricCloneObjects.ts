@@ -24,13 +24,10 @@ export const useFabrciCloneObjects = (
     if (selectedObjects instanceof fabric.Group) {
       // グループをコピー（クローン）する
       selectedObjects?.clone((clonedGroup: fabric.Group) => {
-        
-        
 
         const cloneObjects = clonedGroup.getObjects();
         clonedGroup.destroy();
-        // clonedGroup._restoreObjectsState();
-        // fabricCanvas.remove(clonedGroup);
+
         
         if (selectedObjects.label !== 'concat' && selectedObjects.height) {
           pasteObjectHeightRef.current = selectedObjects.height;
