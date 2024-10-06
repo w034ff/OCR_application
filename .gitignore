@@ -4,3 +4,7 @@ dist/
 no_used_files/
 node_modules/
 app.js
+
+# Ignore Python bytecode files
+*.pyc
+__pycache__/

@@ -2,16 +2,12 @@ services:
   frontend:
     build:
       context: .
-      # args:
-        # USER_NAME: yubuu
-        # USER_ID: 1000
-        # GROUP_ID: 1000
       dockerfile: Dockerfile
     container_name: 'ocr-frontend'
     working_dir: '/frontend'
-    # network_mode: host
     environment:
       - DISPLAY=$DISPLAY
+      - REACT_APP_API_ENDPOINT=http://backend:8000
     tty: true
     volumes:
       - ./:/frontend
@@ -20,3 +16,21 @@ services:
       - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro
     ports:
       - "127.0.0.1:3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - my-network
+  
+  backend:
+    restart: on-failure
+    build: ./backend
+    container_name: 'ocr-backend'
+    working_dir: '/backend'
+    tty: true
+    volumes:
+      - ./backend:/backend
+    networks:
+      - my-network
+
+networks:
+  my-network:

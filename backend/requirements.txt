@@ -1,0 +1,9 @@
+requests
+flake8
+black
+Flask
+fastapi
+uvicorn
+Pillow
+
+python-multipart
